@@ -1,0 +1,46 @@
+Arabalarımızdan indiler.
+Gelemeyecekmişsiniz.
+Türkiye'den İstanbul'a gittim.
+Kitaplarımdan birini aldın mı?
+Arabalarımızdakilerdenmişsiniz.
+Kitabımdan bahsettim.
+Ağacın altında durdum.
+Rengini beğendim.
+Evlerimizdekilerden oldular.
+Kitaplarımızdan aldılar.
+Ankara'dakilerden biri geldi.
+Ali'nin kitabı kayboldu.
+Ayşe'nin arabası bozuldu.
+Kanadını kırdı.
+Bileğini incittin.
+Çocuğun oyuncağı kırıldı.
+Kadın yakın altın kedi.
+Yarın kalın odun alın.
+Kedi masanın altında.
+Geldim.
+Gittim.
+Aldılar.
+İndiler.
+Durdum.
+Beğendim.
+Yapamayacaklarımızdanmış.
+Alabilecek misiniz?
+Geldin mi?
+Alacak mısınız?
+Bunu yaptınız mı?
+Napıyorsun?
+Gelicem birazdan.
+Gidiyom ben.
+Geliyom musun?
+Naber?
+OpenAIlaştırılamayanlardanmış.
+API'den veri aldım.
+config_v2.json dosyasını açtım.
+Python'da test yazdım.
+README.md dosyasını açtım.
+Bugün hava çok güzeldi.
+Öğrenciler kitaplarını masaya bıraktılar.
+Yazılımcılar test sonuçlarını inceledi.
+Türkçe ekler kelimelere düzenli biçimde bağlanır.
+Morfolojik sınırlar subword eğitiminde kaybolabilir.
+Bu corpus yalnızca demo amaçlı küçük bir örnektir.

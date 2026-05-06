@@ -1,0 +1,310 @@
+Bugün öğrenciler ders notlarını düzenledi.
+Dün öğretmenler sınav kağıtlarını inceledi.
+Yarın araştırmacılar yeni verileri paylaşacak.
+Sabah ekip toplantı odasında toplandı.
+Akşam raporun son bölümünü okuduk.
+Hafta sonu aileler parkta yürüyüş yaptı.
+Kütüphanedeki kitaplar raflara dizildi.
+Bahçedeki çocuklar sessizce oyun kurdu.
+Yolcular istasyonda uzun süre bekledi.
+Mühendisler sistem günlüklerini kontrol etti.
+Arabalarımızdan bazıları garaja döndü.
+Evlerimizdekilerden birkaçını yeniledik.
+Kitaplarımızdaki notları karşılaştırdık.
+Defterlerimizden sayfalar kopmadı.
+Odalarımızdakilerden biri boyandı.
+Çantalarımızdakileri masaya bıraktık.
+Dosyalarımızdan eski olanları ayırdık.
+Kalemlerimizdekilerden mavi olanı seçtik.
+Sorularımızdakilerden zor olanı çözdük.
+Planlarımızdan bazıları ertelendi.
+Türkiye'deki konferansa birçok kişi katıldı.
+İstanbul'daki ekip sunumu hazırladı.
+Ankara'dan gelen haberler incelendi.
+İzmir'e giden yolcular erken çıktı.
+Bursa'dakilerden bazıları toplantıya bağlandı.
+Ali'nin notlarını öğretmen gördü.
+Ayşe'nin projesi jüri tarafından beğenildi.
+Mehmet'in arabası servise götürüldü.
+Zeynep'in dosyası arşive kaldırıldı.
+Ece'nin kalemi çantada kaldı.
+Dün geldim ama seni göremedim.
+Sabah gittim ve belgeleri aldım.
+Öğleden sonra indiler, sonra yürüdüler.
+Akşam durdum ve tabelayı okudum.
+Bu filmi beğendim çünkü akıcıydı.
+Çocuklar koştular ve bahçeye çıktılar.
+Ekipler çalıştılar, raporları tamamladılar.
+Yazarlar tartıştılar ve metni düzelttiler.
+Komşular geldiler, kısa süre oturdular.
+Oyuncular sahneye çıktılar.
+Yarın gelecek misiniz acaba?
+Bu raporu alacak mısınız yarın?
+Soruyu yaptınız mı bugün?
+Dosyayı açtınız mı yeniden?
+Bunu okuyacak mısın akşam?
+Toplantıya katılacaklar mı?
+Verileri paylaşacak mısınız?
+Kapıyı kapattın mı çıkarken?
+Notları düzenledin mi bugün?
+Soruları cevapladınız mı dün?
+Napıyorsun orada arkadaşım?
+Gelicem sonra, biraz bekle.
+Gidiyom şimdi, görüşürüz.
+Geliyom ama trafik yoğun.
+Naber dostum, işler nasıl?
+Yapıcam dedi ama başlamadı.
+Bakıyom ekrana, hata arıyorum.
+Koşuyom sandı ama yürüyordu.
+Yazıcam sana akşam.
+Görücem sonucu birazdan.
+OpenAIlaştırılamayan metinler listelendi.
+API'deki yanıtlar kayda alındı.
+config_v3.json dosyası yeniden yazıldı.
+Python'daki script kısa sürede çalıştı.
+README_new.md içeriği güncellendi.
+server_v1.log dosyasını inceledim.
+ModelAPI'den dönen alanlar ayrıştırıldı.
+tokenizer_v4.json arşive taşındı.
+CLI'da yeni seçenek belirdi.
+JSON'daki değerler doğrulandı.
+Kitabını masaya koydu ve çıktı.
+Ağacın gölgesi yola düştü.
+Rengini değiştiren kumaş dikkat çekti.
+Kanadının ucunda küçük bir iz vardı.
+Bileğinin ağrısı sabaha azaldı.
+Çocuğun sorusu sınıfta tartışıldı.
+Oyuncağını kutuya yerleştirdi.
+Kapağını kapattı ve bekledi.
+Ayağını dikkatlice bastı.
+Dudağını ısırıp sustu.
+Kadın yakındaki dükkana uğradı.
+Yakın sokakta sessiz bir ev vardı.
+Altın renkli kalem rafta durdu.
+Kedi pencerenin önünde uyudu.
+Kalın perde odayı kararttı.
+Odun parçaları sobanın yanında kaldı.
+Alın teriyle yazılmış bir metindi.
+Yarın yeni bir plan açıklanacak.
+Masanın üstünde temiz bardaklar vardı.
+Kitap masada açık kaldı.
+Bugün raporlarımızdan bazılarını gönderdik.
+Dün belgelerimizdekileri tek tek ayıkladık.
+Yarın dosyalarımızdakilerden örnek seçeceğiz.
+Sabah kutularımızdan etiketleri çıkardık.
+Akşam klasörlerimizdekilerden eskileri sildik.
+Hafta içi defterlerimizden not aldık.
+Toplantıda önerilerimizden ikisi kabul edildi.
+Projelerimizdakilerden biri yeniden adlandırıldı.
+Çalışmalarımızdan sonuç çıkardık.
+Kayıtlarımızdakilerden hatalı olanı düzelttik.
+Trabzon'dan gelen ekip sahaya çıktı.
+Konya'ya gidecek yolcular bekledi.
+Antalya'daki otelde toplantı yapıldı.
+Eskişehir'dekilerden bazıları çevrime katıldı.
+Mardin'in sokakları akşam aydınlandı.
+Fatma'nın çizimi sergide yer aldı.
+Hasan'ın raporu erken tamamlandı.
+Elif'in bilgisayarı onarıldı.
+Mert'in sorusu kurulda yanıtlandı.
+Deniz'in notları dosyada kaldı.
+Sabah yürüdüm ve kahve aldım.
+Dün okudum, bugün özetledim.
+Akşam yazdım, sonra kapattım.
+Gece uyudum ama erken kalktım.
+Bugün anlattım ve herkes dinledi.
+Öğrenciler sordular ve cevap beklediler.
+Kuşlar uçtular, sonra geri döndüler.
+Arkadaşlar güldüler ve sohbet ettiler.
+Yolcular bindiler, kapılar kapandı.
+İşçiler taşıdılar ve raflara koydular.
+Yeni dosyayı açacak mısın?
+Bu sonucu paylaşacak mıyız?
+Sorunu bildirecek misiniz?
+Yarın toplantıya gelecek misin?
+Kayıtları silecek misiniz?
+Formu doldurdunuz mu şimdi?
+Bu örneği gördün mü az önce?
+Yanıtı gönderdiniz mi maille?
+Projeyi kapattın mı sonunda?
+Sınavı bitirdiniz mi erken?
+Napıyosun burada bu saatte?
+Gelicem dedim ama geç kaldım.
+Gidiyom artık, sonra konuşuruz.
+Geliyom birazdan, bekleyin.
+Naber hocam, hazırlık tamam mı?
+Yazıcam listeyi, eksik kalmasın.
+Bakıcam loglara, sorun çıkar mı?
+Koşucam sandım ama yoruldum.
+Görücem sonucu, sonra dönerim.
+Yapıcam işi, merak etme.
+OpenAIlaştırılan başlıklar ayrıldı.
+API'deki veriyi tekrar okudum.
+config_prod.json değişiklikleri kaydetti.
+Python'dan gelen çıktı kayda geçti.
+README_final.md dosyasını gözden geçirdim.
+client_v2.log satırları filtrelendi.
+GraphAPI'den kimlik bilgisi geldi.
+settings_v5.json yapılandırmayı taşıdı.
+TerminalCLI'da yardım metni açıldı.
+XML'deki alanlar temizlendi.
+Kitabımın kapağı yıpranmıştı.
+Ağacın dalları rüzgarda sallandı.
+Rengini seçerken kararsız kaldı.
+Kanadını açan kuş havalandı.
+Bileğini korumak için bandaj sardı.
+Çocuğun defteri sırada kaldı.
+Oyuncağının pili bitmişti.
+Kapağının kenarı kırılmıştı.
+Ayağının izi kumda kaldı.
+Dudağının rengi soluktu.
+Kadın sabah erkenden çıktı.
+Yakın zamanda yeni karar alınır.
+Altın işlemeli kumaş sergilendi.
+Kedi sessizce koltuğa çıktı.
+Kalın kitap çantaya sığmadı.
+Odun kokusu odaya yayıldı.
+Alın bölgesinde küçük iz vardı.
+Yarınki planlar akşam netleşir.
+Masanın ayağı biraz sallanıyor.
+Kitaplık duvara sabitlendi.
+Bugün sepetlerimizden elmaları ayırdık.
+Dün kutularımızdakileri depoya taşıdık.
+Yarın çantalarımızdan belgeleri çıkaracağız.
+Sabah notlarımızdakilerden önemli olanı seçtik.
+Akşam raporlarımızdan özet hazırladık.
+Hafta sonu klasörlerimizdekileri yedekledik.
+Toplantıda fikirlerimizden bazıları tartışıldı.
+Projelerimizden biri erken bitti.
+Kayıtlarımızdan tarihleri çıkardık.
+Dosyalarımızdakilerden bozuk olanı bulduk.
+Samsun'dan kalkan otobüs gecikti.
+Edirne'ye giden tren doluydu.
+Kayseri'deki fuar kalabalıktı.
+Adana'dakilerden haber geldi.
+Van'ın gölü sabah sakindi.
+Kemal'in telefonu masada kaldı.
+Selin'in sunumu ilgi gördü.
+Burak'ın dosyası eksikti.
+Mina'nın resmi duvara asıldı.
+Okan'ın cevabı kısa oldu.
+Sabah çıktım ve markete uğradım.
+Dün döndüm, sonra rapor yazdım.
+Akşam sordum, hemen yanıt aldım.
+Bugün baktım ve farkı gördüm.
+Gece düşündüm, sabah karar verdim.
+Çalışanlar geldiler ve sistemi açtılar.
+Öğrenciler okudular, öğretmen dinledi.
+Yöneticiler konuştular ve karar verdiler.
+Misafirler oturdular, çay içtiler.
+Sporcular ısındılar ve sahaya çıktılar.
+Bu belgeyi okuyacak mısınız?
+Yarın geri dönecek misin?
+Sonucu kaydedecek miyiz?
+Yeni alanı ekleyecek misiniz?
+Bildirimleri kapatacak mısın?
+Mesajı aldınız mı az önce?
+Kapıyı açtın mı tekrar?
+Notu yazdınız mı deftere?
+Grafiği gördün mü ekranda?
+Dosyayı indirdiniz mi sonunda?
+Napıyon orada, yardım lazım mı?
+Gelicem yakında, hazırlanın.
+Gidiyom ofise, haber veririm.
+Geliyom şimdi, kapıyı açın.
+Naber millet, gündem nedir?
+Yazıcam birazdan, sakin olun.
+Bakıcam sonra, acele etmeyin.
+Koşuyom derken yürümeye başladı.
+Görücem yarın, sonucu söylerim.
+Yapıcam bugün, listeye aldım.
+OpenAIlaştırma denemeleri kaydedildi.
+API'deki token süresi uzatıldı.
+config_test.json ortamı tanımladı.
+Python'daki paket güncellendi.
+README_draft.md başlığı değişti.
+error_v7.log satırları incelendi.
+DataAPI'den yeni kayıt geldi.
+profile_v1.json kullanıcı ayarlarını tuttu.
+AdminCLI'da komut çalıştırıldı.
+YAML'daki girinti düzeltildi.
+Kitabının sayfası yırtılmıştı.
+Ağacın kabuğu yağmurdan koyulaştı.
+Rengini kaybeden kumaş ayrıldı.
+Kanadını toparlayan kuş bekledi.
+Bileğini çevirince acı hissetti.
+Çocuğun çantası ağırdı.
+Oyuncağını arkadaşına verdi.
+Kapağını açmadan bekledi.
+Ayağını uzatıp dinlendi.
+Dudağını oynatmadan baktı.
+Kadın elindeki listeyi okudu.
+Yakın arkadaşlar birlikte yürüdü.
+Altın bilezik kutuda kaldı.
+Kedi bahçede kuşları izledi.
+Kalın çizgi grafikte belirdi.
+Odun yığını duvarın dibindeydi.
+Alın yazısı diye anlatıldı.
+Yarın sabah erken çıkacağız.
+Masanın kenarı çizilmişti.
+Kitapçı yeni baskıyı getirdi.
+Bugün arabalarımızdan ikisi bakıma girdi.
+Dün evlerimizdekileri listeledik.
+Yarın kitaplarımızdan alıntılar seçeceğiz.
+Sabah çocuklarımızdakileri çantalara koyduk.
+Akşam masalarımızdakileri temizledik.
+Hafta içi sorularımızdan yenilerini ürettik.
+Toplantıda planlarımızdan üçü değişti.
+Projelerimizdakilerden eskisi kapandı.
+Kayıtlarımızdan eksik alanları bulduk.
+Dosyalarımızdakilerden yeni olanı açtık.
+Rize'den gelen paket teslim edildi.
+Muğla'ya giden ekip yola çıktı.
+Kars'taki müze yenilendi.
+Sinop'takilerden mesaj geldi.
+Amasya'nın sokakları sessizdi.
+Arda'nın kitabı çantada durdu.
+İpek'in arabası yolda kaldı.
+Can'ın projesi kabul edildi.
+Lale'nin sorusu dikkat çekti.
+Umut'un cevabı herkesi şaşırttı.
+Sabah geldim, kapıyı kapalı buldum.
+Dün gittim, kimseyi bulamadım.
+Akşam aldım, faturayı sakladım.
+Öğlen indim, sonra bekledim.
+Bir süre durdum, sonra yürüdüm.
+Yazılımcılar test ettiler ve çıktı aldılar.
+Editörler düzelttiler, metni yayımladılar.
+Araştırmacılar ölçtüler ve tablo çizdiler.
+Katılımcılar sordular, konuşmacı yanıtladı.
+Gönüllüler taşıdılar, kutuları dizdiler.
+Bu aracı kullanacak mısınız?
+Yarın buraya gelecek misin?
+Dosyaları yedekleyecek miyiz?
+Verileri silecek misiniz?
+Raporu yazacak mısın?
+Listeyi kontrol ettiniz mi?
+Sonuçları paylaştın mı?
+Toplantıyı başlattınız mı?
+Bilgiyi doğruladın mı?
+Pencereyi kapattınız mı?
+Napıyorsun şimdi, ekran dondu mu?
+Gelicem hemen, kapıda bekle.
+Gidiyom toplantıya, sonra ararım.
+Geliyom ama yol biraz uzun.
+Naber ekip, sprint nasıl gidiyor?
+Yazıcam raporu, taslak hazır.
+Bakıcam ölçümlere, sonra konuşuruz.
+Koşuyom zannetme, sadece acelem var.
+Görücem çıktıyı, hata var mı bakarım.
+Yapıcam düzeltmeyi, test beklesin.
+OpenAIlaştırılmış isimler tabloda durdu.
+API'den değil API'deki kayıttan okuduk.
+config_local.json yeni ayar aldı.
+Python'da küçük bir örnek çalıştı.
+README_notes.md kısa açıklama içerdi.
+access_v9.log dosyası arşivlendi.
+SearchAPI'den sonuçlar sıralandı.
+layout_v2.json ekran düzenini tuttu.
+DeployCLI'da sürüm seçildi.
+CSV'deki satırlar temizlendi.
