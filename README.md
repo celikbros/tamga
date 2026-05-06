@@ -62,6 +62,15 @@ v1.1 ozet raporu [artifacts/v1_1_report.md](artifacts/v1_1_report.md),
 ambiguity/negative-word karar notlari ise
 [docs/ambiguity_policy.md](docs/ambiguity_policy.md) icindedir.
 
+v1.2 error taxonomy raporu icin:
+
+```powershell
+python scripts/label_challenge_mismatches.py data/eval/tr_challenge.tsv data/eval/tr_challenge_labeled.tsv --markdown-out artifacts/v1_2_error_taxonomy_report.md
+```
+
+Etiket tanimlari [docs/v1_2_error_taxonomy.md](docs/v1_2_error_taxonomy.md)
+icindedir.
+
 ## BPE Sweep
 
 Bu BPE baseline production tokenizer degildir. Minimal, pure-Python toy BPE
@@ -110,7 +119,7 @@ Daha ayrintili gerekceler icin [docs/design.md](docs/design.md) dosyasina bakin.
 
 - v1.0: frozen deterministic research prototype, raporlar ve regression setleri.
 - v1.1: low-risk pretokenizer fixes, number/date/file-like guards.
-- v1.2: ambiguity ve negative-word policy, davranis degisikligi olmadan planlama.
+- v1.2: challenge mismatch taxonomy, davranis degisikligi olmadan planlama.
 - v2.0: deterministic morphology layer + MorphBPE trainer.
 - Uzun vadede: Turkce/Turk dilleri subword fallback, Ingilizce/kod cluster,
   byte fallback ve cok dilli vocabulary allocation.

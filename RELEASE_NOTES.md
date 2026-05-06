@@ -1,5 +1,35 @@
 # Release Notes
 
+## v1.2.0
+
+v1.2.0 adds a challenge mismatch taxonomy layer without changing tokenizer
+behavior.
+
+### Highlights
+
+- Added `scripts/label_challenge_mismatches.py`.
+- Added generated taxonomy data:
+  `data/eval/tr_challenge_labeled.tsv`.
+- Added Markdown taxonomy report:
+  `artifacts/v1_2_error_taxonomy_report.md`.
+- Added taxonomy documentation:
+  `docs/v1_2_error_taxonomy.md`.
+
+### Labels
+
+- `exact_match`
+- `safe_rule_candidate`
+- `needs_lexicon`
+- `needs_context`
+- `hybrid_candidate`
+- `do_not_fix_yet`
+
+### Non-goals
+
+- No tokenizer behavior change.
+- No broad suffix splitter change.
+- No attempt to force challenge set to 100%.
+
 ## v1.1.0
 
 v1.1.0, v1.0-rc2 sonrasinda dusuk riskli pretokenizer iyilestirmelerine
