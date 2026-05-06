@@ -283,3 +283,155 @@ def test_encode_v07_regressions_stay_stable():
 
     for text, expected_tokens in cases.items():
         assert encode(text) == expected_tokens
+
+
+def test_encode_v11_low_risk_pretokenizer_targets():
+    cases = {
+        "2025'ten sonra değişti.": [
+            "▁2025",
+            "'",
+            "+ten",
+            "▁sonra",
+            "▁değiş",
+            "+ti",
+            ".",
+        ],
+        "3.14 değerini yazdım.": [
+            "▁3.14",
+            "▁değer",
+            "+i",
+            "+ni",
+            "▁yaz",
+            "+dı",
+            "+m",
+            ".",
+        ],
+        "34-ABC-1907 plakası vardı.": [
+            "▁34-ABC-1907",
+            "▁plaka",
+            "+sı",
+            "▁var",
+            "+dı",
+            ".",
+        ],
+        "%25'lik artış oldu.": [
+            "%",
+            "▁25",
+            "'",
+            "+lik",
+            "▁artış",
+            "▁ol",
+            "+du",
+            ".",
+        ],
+        "README.md'yi açtın mı?": [
+            "▁README.md",
+            "'",
+            "+yi",
+            "▁aç",
+            "+tı",
+            "+n",
+            "▁mı",
+            "?",
+        ],
+        "Ali, Ayşe'ye baktı.": [
+            "▁Ali",
+            ",",
+            "▁Ayşe",
+            "'",
+            "+ye",
+            "▁bak",
+            "+tı",
+            ".",
+        ],
+        "“Merhaba,” dedi.": [
+            '"',
+            "▁Merhaba",
+            ",",
+            '"',
+            "▁de",
+            "+di",
+            ".",
+        ],
+        "Evet; ama sonra döndü.": [
+            "▁Evet",
+            ";",
+            "▁ama",
+            "▁sonra",
+            "▁dön",
+            "+dü",
+            ".",
+        ],
+    }
+
+    for text, expected_tokens in cases.items():
+        assert encode(text) == expected_tokens
+
+
+def test_encode_v11_high_risk_categories_stay_stable():
+    cases = {
+        "Kadın yakın altın kedi.": [
+            "▁Kadın",
+            "▁yakın",
+            "▁altın",
+            "▁kedi",
+            ".",
+        ],
+        "Yazın tatile gittik.": [
+            "▁Yaz",
+            "+ın",
+            "▁tatile",
+            "▁git",
+            "+ti",
+            "+k",
+            ".",
+        ],
+        "Yazarım ama göndermem.": [
+            "▁Yazar",
+            "+ım",
+            "▁ama",
+            "▁göndermem",
+            ".",
+        ],
+        "Gül dalında açtı.": [
+            "▁Gül",
+            "▁dalın",
+            "+da",
+            "▁aç",
+            "+tı",
+            ".",
+        ],
+        "Yüz kişi geldi.": [
+            "▁Yüz",
+            "▁kişi",
+            "▁gel",
+            "+di",
+            ".",
+        ],
+        "Arabalarımızdakilerdenmişsiniz.": [
+            "▁Araba",
+            "+lar",
+            "+ımız",
+            "+da",
+            "+ki",
+            "+ler",
+            "+den",
+            "+miş",
+            "+siniz",
+            ".",
+        ],
+        "OpenAIlaştırılamayanlardanmış.": [
+            "▁OpenAI",
+            "+laştır",
+            "+ıl",
+            "+ama",
+            "+yan",
+            "+lar",
+            "+dan",
+            "+mış",
+            ".",
+        ],
+    }
+
+    for text, expected_tokens in cases.items():
+        assert encode(text) == expected_tokens

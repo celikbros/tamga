@@ -144,6 +144,27 @@ _LEXICON_TIE_PRIORITY = {
     "sun": 2,
     "sün": 2,
 }
+_APOSTROPHE_SUFFIX_SURFACES = tuple(
+    sorted(
+        {
+            *(rule.surface for rule in SUFFIX_RULES),
+            "yı",
+            "yi",
+            "yu",
+            "yü",
+            "lı",
+            "li",
+            "lu",
+            "lü",
+            "ıncı",
+            "inci",
+            "uncu",
+            "üncü",
+        },
+        key=len,
+        reverse=True,
+    )
+)
 _ASCII_UPPER_RE = re.compile(r"[A-Z]")
 _PAST_BASES = ("dı", "di", "du", "dü", "tı", "ti", "tu", "tü")
 _PAST_PERSONS = (
@@ -234,8 +255,34 @@ def split_suffix_chain_by_inventory(surface: str) -> list[str] | None:
     return list(result)
 
 
+def split_apostrophe_suffix_chain(surface: str) -> list[str] | None:
+    """Split suffixes in the guarded apostrophe-only flow."""
+    lowered = turkish_lower(surface)
+
+    @lru_cache(maxsize=None)
+    def parse_from(index: int) -> tuple[str, ...] | None:
+        if index == len(surface):
+            return ()
+
+        for suffix_surface in _APOSTROPHE_SUFFIX_SURFACES:
+            if not lowered.startswith(suffix_surface, index):
+                continue
+
+            end = index + len(suffix_surface)
+            rest = parse_from(end)
+            if rest is not None:
+                return (surface[index:end], *rest)
+
+        return None
+
+    result = parse_from(0)
+    if result is None:
+        return None
+    return list(result)
+
+
 def split_apostrophe_suffix(surface: str) -> list[str]:
-    suffixes = split_suffix_chain_by_inventory(surface)
+    suffixes = split_apostrophe_suffix_chain(surface)
     if suffixes is None:
         return [f"+{surface}"]
     return [f"+{suffix}" for suffix in suffixes]

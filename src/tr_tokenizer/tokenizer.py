@@ -4,12 +4,17 @@ from dataclasses import dataclass
 import re
 
 from .morphology import split_apostrophe_suffix, split_known_suffixes
-from .pretok import TURKISH_LETTERS, is_file_like_token, pre_tokenize
+from .pretok import (
+    TURKISH_LETTERS,
+    is_file_like_token,
+    is_numeric_like_token,
+    pre_tokenize,
+)
 
 WORD_START = "▁"
 _WORD_RE = re.compile(rf"^[{TURKISH_LETTERS}]+$")
 _NO_SPACE_BEFORE = set(".,!?;:%)]}»”")
-_NO_SPACE_AFTER = set("([{«“")
+_NO_SPACE_AFTER = set("([{«“%")
 
 
 def _is_word(token: str) -> bool:
@@ -52,7 +57,7 @@ class TurkishTokenizer:
                 else:
                     pieces = split_known_suffixes(token) if self.split_suffixes else [token]
                 encoded.extend(_mark_word_start(pieces))
-            elif is_file_like_token(token):
+            elif is_file_like_token(token) or is_numeric_like_token(token):
                 encoded.extend(_mark_word_start([token]))
             else:
                 encoded.append(token)

@@ -54,6 +54,10 @@ heuristic'leriyle raporlar.
 python scripts/analyze_mismatches.py data/eval/tr_challenge.tsv artifacts/challenge_mismatch_analysis.md
 ```
 
+v1.1 hedef mismatch notlari icin
+[docs/v1_1_target_mismatches.md](docs/v1_1_target_mismatches.md) dosyasina
+bakin.
+
 ## BPE Sweep
 
 Bu BPE baseline production tokenizer degildir. Minimal, pure-Python toy BPE

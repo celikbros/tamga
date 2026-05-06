@@ -26,3 +26,24 @@ def test_pre_tokenize_keeps_file_like_tokens_intact():
         "config_v2.json",
         ".",
     ]
+
+
+def test_pre_tokenize_v11_keeps_guarded_number_and_file_forms():
+    assert pre_tokenize("README.md'yi 3.14 34-ABC-1907.") == [
+        "README.md",
+        "'",
+        "+yi",
+        "3.14",
+        "34-ABC-1907",
+        ".",
+    ]
+    assert pre_tokenize("%25'lik 12:30'da 2024/05/01") == [
+        "%",
+        "25",
+        "'",
+        "+lik",
+        "12:30",
+        "'",
+        "+da",
+        "2024/05/01",
+    ]

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tr-centric-tokenizer"
-version = "1.0.0-rc2"
+version = "1.1.0"
 description = "A Turkish-centered morphology-aware tokenizer prototype with deterministic suffix splitting, evaluation tools, and BPE baseline comparison."
 readme = "README.md"
 requires-python = ">=3.10"
