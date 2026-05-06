@@ -58,6 +58,10 @@ v1.1 hedef mismatch notlari icin
 [docs/v1_1_target_mismatches.md](docs/v1_1_target_mismatches.md) dosyasina
 bakin.
 
+v1.1 ozet raporu [artifacts/v1_1_report.md](artifacts/v1_1_report.md),
+ambiguity/negative-word karar notlari ise
+[docs/ambiguity_policy.md](docs/ambiguity_policy.md) icindedir.
+
 ## BPE Sweep
 
 Bu BPE baseline production tokenizer degildir. Minimal, pure-Python toy BPE
@@ -105,7 +109,8 @@ Daha ayrintili gerekceler icin [docs/design.md](docs/design.md) dosyasina bakin.
 ## Roadmap
 
 - v1.0: frozen deterministic research prototype, raporlar ve regression setleri.
-- v1.1: daha buyuk gold/challenge set ve hata analizi.
+- v1.1: low-risk pretokenizer fixes, number/date/file-like guards.
+- v1.2: ambiguity ve negative-word policy, davranis degisikligi olmadan planlama.
 - v2.0: deterministic morphology layer + MorphBPE trainer.
 - Uzun vadede: Turkce/Turk dilleri subword fallback, Ingilizce/kod cluster,
   byte fallback ve cok dilli vocabulary allocation.
