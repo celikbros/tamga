@@ -23,7 +23,8 @@ Create a small hidden/heldout set before any new tokenizer behavior changes.
 Recommended size:
 
 ```text
-30-50 examples
+40 examples for the first hidden set
+80-100 examples by v1.5/v2.0
 ```
 
 Recommended authorship:
@@ -35,19 +36,21 @@ Recommended authorship:
 
 ## File Format
 
-Use the existing three-column TSV format:
+Use a five-column TSV format for hidden eval:
 
 ```text
-category<TAB>text<TAB>expected_tokens_json
+category<TAB>text<TAB>gold_independent_tokens_json<TAB>gold_policy_tokens_json<TAB>divergence_note
 ```
 
 Example shape:
 
 ```text
-verb_past<TAB>Geldim.<TAB>["▁Gel","+di","+m","."]
+softening<TAB>Kitabımdan bahsettim.<TAB>["▁Kitap","+ım","+dan","▁bahset","+ti","+m","."]<TAB>["▁Kitab","+ım","+dan","▁bahset","+ti","+m","."]<TAB>independent lemma/root may prefer kitap; project policy keeps surface stem Kitab
 ```
 
 The actual hidden set should not be committed if it is meant to stay hidden.
+Detailed annotation instructions are in
+[`docs/hidden_eval_labeling_guideline.md`](hidden_eval_labeling_guideline.md).
 
 ## Recommended Local Path
 
@@ -60,7 +63,9 @@ data/eval/private/tr_hidden_eval.tsv
 This path is ignored by Git. It can be evaluated locally with:
 
 ```powershell
-python scripts/evaluate_tokenizer.py data/eval/private/tr_hidden_eval.tsv
+python scripts/prepare_hidden_eval_views.py data/eval/private/tr_hidden_eval.tsv --out-dir data/eval/private
+python scripts/evaluate_tokenizer.py data/eval/private/tr_hidden_eval_policy.tsv
+python scripts/evaluate_tokenizer.py data/eval/private/tr_hidden_eval_independent.tsv
 ```
 
 If advisors want to share only aggregate numbers, they can run the command and
@@ -72,17 +77,17 @@ For 40 examples:
 
 | Category | Count | Notes |
 | --- | ---: | --- |
-| suffix_chain | 4 | Long but natural suffix chains. |
-| proper_name | 4 | Names, cities, institutions, apostrophe forms. |
+| ambiguity | 7 | Context-free splitting risk is high. |
+| negative_word | 7 | False-positive suffix splits are more harmful than missed splits. |
+| suffix_chain | 4 | Long productive morphology still matters. |
+| proper_name | 3 | Names, cities, institutions, apostrophe forms. |
 | softening | 4 | Surface stem alternations such as `kitab`, `ağac`, `reng`. |
-| negative_word | 5 | Words that must not be falsely split. |
-| ambiguity | 5 | Forms such as `Yazın`, `Gül`, `Yüz`, `At`, `Ocak`. |
 | verb_past | 3 | Simple and compound past-tense forms. |
 | verb_future | 3 | Productive future/ability chains. |
-| question | 3 | Question particle and person suffix cases. |
-| informal | 3 | Surface-preserving colloquial forms. |
+| question | 2 | Question particle and person suffix cases. |
+| informal | 2 | Surface-preserving colloquial forms. |
 | code_mixed | 3 | API/file/mixed-case forms. |
-| numbers_dates | 3 | Dates, decimals, license plates, percentages. |
+| numbers_dates | 2 | Already improved, still worth sampling. |
 
 The exact distribution can change, but the set should include both positive
 split cases and negative "must not split" cases.
@@ -93,7 +98,7 @@ split cases and negative "must not split" cases.
 2. Prefer natural sentences over isolated words.
 3. Include examples where not splitting is the desired behavior.
 4. Keep surface forms; do not normalize informal text into standard Turkish.
-5. Mark expected tokens according to the project's current surface-stem policy.
+5. Provide both independent morphology gold and project-policy gold.
 6. If an example is genuinely ambiguous, label it according to the intended
    reading in that sentence.
 7. Record uncertainty in a separate notes file, not inside the TSV.
@@ -113,7 +118,9 @@ v1.3 should report all three:
 ```powershell
 python scripts/evaluate_tokenizer.py data/eval/tr_gold_expanded.tsv
 python scripts/evaluate_tokenizer.py data/eval/tr_challenge.tsv
-python scripts/evaluate_tokenizer.py data/eval/private/tr_hidden_eval.tsv
+python scripts/prepare_hidden_eval_views.py data/eval/private/tr_hidden_eval.tsv --out-dir data/eval/private
+python scripts/evaluate_tokenizer.py data/eval/private/tr_hidden_eval_policy.tsv
+python scripts/evaluate_tokenizer.py data/eval/private/tr_hidden_eval_independent.tsv
 ```
 
 ## Decision Rule for v1.3
@@ -123,6 +130,7 @@ A new deterministic rule should be accepted only if:
 - frozen regression remains 50/50
 - challenge improves or remains stable in target categories
 - hidden eval does not show a clear regression
+- policy fidelity and linguistic agreement are reported separately
 - negative-word and ambiguity examples do not degrade
 
 If hidden eval drops while challenge improves, treat that as an overfitting
@@ -137,6 +145,11 @@ morphological references.
 
 Hidden eval helps by adding an independent human-authored signal before more
 rules are added.
+
+The two-column hidden format also separates two claims:
+
+- **Policy fidelity:** Does the implementation follow our documented policy?
+- **Linguistic agreement:** Does that policy agree with independent morphology?
 
 ## Recommended Next Step
 

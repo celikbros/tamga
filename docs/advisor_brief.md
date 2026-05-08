@@ -509,6 +509,8 @@ Onerilen ek:
 - danisman/uzman tarafindan gorulmemis 30-50 ornek
 - v1.3 safe-rule veya lexicon calismasindan once tarafsiz test
 - protokol: `docs/hidden_eval_protocol.md`
+- etiketleme kilavuzu: `docs/hidden_eval_labeling_guideline.md`
+- iki gold sutunu: independent morphology ve project policy
 
 Guncel karar:
 
@@ -645,6 +647,7 @@ docs/design.md
 docs/evaluation.md
 docs/ambiguity_policy.md
 docs/hidden_eval_protocol.md
+docs/hidden_eval_labeling_guideline.md
 docs/v1_2_error_taxonomy.md
 ```
 
@@ -670,6 +673,7 @@ Scriptler:
 scripts/evaluate_tokenizer.py
 scripts/analyze_mismatches.py
 scripts/label_challenge_mismatches.py
+scripts/prepare_hidden_eval_views.py
 scripts/compare_bpe_sweep.py
 ```
 

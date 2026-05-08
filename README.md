@@ -76,6 +76,8 @@ icindedir.
 
 v1.3 oncesi hidden/heldout eval protokolu:
 [docs/hidden_eval_protocol.md](docs/hidden_eval_protocol.md)
+ve etiketleme kilavuzu:
+[docs/hidden_eval_labeling_guideline.md](docs/hidden_eval_labeling_guideline.md)
 
 ## BPE Sweep
 
