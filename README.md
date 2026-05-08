@@ -10,6 +10,9 @@ Kapsam ileride Turkce deterministic tokenizer, Turkce merkezli cok dilli
 tokenizer, Turk dilleri tokenizer cluster, MorphBPE fallback, BPE baseline
 comparison ve LLM tokenizer research basliklarina genisleyebilir.
 
+Danismanlar icin ayrintili durum raporu:
+[docs/advisor_brief.md](docs/advisor_brief.md)
+
 ## Ilk Calistirma
 
 ```powershell
