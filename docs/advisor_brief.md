@@ -505,9 +505,16 @@ Soru:
 
 Onerilen ek:
 
-- `hidden_eval.tsv` veya `heldout_gold.tsv`
-- danisman/uzman tarafindan gorulmemis ornekler
-- v2.0 oncesi tarafsiz test
+- `data/eval/private/tr_hidden_eval.tsv`
+- danisman/uzman tarafindan gorulmemis 30-50 ornek
+- v1.3 safe-rule veya lexicon calismasindan once tarafsiz test
+- protokol: `docs/hidden_eval_protocol.md`
+
+Guncel karar:
+
+> Hidden/heldout eval v1.5'e birakilmamali. v1.3'ten once kurulacak. Aksi halde
+> v1.3 ve v1.4'teki kural/lexicon artislari challenge setine overfit etme riski
+> tasir.
 
 ### 8.3 Surface Stem Lexicon
 
@@ -561,7 +568,19 @@ olmaliyiz. Uzun vadede MorphBPE/hybrid yonu daha dogru gorunuyor.
 
 ## 9. Onerilen Yol Haritasi
 
-### v1.3 - Safe Rule Candidates
+### v1.3 - Hidden/Heldout Eval Protocol
+
+Hedef:
+
+- Danismanlardan veya dogal corpus'tan 30-50 yeni ornek
+- gelistirici tarafindan onceden gorulmemis test
+- `data/eval/private/tr_hidden_eval.tsv` gibi Git tarafindan ignore edilen dosya
+- expanded/challenge/hidden uc katmanli raporlama
+- v1.4 oncesi overfitting kontrolu
+
+Bu adim tokenizer davranisi degistirmez.
+
+### v1.4 - Safe Rule Candidates
 
 Sadece `safe_rule_candidate` etiketli 7 ornege bak.
 
@@ -571,22 +590,15 @@ Hedef:
 - testleri once yaz
 - genel suffix splitter'a dokunma
 - expanded 50/50 kalsin
+- hidden eval gerilemesin
 
-### v1.4 - Lexicon Batch Discipline
+### v1.5 - Lexicon Batch Discipline
 
 Hedef:
 
 - `needs_lexicon` orneklerinden kucuk batch sec
 - negative regression ekle
 - surface stem eklemelerinin yan etkisini olc
-
-### v1.5 - Hidden/Heldout Eval
-
-Hedef:
-
-- Danismanlardan veya dogal corpus'tan yeni ornekler
-- mevcut kurallara gore gorulmemis test
-- overfitting kontrolu
 
 ### v2.0 - MorphBPE Hybrid Prototype
 
@@ -632,6 +644,7 @@ RELEASE_NOTES.md
 docs/design.md
 docs/evaluation.md
 docs/ambiguity_policy.md
+docs/hidden_eval_protocol.md
 docs/v1_2_error_taxonomy.md
 ```
 

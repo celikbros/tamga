@@ -74,6 +74,9 @@ python scripts/label_challenge_mismatches.py data/eval/tr_challenge.tsv data/eva
 Etiket tanimlari [docs/v1_2_error_taxonomy.md](docs/v1_2_error_taxonomy.md)
 icindedir.
 
+v1.3 oncesi hidden/heldout eval protokolu:
+[docs/hidden_eval_protocol.md](docs/hidden_eval_protocol.md)
+
 ## BPE Sweep
 
 Bu BPE baseline production tokenizer degildir. Minimal, pure-Python toy BPE
@@ -123,6 +126,8 @@ Daha ayrintili gerekceler icin [docs/design.md](docs/design.md) dosyasina bakin.
 - v1.0: frozen deterministic research prototype, raporlar ve regression setleri.
 - v1.1: low-risk pretokenizer fixes, number/date/file-like guards.
 - v1.2: challenge mismatch taxonomy, davranis degisikligi olmadan planlama.
+- v1.3: hidden/heldout eval protokolu ve tarafsiz sinyal kurulumu.
+- v1.4: yalnizca dusuk riskli safe-rule candidate batch.
 - v2.0: deterministic morphology layer + MorphBPE trainer.
 - Uzun vadede: Turkce/Turk dilleri subword fallback, Ingilizce/kod cluster,
   byte fallback ve cok dilli vocabulary allocation.

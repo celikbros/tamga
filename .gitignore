@@ -3,6 +3,8 @@ __pycache__/
 .pytest_cache/
 pytest-cache-files-*/
 tests/fixtures/tmp*/
+data/eval/private/
+data/eval/*hidden*.tsv
 .venv/
 venv/
 build/
