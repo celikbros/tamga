@@ -77,7 +77,15 @@ icindedir.
 v1.3 oncesi hidden/heldout eval protokolu:
 [docs/hidden_eval_protocol.md](docs/hidden_eval_protocol.md)
 ve etiketleme kilavuzu:
-[docs/hidden_eval_labeling_guideline.md](docs/hidden_eval_labeling_guideline.md)
+[docs/hidden_eval_labeling_guideline.md](docs/hidden_eval_labeling_guideline.md).
+Etiketleyiciye verilecek kisa paket:
+[docs/hidden_eval_labeler_packet.md](docs/hidden_eval_labeler_packet.md).
+Bos public template:
+[data/eval/templates/tr_hidden_eval_template.tsv](data/eval/templates/tr_hidden_eval_template.tsv).
+
+Gercek hidden eval dosyasi public repo'ya konmaz. Onerilen private path:
+`data/eval/private/tr_hidden_eval.tsv`. Public raporlarda yalnizca aggregate
+metrikler yer alir; hidden cumleler veya token listeleri yazilmaz.
 
 ## BPE Sweep
 
@@ -128,8 +136,10 @@ Daha ayrintili gerekceler icin [docs/design.md](docs/design.md) dosyasina bakin.
 - v1.0: frozen deterministic research prototype, raporlar ve regression setleri.
 - v1.1: low-risk pretokenizer fixes, number/date/file-like guards.
 - v1.2: challenge mismatch taxonomy, davranis degisikligi olmadan planlama.
-- v1.3: hidden/heldout eval protokolu ve tarafsiz sinyal kurulumu.
+- v1.3: hidden/heldout eval protokolu, kalibrasyon ve tarafsiz sinyal kurulumu.
 - v1.4: yalnizca dusuk riskli safe-rule candidate batch.
+- v1.5: lexicon batch discipline ve independent morphological reference
+  integration hazirligi.
 - v2.0: deterministic morphology layer + MorphBPE trainer.
 - Uzun vadede: Turkce/Turk dilleri subword fallback, Ingilizce/kod cluster,
   byte fallback ve cok dilli vocabulary allocation.

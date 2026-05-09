@@ -506,11 +506,15 @@ Soru:
 Onerilen ek:
 
 - `data/eval/private/tr_hidden_eval.tsv`
-- danisman/uzman tarafindan gorulmemis 30-50 ornek
+- danisman/uzman tarafindan gorulmemis 40 ornek
 - v1.3 safe-rule veya lexicon calismasindan once tarafsiz test
 - protokol: `docs/hidden_eval_protocol.md`
 - etiketleme kilavuzu: `docs/hidden_eval_labeling_guideline.md`
+- etiketleyici paketi: `docs/hidden_eval_labeler_packet.md`
 - iki gold sutunu: independent morphology ve project policy
+- ilk 5 ornek icin private kalibrasyon adimi
+- public raporlarda sadece aggregate metrikler
+- divergence varsa `divergence_note` zorunlu
 
 Guncel karar:
 
@@ -574,11 +578,13 @@ olmaliyiz. Uzun vadede MorphBPE/hybrid yonu daha dogru gorunuyor.
 
 Hedef:
 
-- Danismanlardan veya dogal corpus'tan 30-50 yeni ornek
+- Danismanlardan veya dogal corpus'tan 40 yeni ornek
 - gelistirici tarafindan onceden gorulmemis test
 - `data/eval/private/tr_hidden_eval.tsv` gibi Git tarafindan ignore edilen dosya
+- ilk 5 ornek uzerinden danisman/ikinci gozlemci kalibrasyonu
 - expanded/challenge/hidden uc katmanli raporlama
 - v1.4 oncesi overfitting kontrolu
+- public raporda hidden ornek metni paylasmama
 
 Bu adim tokenizer davranisi degistirmez.
 
@@ -601,6 +607,8 @@ Hedef:
 - `needs_lexicon` orneklerinden kucuk batch sec
 - negative regression ekle
 - surface stem eklemelerinin yan etkisini olc
+- methodological strengthening: independent morphological reference integration
+  hattini baslat veya netlestir
 
 ### v2.0 - MorphBPE Hybrid Prototype
 

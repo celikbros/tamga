@@ -16,6 +16,11 @@ development:
 These are not hidden signals. If v1.3 and v1.4 add rules based only on these
 files, the project risks overfitting to its own examples.
 
+Treebank or analyzer integration is valuable, but it should be tracked as a
+separate research line: **methodological strengthening: independent
+morphological reference integration**. The immediate v1.3 task is to start the
+hidden evaluation workflow.
+
 ## Goal
 
 Create a small hidden/heldout set before any new tokenizer behavior changes.
@@ -34,6 +39,29 @@ Recommended authorship:
 - examples sampled from natural Turkish text
 - examples not inspected by the implementer while writing rules
 
+## Annotator Profile and Effort
+
+Preferred annotator:
+
+- native Turkish speaker
+- has not read the project design docs
+- preferably has linguistics or Turkish morphology training
+
+One annotator is enough for v1.3. For v1.5, add a second annotator and report
+inter-annotator agreement, for example Cohen's kappa.
+
+Estimated effort:
+
+```text
+guideline reading:     ~30 minutes
+5-item calibration:    ~30 minutes
+35 remaining examples: ~105 minutes
+total:                 ~2.5 hours
+```
+
+This should not be framed as a tiny favor; the annotator needs enough time to do
+consistent work.
+
 ## File Format
 
 Use a five-column TSV format for hidden eval:
@@ -42,25 +70,49 @@ Use a five-column TSV format for hidden eval:
 category<TAB>text<TAB>gold_independent_tokens_json<TAB>gold_policy_tokens_json<TAB>divergence_note
 ```
 
-Example shape:
+Column roles:
 
-```text
-softening<TAB>Kitabımdan bahsettim.<TAB>["▁Kitap","+ım","+dan","▁bahset","+ti","+m","."]<TAB>["▁Kitab","+ım","+dan","▁bahset","+ti","+m","."]<TAB>independent lemma/root may prefer kitap; project policy keeps surface stem Kitab
-```
+| Column | Meaning |
+| --- | --- |
+| `category` | One of the hidden eval categories. |
+| `text` | Natural Turkish sentence, not copied from project eval files. |
+| `gold_independent_tokens_json` | Independent morphology reference or annotator judgment. |
+| `gold_policy_tokens_json` | This project's documented surface-stem policy. |
+| `divergence_note` | Required when the two gold columns differ. |
 
-The actual hidden set should not be committed if it is meant to stay hidden.
 Detailed annotation instructions are in
 [`docs/hidden_eval_labeling_guideline.md`](hidden_eval_labeling_guideline.md).
+The short handoff document for annotators is
+[`docs/hidden_eval_labeler_packet.md`](hidden_eval_labeler_packet.md).
 
-## Recommended Local Path
+## Calibration Gate
 
-Use a private ignored directory:
+Before labeling the full 40-example set:
 
-```text
-data/eval/private/tr_hidden_eval.tsv
-```
+1. The annotator labels 5 calibration examples.
+2. The examples go to an advisor or second reviewer, not to the implementer.
+3. The reviewer checks TSV format, JSON validity, category use, and the
+   independent-vs-policy distinction.
+4. After approval, the annotator labels the remaining 35 examples.
 
-This path is ignored by Git. It can be evaluated locally with:
+The 5 public illustrative examples in the guideline must not be included in the
+hidden set. They are visible to the implementer and therefore cannot be hidden
+test examples.
+
+## Storage and Access Protocol
+
+- The hidden labeled file must not be committed to the public repo.
+- Preferred private path: `data/eval/private/tr_hidden_eval.tsv`.
+- This path is ignored by Git.
+- The canonical copy should stay with the advisor or reviewer.
+- The implementer should not keep a writable local copy while writing rules.
+- Evaluation can be run by the advisor, or via a temporary read-only mount.
+- Public reports should contain aggregate metrics only: overall and
+  category-level tables. They should not include hidden example text.
+- If the implementer accidentally sees a hidden example, mark that row for
+  rotation. This is a "no shame, just rotate" policy.
+
+The private set can be evaluated with:
 
 ```powershell
 python scripts/prepare_hidden_eval_views.py data/eval/private/tr_hidden_eval.tsv --out-dir data/eval/private
@@ -68,29 +120,38 @@ python scripts/evaluate_tokenizer.py data/eval/private/tr_hidden_eval_policy.tsv
 python scripts/evaluate_tokenizer.py data/eval/private/tr_hidden_eval_independent.tsv
 ```
 
-If advisors want to share only aggregate numbers, they can run the command and
-send the summary output without sharing the examples.
+If advisors want to share only aggregate numbers, they can run these commands
+and send the summary output without sharing the examples.
 
-## Suggested Category Balance
+## Category Balance
 
-For 40 examples:
+For the first 40 examples:
 
 | Category | Count | Notes |
 | --- | ---: | --- |
 | ambiguity | 7 | Context-free splitting risk is high. |
 | negative_word | 7 | False-positive suffix splits are more harmful than missed splits. |
 | suffix_chain | 4 | Long productive morphology still matters. |
+| softening | 4 | Surface-stem variants remain important. |
 | proper_name | 3 | Names, cities, institutions, apostrophe forms. |
-| softening | 4 | Surface stem alternations such as `kitab`, `ağac`, `reng`. |
-| verb_past | 3 | Simple and compound past-tense forms. |
-| verb_future | 3 | Productive future/ability chains. |
+| code_mixed | 3 | API/file/mixed-case forms. |
+| verb_future | 2 | Productive future/ability chains. |
+| verb_past | 2 | Simple and compound past-tense forms. |
+| loanword_rare | 2 | Unseen loanwords and rare surface stems. |
 | question | 2 | Question particle and person suffix cases. |
 | informal | 2 | Surface-preserving colloquial forms. |
-| code_mixed | 3 | API/file/mixed-case forms. |
-| numbers_dates | 2 | Already improved, still worth sampling. |
+| punctuation | 1 | Unicode punctuation and separators. |
+| numbers_dates | 1 | Already improved, still worth sampling. |
 
-The exact distribution can change, but the set should include both positive
-split cases and negative "must not split" cases.
+Total: 40 examples.
+
+Sampling note: collect roughly 1.5x the target count per category, then reduce
+without cherry-picking. For fragile categories, include internal variety:
+
+- `ambiguity`: include common cases such as `yuz`, `at`, `gul` and less common
+  cases.
+- `negative_word`: include classic cases such as `kadin`, `altin` and less
+  obvious suffix-like endings such as `odun`, `pamuk`, `+uk`, `+ik`.
 
 ## Authoring Rules
 
@@ -101,7 +162,8 @@ split cases and negative "must not split" cases.
 5. Provide both independent morphology gold and project-policy gold.
 6. If an example is genuinely ambiguous, label it according to the intended
    reading in that sentence.
-7. Record uncertainty in a separate notes file, not inside the TSV.
+7. If the two gold columns differ, `divergence_note` is required.
+8. Record general uncertainty in a separate notes file, not inside the TSV.
 
 ## Evaluation Policy
 
@@ -122,6 +184,16 @@ python scripts/prepare_hidden_eval_views.py data/eval/private/tr_hidden_eval.tsv
 python scripts/evaluate_tokenizer.py data/eval/private/tr_hidden_eval_policy.tsv
 python scripts/evaluate_tokenizer.py data/eval/private/tr_hidden_eval_independent.tsv
 ```
+
+Public hidden-eval reports should include only aggregate metrics:
+
+- overall exact match
+- overall precision/recall/F1
+- category-level exact match and F1
+- policy fidelity using `gold_policy_tokens_json`
+- linguistic agreement using `gold_independent_tokens_json`
+
+No hidden text examples should appear in public reports.
 
 ## Decision Rule for v1.3
 
@@ -155,9 +227,10 @@ The two-column hidden format also separates two claims:
 
 Before v1.3 rule work:
 
-1. Advisors prepare `30-50` hidden examples.
-2. The implementer does not inspect the examples while writing rules.
-3. Advisors or the user run the hidden evaluation and share only aggregate
-   metrics when possible.
-4. v1.3 proceeds with `safe_rule_candidate` examples only after the hidden eval
+1. The advisor or reviewer selects an annotator.
+2. The annotator reads the labeling guideline and labels 5 calibration examples.
+3. A second reviewer checks the calibration output privately.
+4. The annotator labels the remaining 35 examples.
+5. Advisors or the user run hidden evaluation and share aggregate metrics only.
+6. v1.3 proceeds with `safe_rule_candidate` examples only after the hidden eval
    protocol is in place.
