@@ -18,6 +18,9 @@ rules.
 2. This packet
 3. The empty TSV template in `data/eval/templates/tr_hidden_eval_template.tsv`
 
+The requester can use `docs/hidden_eval_request_message.md` as the initial
+message to the advisor or annotator.
+
 Do not read the tokenizer implementation or design docs before labeling. The
 hidden set should reflect independent judgment, not the implementation's current
 rules.

@@ -80,6 +80,8 @@ ve etiketleme kilavuzu:
 [docs/hidden_eval_labeling_guideline.md](docs/hidden_eval_labeling_guideline.md).
 Etiketleyiciye verilecek kisa paket:
 [docs/hidden_eval_labeler_packet.md](docs/hidden_eval_labeler_packet.md).
+Danismana/etiketleyiciye gonderilecek hazir mesaj:
+[docs/hidden_eval_request_message.md](docs/hidden_eval_request_message.md).
 Bos public template:
 [data/eval/templates/tr_hidden_eval_template.tsv](data/eval/templates/tr_hidden_eval_template.tsv).
 
