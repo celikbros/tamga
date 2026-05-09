@@ -12,7 +12,8 @@ eval reporting. It does not change tokenizer behavior.
 - Added `scripts/evaluate_hidden_eval.py` for policy-vs-independent aggregate
   reporting without printing hidden examples.
 - Enforced `divergence_note` when independent and policy gold columns differ.
-- Documented calibration, private storage, rotation, and aggregate-only sharing.
+- Documented separate calibration examples, private storage, rotation, and
+  aggregate-only sharing.
 
 ### Non-goals
 

@@ -34,8 +34,8 @@ Estimated effort for the first 40 examples:
 ```text
 guideline reading:     ~30 minutes
 5-item calibration:    ~30 minutes
-35 remaining examples: ~105 minutes
-total:                 ~2.5 hours
+40 hidden examples:    ~120 minutes
+total:                 ~3 hours
 ```
 
 One annotator is enough for v1.3. A second annotator and inter-annotator
@@ -63,14 +63,15 @@ Use valid JSON lists for token columns.
 
 Before labeling all 40 examples:
 
-1. Label 5 calibration examples.
+1. Label 5 separate calibration examples.
 2. Send them to an advisor or second reviewer, not to the implementer.
 3. The reviewer checks format, JSON validity, category choices, and the
    independent-vs-policy distinction.
-4. Continue with the remaining 35 examples only after approval.
+4. Continue with the full 40 hidden examples only after approval.
 
-The five public examples below are only demonstrations. Do not include them in
-the hidden set.
+Calibration examples are not part of the 40 hidden examples. Once they are
+reviewed or discussed, they lose strict hidden status. The five public examples
+below are only demonstrations and must not be included in the hidden set.
 
 ## Labeling Policies
 

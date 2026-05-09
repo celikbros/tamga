@@ -512,7 +512,7 @@ Onerilen ek:
 - etiketleme kilavuzu: `docs/hidden_eval_labeling_guideline.md`
 - etiketleyici paketi: `docs/hidden_eval_labeler_packet.md`
 - iki gold sutunu: independent morphology ve project policy
-- ilk 5 ornek icin private kalibrasyon adimi
+- hidden setten ayri 5 orneklik private kalibrasyon adimi
 - public raporlarda sadece aggregate metrikler
 - divergence varsa `divergence_note` zorunlu
 - aggregate-only rapor komutu:
@@ -583,7 +583,8 @@ Hedef:
 - Danismanlardan veya dogal corpus'tan 40 yeni ornek
 - gelistirici tarafindan onceden gorulmemis test
 - `data/eval/private/tr_hidden_eval.tsv` gibi Git tarafindan ignore edilen dosya
-- ilk 5 ornek uzerinden danisman/ikinci gozlemci kalibrasyonu
+- hidden setten ayri 5 kalibrasyon ornegi uzerinden danisman/ikinci gozlemci
+  kontrolu
 - expanded/challenge/hidden uc katmanli raporlama
 - v1.4 oncesi overfitting kontrolu
 - public raporda hidden ornek metni paylasmama

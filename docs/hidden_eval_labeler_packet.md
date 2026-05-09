@@ -44,12 +44,15 @@ examples.
 1. Collect roughly 1.5x the target count per category.
 2. Choose natural Turkish sentences; do not copy examples from existing project
    eval files.
-3. Label 5 calibration examples first.
+3. Label 5 separate calibration examples first.
 4. Send the 5 calibration examples to an advisor or second reviewer, not to the
    implementer.
-5. After calibration approval, label the remaining 35 examples.
+5. After calibration approval, label the full 40 hidden examples.
 6. Keep the canonical copy with the advisor or reviewer.
 7. Run evaluation privately and share aggregate metrics only.
+
+Calibration examples must not be included in the 40 hidden examples. Discussed
+calibration rows are no longer strictly hidden.
 
 ## Category Targets
 

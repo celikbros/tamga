@@ -55,8 +55,8 @@ Estimated effort:
 ```text
 guideline reading:     ~30 minutes
 5-item calibration:    ~30 minutes
-35 remaining examples: ~105 minutes
-total:                 ~2.5 hours
+40 hidden examples:    ~120 minutes
+total:                 ~3 hours
 ```
 
 This should not be framed as a tiny favor; the annotator needs enough time to do
@@ -89,15 +89,16 @@ The short handoff document for annotators is
 
 Before labeling the full 40-example set:
 
-1. The annotator labels 5 calibration examples.
+1. The annotator labels 5 separate calibration examples.
 2. The examples go to an advisor or second reviewer, not to the implementer.
 3. The reviewer checks TSV format, JSON validity, category use, and the
    independent-vs-policy distinction.
-4. After approval, the annotator labels the remaining 35 examples.
+4. After approval, the annotator labels the full 40 hidden examples.
 
-The 5 public illustrative examples in the guideline must not be included in the
-hidden set. They are visible to the implementer and therefore cannot be hidden
-test examples.
+Calibration examples must not be part of the 40 hidden examples. Once an
+example is discussed during calibration, it loses strict hidden status. The 5
+public illustrative examples in the guideline must also not be included in the
+hidden set because they are visible to the implementer.
 
 ## Storage and Access Protocol
 
@@ -235,9 +236,10 @@ The two-column hidden format also separates two claims:
 Before v1.3 rule work:
 
 1. The advisor or reviewer selects an annotator.
-2. The annotator reads the labeling guideline and labels 5 calibration examples.
+2. The annotator reads the labeling guideline and labels 5 separate calibration
+   examples.
 3. A second reviewer checks the calibration output privately.
-4. The annotator labels the remaining 35 examples.
+4. The annotator labels the full 40 hidden examples.
 5. Advisors or the user run hidden evaluation and share aggregate metrics only.
 6. v1.3 proceeds with `safe_rule_candidate` examples only after the hidden eval
    protocol is in place.
