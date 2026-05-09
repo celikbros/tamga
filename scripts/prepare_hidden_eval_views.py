@@ -55,6 +55,11 @@ def load_hidden_rows(path: str | Path) -> list[tuple[str, str, list[str], list[s
                 source=source,
                 line_number=line_number,
             )
+            if independent != policy and not note.strip():
+                raise ValueError(
+                    f"{source}:{line_number}: divergence_note is required "
+                    "when independent and policy gold differ"
+                )
             rows.append((category, text, independent, policy, note))
 
     return rows

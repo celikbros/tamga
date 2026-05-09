@@ -515,6 +515,8 @@ Onerilen ek:
 - ilk 5 ornek icin private kalibrasyon adimi
 - public raporlarda sadece aggregate metrikler
 - divergence varsa `divergence_note` zorunlu
+- aggregate-only rapor komutu:
+  `python scripts/evaluate_hidden_eval.py data/eval/private/tr_hidden_eval.tsv --markdown-out artifacts/v1_3_hidden_eval_report.md`
 
 Guncel karar:
 
@@ -585,6 +587,7 @@ Hedef:
 - expanded/challenge/hidden uc katmanli raporlama
 - v1.4 oncesi overfitting kontrolu
 - public raporda hidden ornek metni paylasmama
+- hidden eval icin aggregate-only rapor script'i
 
 Bu adim tokenizer davranisi degistirmez.
 

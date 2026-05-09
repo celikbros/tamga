@@ -1,5 +1,26 @@
 # Release Notes
 
+## v1.3.0
+
+v1.3.0 adds the hidden/heldout evaluation protocol and aggregate-only hidden
+eval reporting. It does not change tokenizer behavior.
+
+### Highlights
+
+- Added hidden eval protocol and annotator guideline.
+- Added a labeler handoff packet and public empty TSV template.
+- Added `scripts/evaluate_hidden_eval.py` for policy-vs-independent aggregate
+  reporting without printing hidden examples.
+- Enforced `divergence_note` when independent and policy gold columns differ.
+- Documented calibration, private storage, rotation, and aggregate-only sharing.
+
+### Non-goals
+
+- No tokenizer behavior change.
+- No public hidden examples.
+- No treebank integration yet; that remains a later methodological
+  strengthening track.
+
 ## v1.2.0
 
 v1.2.0 adds a challenge mismatch taxonomy layer without changing tokenizer

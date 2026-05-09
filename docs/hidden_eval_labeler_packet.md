@@ -98,6 +98,15 @@ Independent analysis maps Gelicem toward gel+ecek+im; project policy preserves t
 ## Private Evaluation Commands
 
 ```powershell
+python scripts/evaluate_hidden_eval.py data/eval/private/tr_hidden_eval.tsv --markdown-out artifacts/v1_3_hidden_eval_report.md
+```
+
+This command prints and writes aggregate metrics only. It should not print
+hidden sentences or token lists.
+
+If standard policy/independent TSV views are needed:
+
+```powershell
 python scripts/prepare_hidden_eval_views.py data/eval/private/tr_hidden_eval.tsv --out-dir data/eval/private
 python scripts/evaluate_tokenizer.py data/eval/private/tr_hidden_eval_policy.tsv
 python scripts/evaluate_tokenizer.py data/eval/private/tr_hidden_eval_independent.tsv

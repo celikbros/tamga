@@ -115,6 +115,12 @@ test examples.
 The private set can be evaluated with:
 
 ```powershell
+python scripts/evaluate_hidden_eval.py data/eval/private/tr_hidden_eval.tsv --markdown-out artifacts/v1_3_hidden_eval_report.md
+```
+
+If separate standard TSV views are needed:
+
+```powershell
 python scripts/prepare_hidden_eval_views.py data/eval/private/tr_hidden_eval.tsv --out-dir data/eval/private
 python scripts/evaluate_tokenizer.py data/eval/private/tr_hidden_eval_policy.tsv
 python scripts/evaluate_tokenizer.py data/eval/private/tr_hidden_eval_independent.tsv
@@ -180,6 +186,7 @@ v1.3 should report all three:
 ```powershell
 python scripts/evaluate_tokenizer.py data/eval/tr_gold_expanded.tsv
 python scripts/evaluate_tokenizer.py data/eval/tr_challenge.tsv
+python scripts/evaluate_hidden_eval.py data/eval/private/tr_hidden_eval.tsv --markdown-out artifacts/v1_3_hidden_eval_report.md
 python scripts/prepare_hidden_eval_views.py data/eval/private/tr_hidden_eval.tsv --out-dir data/eval/private
 python scripts/evaluate_tokenizer.py data/eval/private/tr_hidden_eval_policy.tsv
 python scripts/evaluate_tokenizer.py data/eval/private/tr_hidden_eval_independent.tsv
