@@ -10,6 +10,8 @@
   and first contact.
 - Added multilingual strategy and observation notes to keep v2.0 options open
   without changing v1.x tokenizer behavior.
+- Added multilingual reviewer packet, request messages, and response form for
+  language/Turkic architecture review.
 - Added calibration review thresholds for the hidden eval workflow.
 
 ## v1.3.0

@@ -17,6 +17,11 @@ Multilingual/Turkic long-term strategy notes:
 [docs/multilingual_strategy.md](docs/multilingual_strategy.md) and
 [docs/multilingual_observations.md](docs/multilingual_observations.md)
 
+Multilingual/Turkic reviewer materials:
+[docs/multilingual_reviewer_packet.md](docs/multilingual_reviewer_packet.md),
+[docs/multilingual_reviewer_request_message.md](docs/multilingual_reviewer_request_message.md),
+and [docs/multilingual_reviewer_response_form.md](docs/multilingual_reviewer_response_form.md)
+
 ## Ilk Calistirma
 
 ```powershell

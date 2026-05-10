@@ -665,6 +665,9 @@ docs/hidden_eval_protocol.md
 docs/hidden_eval_labeling_guideline.md
 docs/multilingual_strategy.md
 docs/multilingual_observations.md
+docs/multilingual_reviewer_packet.md
+docs/multilingual_reviewer_request_message.md
+docs/multilingual_reviewer_response_form.md
 docs/v1_2_error_taxonomy.md
 ```
 
@@ -699,6 +702,8 @@ Multilingual/Turkic notlari:
 ```text
 docs/multilingual_strategy.md
 docs/multilingual_observations.md
+docs/multilingual_reviewer_packet.md
+docs/multilingual_reviewer_response_form.md
 ```
 
 Bu dosyalar v1.x implementation taahhudu degildir. Mevcut sinirlari kayda
