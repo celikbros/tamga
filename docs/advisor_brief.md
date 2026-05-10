@@ -511,6 +511,7 @@ Onerilen ek:
 - protokol: `docs/hidden_eval_protocol.md`
 - etiketleme kilavuzu: `docs/hidden_eval_labeling_guideline.md`
 - etiketleyici paketi: `docs/hidden_eval_labeler_packet.md`
+- etiketleyici bulma plani: `docs/labeler_recruitment_plan.md`
 - iki gold sutunu: independent morphology ve project policy
 - hidden setten ayri 5 orneklik private kalibrasyon adimi
 - public raporlarda sadece aggregate metrikler

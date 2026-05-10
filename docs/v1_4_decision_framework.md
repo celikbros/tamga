@@ -115,7 +115,8 @@ Use aggregate hidden metrics only.
 2. If hidden policy F1 is below 0.65, do not add rules. Review annotation
    protocol and category aggregates first.
 3. If hidden `negative_word` or `ambiguity` F1 is below 0.60, do not add broad
-   suffix rules. Add only protective regressions or documentation.
+   suffix rules. Add only protective regressions or documentation. See
+   **Statistical Power Note** before interpreting small-category F1 values.
 4. If hidden policy F1 is 0.65-0.75, v1.4 may add tests and protected lexical
    exceptions only. Avoid suffix-chain behavior changes.
 5. If hidden policy F1 is 0.75-0.85 and target categories align with visible

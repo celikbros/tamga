@@ -6,6 +6,8 @@
   framework, not an implementation plan.
 - Added revert criteria, low-power category notes, and positive-regression
   requirements to the v1.4 decision framework.
+- Added `docs/labeler_recruitment_plan.md` for hidden eval annotator selection
+  and first contact.
 - Added calibration review thresholds for the hidden eval workflow.
 
 ## v1.3.0

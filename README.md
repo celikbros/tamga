@@ -85,6 +85,8 @@ Etiketleyiciye verilecek kisa paket:
 [docs/hidden_eval_labeler_packet.md](docs/hidden_eval_labeler_packet.md).
 Danismana/etiketleyiciye gonderilecek hazir mesaj:
 [docs/hidden_eval_request_message.md](docs/hidden_eval_request_message.md).
+Etiketleyici bulma ve ilk temas plani:
+[docs/labeler_recruitment_plan.md](docs/labeler_recruitment_plan.md).
 Bos public template:
 [data/eval/templates/tr_hidden_eval_template.tsv](data/eval/templates/tr_hidden_eval_template.tsv).
 
