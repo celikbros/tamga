@@ -663,6 +663,8 @@ docs/evaluation.md
 docs/ambiguity_policy.md
 docs/hidden_eval_protocol.md
 docs/hidden_eval_labeling_guideline.md
+docs/multilingual_strategy.md
+docs/multilingual_observations.md
 docs/v1_2_error_taxonomy.md
 ```
 
@@ -691,6 +693,17 @@ scripts/label_challenge_mismatches.py
 scripts/prepare_hidden_eval_views.py
 scripts/compare_bpe_sweep.py
 ```
+
+Multilingual/Turkic notlari:
+
+```text
+docs/multilingual_strategy.md
+docs/multilingual_observations.md
+```
+
+Bu dosyalar v1.x implementation taahhudu degildir. Mevcut sinirlari kayda
+gecirir ve v2.0 icin script handling, cross-language protection, MorphBPE
+fallback, byte fallback ve vocabulary allocation seceneklerini acik tutar.
 
 ## 12. Kapanis
 

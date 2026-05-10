@@ -8,6 +8,8 @@
   requirements to the v1.4 decision framework.
 - Added `docs/labeler_recruitment_plan.md` for hidden eval annotator selection
   and first contact.
+- Added multilingual strategy and observation notes to keep v2.0 options open
+  without changing v1.x tokenizer behavior.
 - Added calibration review thresholds for the hidden eval workflow.
 
 ## v1.3.0

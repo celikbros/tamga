@@ -13,6 +13,10 @@ comparison ve LLM tokenizer research basliklarina genisleyebilir.
 Danismanlar icin ayrintili durum raporu:
 [docs/advisor_brief.md](docs/advisor_brief.md)
 
+Multilingual/Turkic long-term strategy notes:
+[docs/multilingual_strategy.md](docs/multilingual_strategy.md) and
+[docs/multilingual_observations.md](docs/multilingual_observations.md)
+
 ## Ilk Calistirma
 
 ```powershell
@@ -129,6 +133,8 @@ production corpus degildir.
   `Gelicem -> ▁Gel +icem`, `Gidiyom -> ▁Gid +iyom`.
 - Code/proper-name orneklerinde yuzey form korunur:
   `README.md`, `API'den`, `OpenAIlaştırılamayanlardanmış`.
+- Cok dilli/Turk dilleri hedefi v2.0 icindir; v1.x non-Turkish smoke
+  sonuclari regression hedefi degil, planlama girdisidir.
 
 Daha ayrintili gerekceler icin [docs/design.md](docs/design.md) dosyasina bakin.
 
