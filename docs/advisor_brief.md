@@ -598,6 +598,8 @@ Sadece `safe_rule_candidate` etiketli 7 ornege bak.
 
 Hedef:
 
+- `docs/v1_4_decision_framework.md` icindeki karar agacina uy
+- hidden eval aggregate sonucu gelmeden implementation karari alma
 - 2-3 dusuk riskli fixture sec
 - testleri once yaz
 - genel suffix splitter'a dokunma

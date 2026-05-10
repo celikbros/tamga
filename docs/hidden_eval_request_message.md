@@ -25,6 +25,13 @@ Amaç: tokenizer'a yeni kural eklemeden önce, sistemin daha önce görmediği
 - Geliştirici hidden cümleleri görmeyecek.
 - Bize mümkünse sadece aggregate metrikler dönecek.
 
+Kalibrasyon geçiş eşiği:
+
+- 5/5 kabul: 40 hidden örneğe geç.
+- 3-4/5 kabul: hatalı satırları özel olarak tartış, sorun giderildiyse geç.
+- 0-2/5 kabul: guideline veya örnekler revize edilsin, yeni 5 kalibrasyon
+  örneği hazırlansın.
+
 Beklenen dosya formatı:
 
 category<TAB>text<TAB>gold_independent_tokens_json<TAB>gold_policy_tokens_json<TAB>divergence_note

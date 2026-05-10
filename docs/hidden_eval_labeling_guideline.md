@@ -73,6 +73,14 @@ Calibration examples are not part of the 40 hidden examples. Once they are
 reviewed or discussed, they lose strict hidden status. The five public examples
 below are only demonstrations and must not be included in the hidden set.
 
+Calibration review threshold:
+
+| Calibration result | Action |
+| --- | --- |
+| 5/5 accepted | Proceed to the 40 hidden examples. |
+| 3-4/5 accepted | Discuss the failed rows privately, correct the issue, then proceed if the reviewer is satisfied. |
+| 0-2/5 accepted | Revise the guideline or examples, then create a fresh 5-example calibration batch. |
+
 ## Labeling Policies
 
 ### Independent Gold

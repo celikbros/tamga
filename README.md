@@ -74,6 +74,9 @@ python scripts/label_challenge_mismatches.py data/eval/tr_challenge.tsv data/eva
 Etiket tanimlari [docs/v1_2_error_taxonomy.md](docs/v1_2_error_taxonomy.md)
 icindedir.
 
+v1.4 icin davranis degistirmeyen karar cercevesi:
+[docs/v1_4_decision_framework.md](docs/v1_4_decision_framework.md)
+
 v1.3 oncesi hidden/heldout eval protokolu:
 [docs/hidden_eval_protocol.md](docs/hidden_eval_protocol.md)
 ve etiketleme kilavuzu:

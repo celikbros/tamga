@@ -1,5 +1,11 @@
 # Release Notes
 
+## Unreleased
+
+- Added `docs/v1_4_decision_framework.md` as a hidden-eval-dependent decision
+  framework, not an implementation plan.
+- Added calibration review thresholds for the hidden eval workflow.
+
 ## v1.3.0
 
 v1.3.0 adds the hidden/heldout evaluation protocol and aggregate-only hidden

@@ -57,6 +57,14 @@ examples.
 Calibration examples must not be included in the 40 hidden examples. Discussed
 calibration rows are no longer strictly hidden.
 
+Calibration review threshold:
+
+| Calibration result | Action |
+| --- | --- |
+| 5/5 accepted | Proceed to the 40 hidden examples. |
+| 3-4/5 accepted | Discuss the failed rows privately, correct the issue, then proceed if the reviewer is satisfied. |
+| 0-2/5 accepted | Revise the guideline or examples, then create a fresh 5-example calibration batch. |
+
 ## Category Targets
 
 | Category | Count |

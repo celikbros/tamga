@@ -100,6 +100,19 @@ example is discussed during calibration, it loses strict hidden status. The 5
 public illustrative examples in the guideline must also not be included in the
 hidden set because they are visible to the implementer.
 
+Calibration review uses this threshold:
+
+| Calibration result | Action |
+| --- | --- |
+| 5/5 accepted | Proceed to the 40 hidden examples. |
+| 3-4/5 accepted | Discuss the failed rows privately, correct the misunderstanding, then proceed if the reviewer is satisfied. |
+| 0-2/5 accepted | Revise the guideline or examples, then request a fresh 5-example calibration batch. |
+
+The review should check format, JSON validity, category choice, and whether the
+annotator understood the difference between independent morphology and project
+policy. If the implementer sees a calibration row, that row still must not enter
+the hidden set.
+
 ## Storage and Access Protocol
 
 - The hidden labeled file must not be committed to the public repo.
