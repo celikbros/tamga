@@ -60,15 +60,17 @@ Calibration rows are not part of the 40 hidden examples.
 
 ## Current Safe Rule Candidates
 
-These seven examples come from visible challenge taxonomy. They can be analyzed
-now because they are not hidden.
+These seven visible examples come from challenge taxonomy. They can be analyzed
+now because they are not hidden. They map to eight candidate decisions because
+S4 contains two separable issues: `tarihinde` and `yazıldı`.
 
 | ID | Category | Visible example | Mismatch pattern | Candidate hypothesis | Regression risk |
 | --- | --- | --- | --- | --- | --- |
 | S1 | proper_name | `Mehmet'in arabasından ses geldi.` | `arabasından` becomes `araba +sın +dan` instead of `araba +sı +ndan`. | If a known noun stem is followed by possessive `+sı/+si/+su/+sü` plus buffered ablative `+ndan/+nden`, split the buffered ablative as one suffix. | Medium |
 | S2 | numbers_dates | `12:30'da toplantı başladı.` | Number/apostrophe flow is correct; `başladı` remains unsplit. | Treat this as a possible lexicon-safe verb-past fixture only if hidden eval shows the same common-verb under-splitting. | Low-medium |
 | S3 | numbers_dates | `5'inci satırı sildim.` | Number/apostrophe flow is correct; `satırı` remains unsplit. | Add `satır` as a guarded surface stem candidate only with negative regressions for short `+ı` splitting. | Medium |
-| S4 | numbers_dates | `2024/05/01 tarihinde yazıldı.` | Date token is correct; `tarihinde` and `yazıldı` mismatch. | Split `tarih +in +de` and/or `yazıl +dı` only through explicit surface stems. | Medium |
+| S4a | numbers_dates | `2024/05/01 tarihinde yazıldı.` | Date token is correct; `tarihinde` remains under-split. | Add `tarih` as a guarded surface stem only if hidden eval shows the same date-context pattern. | Medium |
+| S4b | numbers_dates | `2024/05/01 tarihinde yazıldı.` | Date token is correct; `yazıldı` is split as `yaz +ıl +dı` rather than `yazıl +dı`. | Treat `yazıl` as a separate explicit passive surface stem only if supported by hidden aggregate patterns. | Medium |
 | S5 | punctuation | `Hayır! Bunu yapma.` | Punctuation is correct; `yapma` remains unsplit. | Consider `yap +ma` only as an explicit known-verb negative/imperative pattern. | High |
 | S6 | punctuation | `Peki... sonra ne oldu?` | `Peki` over-splits as `Pe +ki`. | Add exact protected lexical item `peki` so `+ki` does not fire inside it. | Low |
 | S7 | punctuation | `(Ankara'dan) yeni döndüm.` | Parentheses/apostrophe flow is correct; `yeni` over-splits as `ye +ni`. | Add exact protected lexical item `yeni`. | Low |
@@ -76,16 +78,34 @@ now because they are not hidden.
 ## Hypotheses To Test
 
 Each candidate should be phrased as a testable hypothesis before implementation.
+Each candidate also needs a pre-registered revert condition.
 
-| Candidate | Expected improvement | Must not regress |
-| --- | --- | --- |
-| S1 buffered possessive+ablative | improves proper-name/noun suffix-chain F1 | `mısın`, `yakın`, `kadın`, question-person suffix cases |
-| S2 explicit `başla` past split | improves common verb-past under-splitting | unknown verbs should not receive broad `+dı` splitting |
-| S3 explicit `satır` stem | improves numbers_dates/object-case examples | `sarı`, `satı`, unrelated short-final words |
-| S4 explicit `tarih` and `yazıl` stems | improves numbers_dates/date-context examples | broad `+in/+de/+ıl` splitting |
-| S5 explicit `yap +ma` | improves punctuation/imperative examples | negative-word and ambiguity categories; words ending in `ma` |
-| S6 protect `peki` | reduces punctuation over-splitting | `+ki` behavior in already correct words |
-| S7 protect `yeni` | reduces over-splitting in punctuation/question/code-mixed examples | `yeniden` policy must be decided separately |
+| Candidate | Expected improvement | Must not regress | Revert if |
+| --- | --- | --- | --- |
+| S1 buffered possessive+ablative | Improves proper-name/noun suffix-chain F1. | `mısın`, `yakın`, `kadın`, question-person suffix cases. | Expanded falls below 50/50, any protected negative-word case regresses, or question-person suffix cases break. |
+| S2 explicit `başla` past split | Improves common verb-past under-splitting. | Unknown verbs should not receive broad `+dı` splitting. | Any unknown verb starts receiving broad past-tense splitting, or expanded falls below 50/50. |
+| S3 explicit `satır` stem | Improves object-case examples around `satır`. | `sarı`, `satı`, unrelated short-final words. | Any short-final negative regression appears, or `+ı` becomes broadly aggressive. |
+| S4a explicit `tarih` stem | Improves date-context examples such as `tarih +in +de`. | Broad `+in/+de` splitting in unknown words. | Any negative-word or ambiguity case regresses through short suffix splitting. |
+| S4b explicit `yazıl` passive stem | Improves passive verb-past examples when the surface stem is `yazıl`. | Existing `yaz +ıl +dı` behavior where expected. | Expanded falls below 50/50 or visible/hidden passive examples show inconsistent policy. |
+| S5 explicit `yap +ma` | Improves punctuation/imperative examples. | Negative-word and ambiguity categories; words ending in `ma`. | Any word-final `ma` false positive appears, or hidden `negative_word`/`ambiguity` aggregate worsens. |
+| S6 protect `peki` | Reduces punctuation over-splitting. | `+ki` behavior in already correct words. | `Peki...` still fails, expanded falls below 50/50, or existing correct `+ki` cases break. |
+| S7 protect `yeni` | Reduces over-splitting in punctuation/question/code-mixed examples. | `yeniden` policy must be decided separately. | `yeni` still over-splits, `yeniden` gets worse, or expanded falls below 50/50. |
+
+Positive regression tests are required too. Each implemented rule must add at
+least one positive test asserting the new behavior, in addition to negative
+regressions protecting existing behavior.
+
+## Statistical Power Note
+
+Hidden categories with three or fewer examples should be treated as low-power
+signals. In the first 40-example hidden set this includes `informal`,
+`numbers_dates`, `punctuation`, `question`, `verb_future`, `verb_past`, and
+`loanword_rare`.
+
+Their F1 should not trigger decision-tree branches in isolation. They can
+support a decision only when the same direction appears across multiple
+categories or when visible challenge evidence and hidden aggregate evidence
+point to the same pattern.
 
 ## Decision Tree After Hidden Eval
 
@@ -110,9 +130,16 @@ Candidate priority after hidden eval:
 | 1 | S6 protect `peki` | Low risk exact lexical protection. |
 | 2 | S7 protect `yeni` | Low risk exact lexical protection, but check `yeniden`. |
 | 3 | S1 buffered possessive+ablative | Useful morphology, but needs careful person-suffix regressions. |
-| 4 | S3/S4 explicit stems | May help, but expands lexicon policy. |
-| 5 | S2 explicit common verb split | Likely useful, but not really a number/date issue. |
-| 6 | S5 `yap +ma` | Highest risk because `+ma` is productive and ambiguous. |
+| 4 | S2 explicit common verb split | Contained if implemented as one known stem; note that this is a secondary verb-past issue inside a numbers/date example. |
+| 5 | S3 explicit `satır` stem | May help object-case handling, but expands lexicon policy and short `+ı` risk. |
+| 6 | S4a explicit `tarih` stem | Useful in date contexts, but expands short `+in/+de` handling risk. |
+| 7 | S4b explicit `yazıl` passive stem | Separate passive-stem policy question; should not be bundled with S4a. |
+| 8 | S5 `yap +ma` | Highest risk because `+ma` is productive and ambiguous. |
+
+S2 should remain visible in this framework because it came from a
+`numbers_dates` challenge row, but the candidate itself is not a number/date
+fix. If taxonomy is regenerated later, this row may be better described as a
+secondary verb-past mismatch within a number/date fixture.
 
 ## Required Regression Tests Before Any Rule
 

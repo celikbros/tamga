@@ -4,6 +4,8 @@
 
 - Added `docs/v1_4_decision_framework.md` as a hidden-eval-dependent decision
   framework, not an implementation plan.
+- Added revert criteria, low-power category notes, and positive-regression
+  requirements to the v1.4 decision framework.
 - Added calibration review thresholds for the hidden eval workflow.
 
 ## v1.3.0
