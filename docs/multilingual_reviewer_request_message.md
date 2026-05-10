@@ -50,6 +50,53 @@ Thank you,
 [Your Name]
 ```
 
+## Akademik / Hoca E-postası (Türkçe)
+
+```text
+Konu: Türkçe merkezli tokenizer projesi için kısa multilingual/Türk dilleri review isteği
+
+Merhaba [Hocam/Name],
+
+tr-centric-tokenizer adlı Türkçe merkezli, morfoloji-duyarlı bir tokenizer
+araştırma prototipi üzerinde çalışıyoruz.
+
+Mevcut v1.x sistem Türkçe deterministic morfoloji çekirdeğine odaklanıyor.
+Ancak uzun vadede sistemi multilingual/Türk dilleri farkındalığı olan bir v2.0
+tasarıma taşımak istiyoruz. Bu aşamaya geçmeden önce Unicode normalization,
+script handling, apostrof kullanımı, fallback ve vocabulary allocation gibi
+ileride değiştirmesi pahalı olabilecek mimari kararlar konusunda dış review
+almak istiyoruz.
+
+Bu bir kod yazma veya büyük veri etiketleme isteği değildir. Beklentimiz kısa
+bir mimari risk değerlendirmesi:
+
+- Önerilen katman sırası mantıklı mı?
+- [dil/script alanı] için hangi riskleri görüyorsunuz?
+- Hangi örnekler ileride smoke test adayı olabilir?
+- Vocabulary training öncesi mutlaka netleşmesi gereken normalization/script
+  kararları var mı?
+
+Tahmini süre: 30-60 dakika.
+
+İlgili dosyalar:
+
+- docs/multilingual_strategy.md
+- docs/multilingual_observations.md
+- docs/multilingual_reviewer_packet.md
+- docs/multilingual_reviewer_response_form.md
+
+Eğer bu konuda çalışabilecek bir lisansüstü öğrenciniz veya Turkish/Turkic NLP,
+computational linguistics ya da [hedef dil/script] alanına aşina bir meslektaşınız
+varsa yönlendirmeniz de çok değerli olur.
+
+Katkı veren reviewer'ları proje dokümantasyonunda teşekkür/acknowledgment
+bölümünde anabiliriz. Çalışma ileride makaleye dönüşür ve katkı kapsamı büyürse
+uygun akademik katkı biçimini ayrıca konuşabiliriz.
+
+Teşekkürler,
+[Adınız]
+```
+
 ## Student / Peer Message
 
 ```text
@@ -83,6 +130,41 @@ Bu review hidden eval degil; verdigin ornekler daha sonra public smoke-test
 adaylari olabilir. Gizli veri ya da lisansli corpus gondermene gerek yok.
 
 Uygun olursa dosyalari gondereyim.
+```
+
+## Öğrenci / Peer Mesajı (Türkçe)
+
+```text
+Merhaba [Name],
+
+Türkçe merkezli morphology-aware tokenizer projemiz için kısa bir
+multilingual/Türk dilleri mimari review almak istiyoruz.
+
+Bu bir kod yazma ya da büyük veri etiketleme işi değil. Amaç, v2.0'a geçmeden
+önce geri dönülmez mimari riskleri yakalamak:
+
+- Unicode/script handling
+- apostrof kullanımı
+- normalization
+- Türk dilleri için özel karakterler
+- fallback ve vocabulary allocation
+
+Tahmini süre: 30-60 dakika.
+
+Okunacak kısa dosyalar:
+
+- docs/multilingual_strategy.md
+- docs/multilingual_observations.md
+- docs/multilingual_reviewer_packet.md
+- docs/multilingual_reviewer_response_form.md
+
+Senden beklediğimiz şey, response form'daki başlıklara göre kısa yorumlar ve
+gerekirse 5-10 örnek cümle/token riski önermek.
+
+Bu review hidden eval değil; verdiğin örnekler daha sonra public smoke-test
+adayları olabilir. Gizli veri ya da lisanslı corpus göndermene gerek yok.
+
+Uygunsan dosyaları gönderebilirim.
 ```
 
 ## Short Follow-Up
