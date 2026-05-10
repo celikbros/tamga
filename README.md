@@ -22,6 +22,9 @@ Multilingual/Turkic reviewer materials:
 [docs/multilingual_reviewer_request_message.md](docs/multilingual_reviewer_request_message.md),
 and [docs/multilingual_reviewer_response_form.md](docs/multilingual_reviewer_response_form.md)
 
+Fictional reviewer response examples:
+[docs/reviewer_response_examples/README.md](docs/reviewer_response_examples/README.md)
+
 ## Ilk Calistirma
 
 ```powershell

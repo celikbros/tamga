@@ -12,6 +12,8 @@
   without changing v1.x tokenizer behavior.
 - Added multilingual reviewer packet, request messages, and response form for
   language/Turkic architecture review.
+- Added fictional multilingual reviewer response examples to show what useful
+  professor/student feedback may look like.
 - Added calibration review thresholds for the hidden eval workflow.
 
 ## v1.3.0
