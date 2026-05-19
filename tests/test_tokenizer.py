@@ -452,3 +452,12 @@ def test_encode_v13_keeps_urls_as_protected_spans():
 
 def test_decode_v13_preserves_smart_double_quote_spacing():
     assert decode(encode("“Merhaba,” dedi.")) == "“Merhaba,” dedi."
+
+
+def test_decode_v13_preserves_code_call_spacing():
+    text = "def kullanici_adi(ad): return ad.strip() # Türkçe örnek"
+    assert decode(encode(text)) == text
+
+
+def test_decode_v13_keeps_plain_parentheses_spacing():
+    assert decode([f"{WORD_START}Bunu", "(", f"{WORD_START}test", ")"]) == "Bunu (test)"

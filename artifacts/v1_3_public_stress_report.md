@@ -5,7 +5,7 @@ Tokenizer behavior is not changed by this report.
 ## SUMMARY
 
 - examples: 28
-- roundtrip_exact: 20/28 (0.7143)
+- roundtrip_exact: 21/28 (0.7500)
 - protected_spans_preserved: 18/23 (0.7826)
 
 ## CATEGORY SUMMARY
@@ -14,7 +14,7 @@ Tokenizer behavior is not changed by this report.
 | --- | ---: | ---: | ---: | ---: |
 | ambiguity | 1 | 1/1 (1.0000) | n/a | 7.00 |
 | azerbaijani | 2 | 0/2 (0.0000) | n/a | 17.00 |
-| code_like | 1 | 0/1 (0.0000) | 2/2 (1.0000) | 13.00 |
+| code_like | 1 | 1/1 (1.0000) | 2/2 (1.0000) | 13.00 |
 | code_mixed | 1 | 1/1 (1.0000) | 1/1 (1.0000) | 9.00 |
 | english_apostrophe | 1 | 1/1 (1.0000) | n/a | 9.00 |
 | english_passthrough | 1 | 1/1 (1.0000) | 2/2 (1.0000) | 9.00 |
@@ -196,9 +196,9 @@ Tokens:
 ["▁def","▁kullanici_adi","(","▁ad",")",":","▁return","▁ad.strip","(",")","#","▁Türkçe","▁örnek"]
 ```
 
-Decoded: `def kullanici_adi (ad): return ad.strip () # Türkçe örnek`
+Decoded: `def kullanici_adi(ad): return ad.strip() # Türkçe örnek`
 
-Roundtrip exact: `False`
+Roundtrip exact: `True`
 
 ### english_passthrough
 

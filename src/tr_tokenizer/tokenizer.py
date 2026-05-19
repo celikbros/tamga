@@ -34,6 +34,20 @@ def _mark_word_start(pieces: list[str]) -> list[str]:
     return [f"{WORD_START}{pieces[0]}", *pieces[1:]]
 
 
+def _source_surface(token: str) -> str:
+    if token.startswith(WORD_START):
+        return token[len(WORD_START) :]
+    if token.startswith("+"):
+        return token[1:]
+    return token
+
+
+def _opens_code_call(token: str, previous_token: str | None) -> bool:
+    if token != "(" or previous_token is None:
+        return False
+    return is_file_like_token(_source_surface(previous_token))
+
+
 @dataclass(frozen=True)
 class TurkishTokenizer:
     """Small deterministic tokenizer close to Turkish morphology."""
@@ -82,6 +96,7 @@ def encode(text: str, *, lowercase: bool = False, split_suffixes: bool = True) -
 
 def decode(tokens: list[str] | tuple[str, ...]) -> str:
     text = ""
+    previous_token: str | None = None
 
     for token in tokens:
         if not token:
@@ -97,11 +112,15 @@ def decode(tokens: list[str] | tuple[str, ...]) -> str:
             text = text.rstrip() + token[1:]
         elif token == "'":
             text = text.rstrip() + "'"
+        elif _opens_code_call(token, previous_token):
+            text = text.rstrip() + token
         elif _should_attach_left(token):
             text = text.rstrip() + token
         elif not text or text.endswith((" ", "'")) or text[-1] in _NO_SPACE_AFTER:
             text += token
         else:
             text += f" {token}"
+
+        previous_token = token
 
     return text

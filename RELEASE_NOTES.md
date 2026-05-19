@@ -30,6 +30,9 @@
   and stress TSV files.
 - Preserved smart double quotes in normalization and decode spacing so
   `“Merhaba,” dedi.` round-trips without ASCII quote conversion.
+- Preserved code-call spacing for protected code-like tokens, e.g.
+  `kullanici_adi(ad)` and `ad.strip()`, while keeping plain prose parentheses
+  spaced normally.
 
 ## v1.3.0
 
