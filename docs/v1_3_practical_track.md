@@ -86,6 +86,8 @@ Current command:
 
 ```powershell
 python scripts/report_stress_public.py data/eval/tr_stress_public.tsv --markdown-out artifacts/v1_3_public_stress_report.md
+python scripts/report_coverage.py data/eval/tr_gold_expanded.tsv --markdown-out artifacts/v1_3_coverage_expanded.md
+python scripts/report_coverage.py data/eval/tr_stress_public.tsv --markdown-out artifacts/v1_3_coverage_stress.md
 ```
 
 Current public-stress baseline:
@@ -100,6 +102,28 @@ URL protection is now covered by the public stress set. The remaining first
 weak spots are Uzbek apostrophe-like characters, Azerbaijani-specific letters,
 Turkic Cyrillic pass-through, code punctuation roundtrip, and Unicode quote
 roundtrip. These are observations, not v1.x regression failures.
+
+Current coverage telemetry:
+
+```text
+expanded regression:
+  examples: 50
+  tokens: 332
+  suffix tokens: 163
+  protected tokens: 2
+  other tokens: 0
+
+public stress:
+  examples: 28
+  tokens: 314
+  suffix tokens: 45
+  protected tokens: 17
+  other tokens: 97
+```
+
+The high `other` count in the stress set is concentrated in Azerbaijani,
+Kazakh/Kyrgyz/Tatar Cyrillic, and Uzbek apostrophe-like inputs. That is useful
+v2.0 routing/fallback evidence, not a v1.x production failure.
 
 ## Documentation Rule
 

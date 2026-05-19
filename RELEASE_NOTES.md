@@ -26,6 +26,8 @@
   span visibility.
 - Added URL protection in the pretokenizer so `https://...` spans are preserved
   before morphology and sentence-final punctuation remains separate.
+- Added `scripts/report_coverage.py` for token-kind telemetry across regression
+  and stress TSV files.
 
 ## v1.3.0
 

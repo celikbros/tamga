@@ -125,6 +125,13 @@ Public v1.3 stress raporu:
 python scripts/report_stress_public.py data/eval/tr_stress_public.tsv --markdown-out artifacts/v1_3_public_stress_report.md
 ```
 
+Coverage telemetry:
+
+```powershell
+python scripts/report_coverage.py data/eval/tr_gold_expanded.tsv --markdown-out artifacts/v1_3_coverage_expanded.md
+python scripts/report_coverage.py data/eval/tr_stress_public.tsv --markdown-out artifacts/v1_3_coverage_stress.md
+```
+
 ## BPE Sweep
 
 Bu BPE baseline production tokenizer degildir. Minimal, pure-Python toy BPE
