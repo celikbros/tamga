@@ -8,6 +8,7 @@ from .pretok import (
     TURKISH_LETTERS,
     is_file_like_token,
     is_numeric_like_token,
+    is_url_like_token,
     pre_tokenize,
 )
 
@@ -57,7 +58,11 @@ class TurkishTokenizer:
                 else:
                     pieces = split_known_suffixes(token) if self.split_suffixes else [token]
                 encoded.extend(_mark_word_start(pieces))
-            elif is_file_like_token(token) or is_numeric_like_token(token):
+            elif (
+                is_url_like_token(token)
+                or is_file_like_token(token)
+                or is_numeric_like_token(token)
+            ):
                 encoded.extend(_mark_word_start([token]))
             else:
                 encoded.append(token)

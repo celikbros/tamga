@@ -24,6 +24,8 @@
 - Added `data/eval/tr_stress_public.tsv` and
   `scripts/report_stress_public.py` for public stress reporting and protected
   span visibility.
+- Added URL protection in the pretokenizer so `https://...` spans are preserved
+  before morphology and sentence-final punctuation remains separate.
 
 ## v1.3.0
 

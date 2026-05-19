@@ -5,8 +5,8 @@ Tokenizer behavior is not changed by this report.
 ## SUMMARY
 
 - examples: 28
-- roundtrip_exact: 17/28 (0.6071)
-- protected_spans_preserved: 16/23 (0.6957)
+- roundtrip_exact: 19/28 (0.6786)
+- protected_spans_preserved: 18/23 (0.7826)
 
 ## CATEGORY SUMMARY
 
@@ -26,21 +26,17 @@ Tokenizer behavior is not changed by this report.
 | numbers_dates | 3 | 3/3 (1.0000) | 4/4 (1.0000) | 7.67 |
 | protected_file | 2 | 2/2 (1.0000) | 2/2 (1.0000) | 8.00 |
 | protected_file_date | 1 | 1/1 (1.0000) | 2/2 (1.0000) | 6.00 |
-| protected_url | 1 | 0/1 (0.0000) | 0/1 (0.0000) | 15.00 |
+| protected_url | 1 | 1/1 (1.0000) | 1/1 (1.0000) | 7.00 |
 | punctuation_mixed | 1 | 1/1 (1.0000) | n/a | 7.00 |
 | punctuation_unicode | 1 | 0/1 (0.0000) | n/a | 7.00 |
 | tatar_cyrillic | 1 | 0/1 (0.0000) | n/a | 36.00 |
 | turkish_apostrophe | 1 | 1/1 (1.0000) | 1/1 (1.0000) | 9.00 |
 | turkish_i_case | 1 | 1/1 (1.0000) | n/a | 10.00 |
-| url_code_mixed | 1 | 0/1 (0.0000) | 2/3 (0.6667) | 10.00 |
+| url_code_mixed | 1 | 1/1 (1.0000) | 3/3 (1.0000) | 4.00 |
 | uzbek_apostrophe | 2 | 0/2 (0.0000) | 0/5 (0.0000) | 11.00 |
 
 ## BROKEN PROTECTED SPANS
 
-- category: `protected_url`
-  text: `Bilgi için https://example.com/tr/sayfa adresine bakın.`
-  broken_span: `https://example.com/tr/sayfa`
-  tokens: `["▁Bilgi","▁için","▁https",":","/","/","▁example.com","/","▁tr","/","▁sayfa","▁adresine","▁bak","+ın","."]`
 - category: `uzbek_apostrophe`
   text: `Oʻzbekistonning poytaxti Toshkent.`
   broken_span: `Oʻzbekistonning`
@@ -61,10 +57,6 @@ Tokenizer behavior is not changed by this report.
   text: `Oʻzbekcha: gʻisht, sanʼat, maʼno.`
   broken_span: `maʼno`
   tokens: `["▁O","ʻ","▁zbekcha",":","▁g","ʻ","▁isht",",","▁san","'","+at",",","▁ma","'","+no","."]`
-- category: `url_code_mixed`
-  text: `https://example.com/2024-05-19 dosya.py 1234.56 TL`
-  broken_span: `https://example.com/2024-05-19`
-  tokens: `["▁https",":","/","/","▁example.com","/","▁2024-05-19","▁dosya.py","▁1234.56","▁TL"]`
 
 ## SAMPLE TOKENIZATIONS
 
@@ -173,12 +165,12 @@ Text: `Bilgi için https://example.com/tr/sayfa adresine bakın.`
 Tokens:
 
 ```json
-["▁Bilgi","▁için","▁https",":","/","/","▁example.com","/","▁tr","/","▁sayfa","▁adresine","▁bak","+ın","."]
+["▁Bilgi","▁için","▁https://example.com/tr/sayfa","▁adresine","▁bak","+ın","."]
 ```
 
-Decoded: `Bilgi için https: / / example.com / tr / sayfa adresine bakın.`
+Decoded: `Bilgi için https://example.com/tr/sayfa adresine bakın.`
 
-Roundtrip exact: `False`
+Roundtrip exact: `True`
 
 ### protected_file_date
 
@@ -453,10 +445,10 @@ Text: `https://example.com/2024-05-19 dosya.py 1234.56 TL`
 Tokens:
 
 ```json
-["▁https",":","/","/","▁example.com","/","▁2024-05-19","▁dosya.py","▁1234.56","▁TL"]
+["▁https://example.com/2024-05-19","▁dosya.py","▁1234.56","▁TL"]
 ```
 
-Decoded: `https: / / example.com / 2024-05-19 dosya.py 1234.56 TL`
+Decoded: `https://example.com/2024-05-19 dosya.py 1234.56 TL`
 
-Roundtrip exact: `False`
+Roundtrip exact: `True`
 

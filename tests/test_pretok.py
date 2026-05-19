@@ -47,3 +47,15 @@ def test_pre_tokenize_v11_keeps_guarded_number_and_file_forms():
         "+da",
         "2024/05/01",
     ]
+
+
+def test_pre_tokenize_keeps_urls_intact_and_splits_sentence_punctuation():
+    assert pre_tokenize("https://example.com/tr/sayfa.") == [
+        "https://example.com/tr/sayfa",
+        ".",
+    ]
+    assert pre_tokenize("Bak: https://example.com/a/b?x=1#c") == [
+        "Bak",
+        ":",
+        "https://example.com/a/b?x=1#c",
+    ]

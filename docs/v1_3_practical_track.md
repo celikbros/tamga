@@ -92,12 +92,13 @@ Current public-stress baseline:
 
 ```text
 examples: 28
-roundtrip_exact: 17/28
-protected_spans_preserved: 16/23
+roundtrip_exact: 19/28
+protected_spans_preserved: 18/23
 ```
 
-The first weak spots are URL protection, Uzbek apostrophe-like characters,
-Azerbaijani-specific letters, Turkic Cyrillic pass-through, and Unicode quote
+URL protection is now covered by the public stress set. The remaining first
+weak spots are Uzbek apostrophe-like characters, Azerbaijani-specific letters,
+Turkic Cyrillic pass-through, code punctuation roundtrip, and Unicode quote
 roundtrip. These are observations, not v1.x regression failures.
 
 ## Documentation Rule

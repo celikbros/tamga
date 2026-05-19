@@ -18,13 +18,20 @@ _SLASH_NUMBER = r"\d+(?:/\d+)+"
 _HYPHEN_CODE = rf"\d+(?:-[0-9{TURKISH_LETTERS}]+)+"
 _ALNUM_NUMBER = rf"(?:\d+[{TURKISH_LETTERS}]+|[{TURKISH_LETTERS}]+\d+)[0-9{TURKISH_LETTERS}]*"
 _NUMERIC_LIKE = rf"(?:{_SLASH_NUMBER}|{_TIME}|{_HYPHEN_CODE}|{_ALNUM_NUMBER}|{_NUMBER})"
+_URL = r"https?://[^\s<>()\"']+"
 _APOSTROPHE_FORM = rf"(?:{_FILE_LIKE}|{_NUMERIC_LIKE}|{_WORD})'(?:{_WORD})"
 _TOKEN_RE = re.compile(
-    rf"{_APOSTROPHE_FORM}|{_FILE_LIKE}|{_NUMERIC_LIKE}|{_WORD}|\S"
+    rf"{_URL}|{_APOSTROPHE_FORM}|{_FILE_LIKE}|{_NUMERIC_LIKE}|{_WORD}|\S"
 )
 _WORD_RE = re.compile(rf"^{_WORD}$")
 _FILE_LIKE_RE = re.compile(rf"^{_FILE_LIKE}$")
 _NUMERIC_LIKE_RE = re.compile(rf"^{_NUMERIC_LIKE}$")
+_URL_RE = re.compile(rf"^{_URL}$")
+_URL_TRAILING_PUNCTUATION = ".,!?;:"
+
+
+def is_url_like_token(token: str) -> bool:
+    return bool(_URL_RE.match(token))
 
 
 def is_file_like_token(token: str) -> bool:
@@ -33,6 +40,22 @@ def is_file_like_token(token: str) -> bool:
 
 def is_numeric_like_token(token: str) -> bool:
     return bool(_NUMERIC_LIKE_RE.match(token))
+
+
+def split_url_token(token: str) -> list[str]:
+    """Keep URLs intact while leaving sentence punctuation outside."""
+    if not is_url_like_token(token):
+        return [token]
+
+    trailing: list[str] = []
+    while token and token[-1] in _URL_TRAILING_PUNCTUATION:
+        trailing.append(token[-1])
+        token = token[:-1]
+
+    if not token:
+        return list(reversed(trailing))
+
+    return [token, *reversed(trailing)]
 
 
 def split_apostrophe_token(token: str) -> list[str]:
@@ -53,6 +76,10 @@ def pre_tokenize(text: str, *, lowercase: bool = False) -> list[str]:
     tokens: list[str] = []
 
     for match in _TOKEN_RE.finditer(normalized):
-        tokens.extend(split_apostrophe_token(match.group(0)))
+        token = match.group(0)
+        if is_url_like_token(token):
+            tokens.extend(split_url_token(token))
+        else:
+            tokens.extend(split_apostrophe_token(token))
 
     return tokens

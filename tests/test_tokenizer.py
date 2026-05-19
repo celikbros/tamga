@@ -1,4 +1,5 @@
 from tr_tokenizer import TurkishTokenizer, decode, encode
+from tr_tokenizer.tokenizer import WORD_START
 
 
 def test_encode_splits_apostrophe_and_known_suffixes():
@@ -435,3 +436,15 @@ def test_encode_v11_high_risk_categories_stay_stable():
 
     for text, expected_tokens in cases.items():
         assert encode(text) == expected_tokens
+
+
+def test_encode_v13_keeps_urls_as_protected_spans():
+    assert encode("See https://example.com/tr/page now.") == [
+        f"{WORD_START}See",
+        f"{WORD_START}https://example.com/tr/page",
+        f"{WORD_START}now",
+        ".",
+    ]
+    assert decode(encode("https://example.com/2024-05-19 dosya.py")) == (
+        "https://example.com/2024-05-19 dosya.py"
+    )
