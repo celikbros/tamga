@@ -1,10 +1,16 @@
 # Hidden / Heldout Eval Protocol
 
+Status: optional external validation track
+
 This protocol responds to the main methodological concern raised after v1.2:
 before adding more rules or lexicon entries, the project needs a small
 independent evaluation set that was not used while designing the tokenizer.
 
-## Why This Comes Before v1.3 Rule Work
+As of 2026-05-19, this track is no longer the immediate critical path. The
+project may continue with public stress tests, telemetry, and baseline
+comparison while human hidden eval remains deferred.
+
+## Why This Matters
 
 The current metrics are useful, but they are based on examples visible during
 development:
@@ -18,8 +24,11 @@ files, the project risks overfitting to its own examples.
 
 Treebank or analyzer integration is valuable, but it should be tracked as a
 separate research line: **methodological strengthening: independent
-morphological reference integration**. The immediate v1.3 task is to start the
-hidden evaluation workflow.
+morphological reference integration**.
+
+If an external labeler is not available, this protocol can wait. In that case,
+v1.3 should use the practical technical track in
+[`docs/v1_3_practical_track.md`](v1_3_practical_track.md).
 
 ## Goal
 
@@ -246,7 +255,7 @@ The two-column hidden format also separates two claims:
 
 ## Recommended Next Step
 
-Before v1.3 rule work:
+When external validation is available:
 
 1. The advisor or reviewer selects an annotator.
 2. The annotator reads the labeling guideline and labels 5 separate calibration
@@ -254,5 +263,8 @@ Before v1.3 rule work:
 3. A second reviewer checks the calibration output privately.
 4. The annotator labels the full 40 hidden examples.
 5. Advisors or the user run hidden evaluation and share aggregate metrics only.
-6. v1.3 proceeds with `safe_rule_candidate` examples only after the hidden eval
-   protocol is in place.
+6. The results are used as external validation before stronger research claims.
+
+If external validation is deferred, do not claim hidden eval has been completed.
+Continue with public stress tests, coverage telemetry, and stronger baseline
+comparison.

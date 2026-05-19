@@ -105,6 +105,10 @@ Etiketleyici bulma ve ilk temas plani:
 Bos public template:
 [data/eval/templates/tr_hidden_eval_template.tsv](data/eval/templates/tr_hidden_eval_template.tsv).
 
+Dis insan etiketleyici/hoca sureci su an zorunlu kritik yol degildir. Teknik
+ilerleme icin pratik v1.3 hatti:
+[docs/v1_3_practical_track.md](docs/v1_3_practical_track.md).
+
 Gercek hidden eval dosyasi public repo'ya konmaz. Onerilen private path:
 `data/eval/private/tr_hidden_eval.tsv`. Public raporlarda yalnizca aggregate
 metrikler yer alir; hidden cumleler veya token listeleri yazilmaz.
@@ -166,7 +170,8 @@ Daha ayrintili gerekceler icin [docs/design.md](docs/design.md) dosyasina bakin.
 - v1.0: frozen deterministic research prototype, raporlar ve regression setleri.
 - v1.1: low-risk pretokenizer fixes, number/date/file-like guards.
 - v1.2: challenge mismatch taxonomy, davranis degisikligi olmadan planlama.
-- v1.3: hidden/heldout eval protokolu, kalibrasyon ve aggregate-only raporlama.
+- v1.3: public stress tests, telemetry ve baseline hazirligi; hidden eval
+  optional external validation olarak tutulur.
 - v1.4: yalnizca dusuk riskli safe-rule candidate batch.
 - v1.5: lexicon batch discipline ve independent morphological reference
   integration hazirligi.

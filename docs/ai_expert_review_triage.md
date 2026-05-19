@@ -56,8 +56,10 @@ tokenizer behavior:
 - Keep `tr_gold_expanded.tsv` as the frozen regression set.
 - Treat `tr_challenge.tsv` as a dev/error-analysis set, not a target to force
   to 100%.
-- Continue the hidden eval track before new rules.
-- Keep human hidden eval and aggregate-only reporting as the critical path.
+- Treat human hidden eval as valuable external validation, not as the immediate
+  blocker for technical hardening.
+- Continue with public stress tests, telemetry, and stronger baseline planning
+  while external validation remains optional.
 - Document that v1.x is Turkish-centered, not multilingual production.
 - Treat multilingual smoke results as observations, not regression failures.
 - Update architecture docs so cross-language protection and language/script
@@ -188,7 +190,8 @@ morphology.
 
 ## Human Validation Needed
 
-These points should be asked of human reviewers or labelers:
+These points should be asked of human reviewers or labelers when external
+validation is available:
 
 - Is the surface-stem policy acceptable for tokenizer output if lemma metadata is
   separated?
@@ -205,18 +208,19 @@ These points should be asked of human reviewers or labelers:
 
 The reviews do not require an immediate tokenizer rewrite.
 
-They strengthen the current plan:
+They strengthen the current guardrail plan:
 
 ```text
 freeze behavior
-finish hidden eval setup
-collect human feedback
-then decide the next low-risk rule batch
+avoid broad greedy rules
+improve public stress tests, telemetry, and baseline comparisons
+keep external human validation as optional methodological strengthening
 ```
 
-The next critical-path action remains:
+The next critical-path action is now technical and reproducible:
 
 ```text
-find human labeler/reviewer -> run calibration -> collect 40 hidden examples
+public stress set -> protected-span metrics -> coverage telemetry -> stronger baseline plan
 ```
 
+Human hidden eval can be added later without blocking this track.

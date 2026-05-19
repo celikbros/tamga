@@ -19,6 +19,8 @@
   multilingual/Turkic AI review comments without changing tokenizer behavior.
 - Refined `docs/multilingual_strategy.md` so v2.0 protection, routing,
   normalization, and byte-fallback decisions remain explicit and reversible.
+- Added `docs/v1_3_practical_track.md` and clarified that professor/student
+  hidden eval is optional external validation, not the immediate critical path.
 
 ## v1.3.0
 
