@@ -13,6 +13,10 @@ def test_normalize_text_preserves_smart_double_quotes():
     assert normalize_text("“Merhaba,” dedi.") == "“Merhaba,” dedi."
 
 
+def test_normalize_text_preserves_modifier_apostrophe_letters():
+    assert normalize_text("Oʻzbekcha sanʼat") == "Oʻzbekcha sanʼat"
+
+
 def test_turkish_lower_handles_dotted_and_dotless_i():
     assert turkish_lower("I İ ISPARTA İZMİR") == "ı i ısparta izmir"
 

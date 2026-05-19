@@ -2,7 +2,7 @@
 
 Status: approved direction  
 Date: 2026-05-19  
-Tokenizer behavior: not changed
+Tokenizer behavior: low-risk protection and roundtrip hardening
 
 ## Decision
 
@@ -94,14 +94,13 @@ Current public-stress baseline:
 
 ```text
 examples: 28
-roundtrip_exact: 21/28
-protected_spans_preserved: 18/23
+roundtrip_exact: 23/28
+protected_spans_preserved: 23/23
 ```
 
 URL protection is now covered by the public stress set. The remaining first
-weak spots are Uzbek apostrophe-like characters, Azerbaijani-specific letters,
-and Turkic Cyrillic pass-through. These are observations, not v1.x regression
-failures.
+weak spots are Azerbaijani-specific letters and Turkic Cyrillic pass-through.
+These are observations, not v1.x regression failures.
 
 Current coverage telemetry:
 
@@ -115,15 +114,15 @@ expanded regression:
 
 public stress:
   examples: 28
-  tokens: 314
-  suffix tokens: 45
+  tokens: 304
+  suffix tokens: 43
   protected tokens: 17
-  other tokens: 97
+  other tokens: 94
 ```
 
-The high `other` count in the stress set is concentrated in Azerbaijani,
-Kazakh/Kyrgyz/Tatar Cyrillic, and Uzbek apostrophe-like inputs. That is useful
-v2.0 routing/fallback evidence, not a v1.x production failure.
+The high `other` count in the stress set is concentrated in Azerbaijani and
+Kazakh/Kyrgyz/Tatar Cyrillic inputs. That is useful v2.0 routing/fallback
+evidence, not a v1.x production failure.
 
 ## Documentation Rule
 

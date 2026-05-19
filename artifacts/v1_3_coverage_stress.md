@@ -5,21 +5,21 @@ Tokenizer behavior is not changed by this report.
 ## SUMMARY
 
 - examples: 28
-- tokens: 314
-- avg_tokens_per_example: 11.2143
+- tokens: 304
+- avg_tokens_per_example: 10.8571
 
 ## TOKEN KIND COUNTS
 
 | token_kind | count | share |
 | --- | ---: | ---: |
-| suffix | 45 | 0.1433 |
-| apostrophe | 12 | 0.0382 |
-| protected_url | 2 | 0.0064 |
-| protected_file | 7 | 0.0223 |
-| protected_number | 8 | 0.0255 |
-| word | 89 | 0.2834 |
-| punctuation_symbol | 54 | 0.1720 |
-| other | 97 | 0.3089 |
+| suffix | 43 | 0.1414 |
+| apostrophe | 10 | 0.0329 |
+| protected_url | 2 | 0.0066 |
+| protected_file | 7 | 0.0230 |
+| protected_number | 8 | 0.0263 |
+| word | 86 | 0.2829 |
+| punctuation_symbol | 54 | 0.1776 |
+| other | 94 | 0.3092 |
 
 ## CATEGORY SUMMARY
 
@@ -46,16 +46,10 @@ Tokenizer behavior is not changed by this report.
 | turkish_apostrophe | 1 | 9 | 9.00 | 3 | 1 | 2 | 1 | 0 |
 | turkish_i_case | 1 | 10 | 10.00 | 2 | 0 | 5 | 1 | 0 |
 | url_code_mixed | 1 | 4 | 4.00 | 0 | 3 | 1 | 0 | 0 |
-| uzbek_apostrophe | 2 | 22 | 11.00 | 2 | 0 | 10 | 5 | 3 |
+| uzbek_apostrophe | 2 | 12 | 6.00 | 0 | 0 | 7 | 5 | 0 |
 
 ## OTHER TOKEN EXAMPLES
 
-- category: `uzbek_apostrophe`
-  text: `Oʻzbekistonning poytaxti Toshkent.`
-  other_tokens: `['ʻ']`
-- category: `uzbek_apostrophe`
-  text: `Oʻzbekcha: gʻisht, sanʼat, maʼno.`
-  other_tokens: `['ʻ', 'ʻ']`
 - category: `azerbaijani`
   text: `Mənim adım Əli, Bakıda yaşayıram.`
   other_tokens: `['ə', 'Ə']`

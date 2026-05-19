@@ -33,6 +33,9 @@
 - Preserved code-call spacing for protected code-like tokens, e.g.
   `kullanici_adi(ad)` and `ad.strip()`, while keeping plain prose parentheses
   spaced normally.
+- Preserved Uzbek apostrophe-like lexical spans such as `Oʻzbekiston`,
+  `gʻisht`, and `sanʼat` without routing them through Turkish apostrophe suffix
+  splitting.
 
 ## v1.3.0
 

@@ -5,8 +5,8 @@ Tokenizer behavior is not changed by this report.
 ## SUMMARY
 
 - examples: 28
-- roundtrip_exact: 21/28 (0.7500)
-- protected_spans_preserved: 18/23 (0.7826)
+- roundtrip_exact: 23/28 (0.8214)
+- protected_spans_preserved: 23/23 (1.0000)
 
 ## CATEGORY SUMMARY
 
@@ -33,30 +33,11 @@ Tokenizer behavior is not changed by this report.
 | turkish_apostrophe | 1 | 1/1 (1.0000) | 1/1 (1.0000) | 9.00 |
 | turkish_i_case | 1 | 1/1 (1.0000) | n/a | 10.00 |
 | url_code_mixed | 1 | 1/1 (1.0000) | 3/3 (1.0000) | 4.00 |
-| uzbek_apostrophe | 2 | 0/2 (0.0000) | 0/5 (0.0000) | 11.00 |
+| uzbek_apostrophe | 2 | 2/2 (1.0000) | 5/5 (1.0000) | 6.00 |
 
 ## BROKEN PROTECTED SPANS
 
-- category: `uzbek_apostrophe`
-  text: `Oʻzbekistonning poytaxti Toshkent.`
-  broken_span: `Oʻzbekistonning`
-  tokens: `["▁O","ʻ","▁zbekistonning","▁poytaxti","▁Toshkent","."]`
-- category: `uzbek_apostrophe`
-  text: `Oʻzbekcha: gʻisht, sanʼat, maʼno.`
-  broken_span: `Oʻzbekcha`
-  tokens: `["▁O","ʻ","▁zbekcha",":","▁g","ʻ","▁isht",",","▁san","'","+at",",","▁ma","'","+no","."]`
-- category: `uzbek_apostrophe`
-  text: `Oʻzbekcha: gʻisht, sanʼat, maʼno.`
-  broken_span: `gʻisht`
-  tokens: `["▁O","ʻ","▁zbekcha",":","▁g","ʻ","▁isht",",","▁san","'","+at",",","▁ma","'","+no","."]`
-- category: `uzbek_apostrophe`
-  text: `Oʻzbekcha: gʻisht, sanʼat, maʼno.`
-  broken_span: `sanʼat`
-  tokens: `["▁O","ʻ","▁zbekcha",":","▁g","ʻ","▁isht",",","▁san","'","+at",",","▁ma","'","+no","."]`
-- category: `uzbek_apostrophe`
-  text: `Oʻzbekcha: gʻisht, sanʼat, maʼno.`
-  broken_span: `maʼno`
-  tokens: `["▁O","ʻ","▁zbekcha",":","▁g","ʻ","▁isht",",","▁san","'","+at",",","▁ma","'","+no","."]`
+No broken protected spans.
 
 ## SAMPLE TOKENIZATIONS
 
@@ -249,12 +230,12 @@ Text: `Oʻzbekistonning poytaxti Toshkent.`
 Tokens:
 
 ```json
-["▁O","ʻ","▁zbekistonning","▁poytaxti","▁Toshkent","."]
+["▁Oʻzbekistonning","▁poytaxti","▁Toshkent","."]
 ```
 
-Decoded: `O ʻ zbekistonning poytaxti Toshkent.`
+Decoded: `Oʻzbekistonning poytaxti Toshkent.`
 
-Roundtrip exact: `False`
+Roundtrip exact: `True`
 
 ### uzbek_apostrophe
 
@@ -263,12 +244,12 @@ Text: `Oʻzbekcha: gʻisht, sanʼat, maʼno.`
 Tokens:
 
 ```json
-["▁O","ʻ","▁zbekcha",":","▁g","ʻ","▁isht",",","▁san","'","+at",",","▁ma","'","+no","."]
+["▁Oʻzbekcha",":","▁gʻisht",",","▁sanʼat",",","▁maʼno","."]
 ```
 
-Decoded: `O ʻ zbekcha: g ʻ isht, san'at, ma'no.`
+Decoded: `Oʻzbekcha: gʻisht, sanʼat, maʼno.`
 
-Roundtrip exact: `False`
+Roundtrip exact: `True`
 
 ### azerbaijani
 

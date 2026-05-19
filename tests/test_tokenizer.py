@@ -461,3 +461,15 @@ def test_decode_v13_preserves_code_call_spacing():
 
 def test_decode_v13_keeps_plain_parentheses_spacing():
     assert decode([f"{WORD_START}Bunu", "(", f"{WORD_START}test", ")"]) == "Bunu (test)"
+
+
+def test_encode_v13_keeps_uzbek_apostrophe_words_intact():
+    assert encode("Oʻzbekistonning poytaxti Toshkent.") == [
+        f"{WORD_START}Oʻzbekistonning",
+        f"{WORD_START}poytaxti",
+        f"{WORD_START}Toshkent",
+        ".",
+    ]
+    assert decode(encode("Oʻzbekcha: gʻisht, sanʼat, maʼno.")) == (
+        "Oʻzbekcha: gʻisht, sanʼat, maʼno."
+    )

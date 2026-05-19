@@ -8,6 +8,7 @@ from .pretok import (
     TURKISH_LETTERS,
     is_file_like_token,
     is_numeric_like_token,
+    is_uzbek_apostrophe_word,
     is_url_like_token,
     pre_tokenize,
 )
@@ -74,6 +75,7 @@ class TurkishTokenizer:
                 encoded.extend(_mark_word_start(pieces))
             elif (
                 is_url_like_token(token)
+                or is_uzbek_apostrophe_word(token)
                 or is_file_like_token(token)
                 or is_numeric_like_token(token)
             ):

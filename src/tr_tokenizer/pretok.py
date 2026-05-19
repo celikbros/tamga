@@ -19,11 +19,17 @@ _HYPHEN_CODE = rf"\d+(?:-[0-9{TURKISH_LETTERS}]+)+"
 _ALNUM_NUMBER = rf"(?:\d+[{TURKISH_LETTERS}]+|[{TURKISH_LETTERS}]+\d+)[0-9{TURKISH_LETTERS}]*"
 _NUMERIC_LIKE = rf"(?:{_SLASH_NUMBER}|{_TIME}|{_HYPHEN_CODE}|{_ALNUM_NUMBER}|{_NUMBER})"
 _URL = r"https?://[^\s<>()\"']+"
+_UZBEK_APOSTROPHES = "\u02bb\u02bc"
+_UZBEK_APOSTROPHE_WORD = (
+    rf"[{TURKISH_LETTERS}]+(?:[{_UZBEK_APOSTROPHES}][{TURKISH_LETTERS}]+)+"
+)
 _APOSTROPHE_FORM = rf"(?:{_FILE_LIKE}|{_NUMERIC_LIKE}|{_WORD})'(?:{_WORD})"
 _TOKEN_RE = re.compile(
-    rf"{_URL}|{_APOSTROPHE_FORM}|{_FILE_LIKE}|{_NUMERIC_LIKE}|{_WORD}|\S"
+    rf"{_URL}|{_UZBEK_APOSTROPHE_WORD}|{_APOSTROPHE_FORM}|"
+    rf"{_FILE_LIKE}|{_NUMERIC_LIKE}|{_WORD}|\S"
 )
 _WORD_RE = re.compile(rf"^{_WORD}$")
+_UZBEK_APOSTROPHE_WORD_RE = re.compile(rf"^{_UZBEK_APOSTROPHE_WORD}$")
 _FILE_LIKE_RE = re.compile(rf"^{_FILE_LIKE}$")
 _NUMERIC_LIKE_RE = re.compile(rf"^{_NUMERIC_LIKE}$")
 _URL_RE = re.compile(rf"^{_URL}$")
@@ -32,6 +38,10 @@ _URL_TRAILING_PUNCTUATION = ".,!?;:"
 
 def is_url_like_token(token: str) -> bool:
     return bool(_URL_RE.match(token))
+
+
+def is_uzbek_apostrophe_word(token: str) -> bool:
+    return bool(_UZBEK_APOSTROPHE_WORD_RE.match(token))
 
 
 def is_file_like_token(token: str) -> bool:

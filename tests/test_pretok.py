@@ -59,3 +59,22 @@ def test_pre_tokenize_keeps_urls_intact_and_splits_sentence_punctuation():
         ":",
         "https://example.com/a/b?x=1#c",
     ]
+
+
+def test_pre_tokenize_keeps_uzbek_apostrophe_words_intact():
+    assert pre_tokenize("Oʻzbekistonning poytaxti Toshkent.") == [
+        "Oʻzbekistonning",
+        "poytaxti",
+        "Toshkent",
+        ".",
+    ]
+    assert pre_tokenize("Oʻzbekcha: gʻisht, sanʼat, maʼno.") == [
+        "Oʻzbekcha",
+        ":",
+        "gʻisht",
+        ",",
+        "sanʼat",
+        ",",
+        "maʼno",
+        ".",
+    ]
