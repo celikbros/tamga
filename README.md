@@ -119,6 +119,12 @@ Hidden eval aggregate raporu:
 python scripts/evaluate_hidden_eval.py data/eval/private/tr_hidden_eval.tsv --markdown-out artifacts/v1_3_hidden_eval_report.md
 ```
 
+Public v1.3 stress raporu:
+
+```powershell
+python scripts/report_stress_public.py data/eval/tr_stress_public.tsv --markdown-out artifacts/v1_3_public_stress_report.md
+```
+
 ## BPE Sweep
 
 Bu BPE baseline production tokenizer degildir. Minimal, pure-Python toy BPE

@@ -21,6 +21,9 @@
   normalization, and byte-fallback decisions remain explicit and reversible.
 - Added `docs/v1_3_practical_track.md` and clarified that professor/student
   hidden eval is optional external validation, not the immediate critical path.
+- Added `data/eval/tr_stress_public.tsv` and
+  `scripts/report_stress_public.py` for public stress reporting and protected
+  span visibility.
 
 ## v1.3.0
 

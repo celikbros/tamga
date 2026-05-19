@@ -82,6 +82,24 @@ Recommended next sequence:
    - byte-level BPE
    - existing LLM tokenizer fertility checks
 
+Current command:
+
+```powershell
+python scripts/report_stress_public.py data/eval/tr_stress_public.tsv --markdown-out artifacts/v1_3_public_stress_report.md
+```
+
+Current public-stress baseline:
+
+```text
+examples: 28
+roundtrip_exact: 17/28
+protected_spans_preserved: 16/23
+```
+
+The first weak spots are URL protection, Uzbek apostrophe-like characters,
+Azerbaijani-specific letters, Turkic Cyrillic pass-through, and Unicode quote
+roundtrip. These are observations, not v1.x regression failures.
+
 ## Documentation Rule
 
 Until external human validation exists, project claims should use this wording:
@@ -91,4 +109,3 @@ The tokenizer passes the project-owned frozen regression set and has public
 challenge/stress analysis infrastructure. Independent human hidden evaluation is
 planned but not yet completed.
 ```
-
