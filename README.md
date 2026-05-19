@@ -17,6 +17,9 @@ Multilingual/Turkic long-term strategy notes:
 [docs/multilingual_strategy.md](docs/multilingual_strategy.md) and
 [docs/multilingual_observations.md](docs/multilingual_observations.md)
 
+AI expert-review triage for Turkish and multilingual/Turkic feedback:
+[docs/ai_expert_review_triage.md](docs/ai_expert_review_triage.md)
+
 Multilingual/Turkic reviewer materials:
 [docs/multilingual_reviewer_packet.md](docs/multilingual_reviewer_packet.md),
 [docs/multilingual_reviewer_request_message.md](docs/multilingual_reviewer_request_message.md),

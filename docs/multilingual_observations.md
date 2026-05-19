@@ -12,6 +12,10 @@ is not an evaluation benchmark and not a regression target.
 The tokenizer is currently Turkish-centered. Multilingual and Turkic-aware
 behavior belongs to later v2.0 planning.
 
+AI expert-style review comments are summarized separately in
+[ai_expert_review_triage.md](ai_expert_review_triage.md). Those comments are
+advisory signals, not hidden eval evidence.
+
 ## Non-Goals
 
 - These observations do not define desired behavior.
@@ -113,10 +117,12 @@ Track this under:
 
 These observations suggest that v2.0 should preserve room for:
 
+- raw input preservation and offset mapping
+- minimal, non-destructive cleanup before protection
 - Unicode/script-aware pretokenization
 - cross-language protection for code, files, URLs, numbers, and dates
-- Turkish morphology as a layer, not a monolith
-- Turkic-aware handling when script and language cues support it
+- Turkish morphology as a gated layer, not a default for all Latin input
+- Turkic-aware handling only when script and language cues support it
 - MorphBPE fallback
 - byte fallback as last resort
 

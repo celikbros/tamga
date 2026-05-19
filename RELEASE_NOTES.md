@@ -15,6 +15,10 @@
 - Added fictional multilingual reviewer response examples to show what useful
   professor/student feedback may look like.
 - Added calibration review thresholds for the hidden eval workflow.
+- Added `docs/ai_expert_review_triage.md` to summarize Turkish and
+  multilingual/Turkic AI review comments without changing tokenizer behavior.
+- Refined `docs/multilingual_strategy.md` so v2.0 protection, routing,
+  normalization, and byte-fallback decisions remain explicit and reversible.
 
 ## v1.3.0
 
