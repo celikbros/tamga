@@ -346,10 +346,10 @@ def test_encode_v11_low_risk_pretokenizer_targets():
             ".",
         ],
         "“Merhaba,” dedi.": [
-            '"',
+            "“",
             "▁Merhaba",
             ",",
-            '"',
+            "”",
             "▁de",
             "+di",
             ".",
@@ -448,3 +448,7 @@ def test_encode_v13_keeps_urls_as_protected_spans():
     assert decode(encode("https://example.com/2024-05-19 dosya.py")) == (
         "https://example.com/2024-05-19 dosya.py"
     )
+
+
+def test_decode_v13_preserves_smart_double_quote_spacing():
+    assert decode(encode("“Merhaba,” dedi.")) == "“Merhaba,” dedi."

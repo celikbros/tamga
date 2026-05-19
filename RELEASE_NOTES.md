@@ -28,6 +28,8 @@
   before morphology and sentence-final punctuation remains separate.
 - Added `scripts/report_coverage.py` for token-kind telemetry across regression
   and stress TSV files.
+- Preserved smart double quotes in normalization and decode spacing so
+  `“Merhaba,” dedi.` round-trips without ASCII quote conversion.
 
 ## v1.3.0
 

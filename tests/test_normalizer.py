@@ -9,6 +9,10 @@ def test_normalize_text_collapses_space_and_apostrophe():
     assert normalize_text(text) == "Türkiye'den geldim"
 
 
+def test_normalize_text_preserves_smart_double_quotes():
+    assert normalize_text("“Merhaba,” dedi.") == "“Merhaba,” dedi."
+
+
 def test_turkish_lower_handles_dotted_and_dotless_i():
     assert turkish_lower("I İ ISPARTA İZMİR") == "ı i ısparta izmir"
 

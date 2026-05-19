@@ -5,7 +5,7 @@ Tokenizer behavior is not changed by this report.
 ## SUMMARY
 
 - examples: 28
-- roundtrip_exact: 19/28 (0.6786)
+- roundtrip_exact: 20/28 (0.7143)
 - protected_spans_preserved: 18/23 (0.7826)
 
 ## CATEGORY SUMMARY
@@ -28,7 +28,7 @@ Tokenizer behavior is not changed by this report.
 | protected_file_date | 1 | 1/1 (1.0000) | 2/2 (1.0000) | 6.00 |
 | protected_url | 1 | 1/1 (1.0000) | 1/1 (1.0000) | 7.00 |
 | punctuation_mixed | 1 | 1/1 (1.0000) | n/a | 7.00 |
-| punctuation_unicode | 1 | 0/1 (0.0000) | n/a | 7.00 |
+| punctuation_unicode | 1 | 1/1 (1.0000) | n/a | 7.00 |
 | tatar_cyrillic | 1 | 0/1 (0.0000) | n/a | 36.00 |
 | turkish_apostrophe | 1 | 1/1 (1.0000) | 1/1 (1.0000) | 9.00 |
 | turkish_i_case | 1 | 1/1 (1.0000) | n/a | 10.00 |
@@ -347,12 +347,12 @@ Text: `“Merhaba,” dedi.`
 Tokens:
 
 ```json
-["\"","▁Merhaba",",","\"","▁de","+di","."]
+["“","▁Merhaba",",","”","▁de","+di","."]
 ```
 
-Decoded: `" Merhaba, " dedi.`
+Decoded: `“Merhaba,” dedi.`
 
-Roundtrip exact: `False`
+Roundtrip exact: `True`
 
 ### punctuation_mixed
 
