@@ -5,7 +5,7 @@ Tokenizer behavior is not changed by this report.
 ## SUMMARY
 
 - examples: 28
-- roundtrip_exact: 23/28 (0.8214)
+- roundtrip_exact: 25/28 (0.8929)
 - protected_spans_preserved: 23/23 (1.0000)
 
 ## CATEGORY SUMMARY
@@ -13,7 +13,7 @@ Tokenizer behavior is not changed by this report.
 | category | examples | roundtrip_exact | protected_preserved | avg_tokens |
 | --- | ---: | ---: | ---: | ---: |
 | ambiguity | 1 | 1/1 (1.0000) | n/a | 7.00 |
-| azerbaijani | 2 | 0/2 (0.0000) | n/a | 17.00 |
+| azerbaijani | 2 | 2/2 (1.0000) | n/a | 11.00 |
 | code_like | 1 | 1/1 (1.0000) | 2/2 (1.0000) | 13.00 |
 | code_mixed | 1 | 1/1 (1.0000) | 1/1 (1.0000) | 9.00 |
 | english_apostrophe | 1 | 1/1 (1.0000) | n/a | 9.00 |
@@ -258,12 +258,12 @@ Text: `Mənim adım Əli, Bakıda yaşayıram.`
 Tokens:
 
 ```json
-["▁M","ə","▁nim","▁ad","+ım","Ə","▁li",",","▁Bak","+ı","+da","▁yaşayıram","."]
+["▁Mənim","▁ad","+ım","▁Əli",",","▁Bak","+ı","+da","▁yaşayıram","."]
 ```
 
-Decoded: `M ə nim adım Ə li, Bakıda yaşayıram.`
+Decoded: `Mənim adım Əli, Bakıda yaşayıram.`
 
-Roundtrip exact: `False`
+Roundtrip exact: `True`
 
 ### azerbaijani
 
@@ -272,12 +272,12 @@ Text: `Xəbər: qız məktəbə gedir, dağ yolu uzundur.`
 Tokens:
 
 ```json
-["▁X","ə","▁b","ə","▁r",":","▁qız","▁m","ə","▁kt","ə","▁b","ə","▁ge","+dir",",","▁dağ","▁yolu","▁uzun","+dur","."]
+["▁Xəbər",":","▁qız","▁məktəbə","▁ge","+dir",",","▁dağ","▁yolu","▁uzun","+dur","."]
 ```
 
-Decoded: `X ə b ə r: qız m ə kt ə b ə gedir, dağ yolu uzundur.`
+Decoded: `Xəbər: qız məktəbə gedir, dağ yolu uzundur.`
 
-Roundtrip exact: `False`
+Roundtrip exact: `True`
 
 ### kazakh_cyrillic
 

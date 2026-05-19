@@ -5,28 +5,28 @@ Tokenizer behavior is not changed by this report.
 ## SUMMARY
 
 - examples: 28
-- tokens: 304
-- avg_tokens_per_example: 10.8571
+- tokens: 292
+- avg_tokens_per_example: 10.4286
 
 ## TOKEN KIND COUNTS
 
 | token_kind | count | share |
 | --- | ---: | ---: |
-| suffix | 43 | 0.1414 |
-| apostrophe | 10 | 0.0329 |
-| protected_url | 2 | 0.0066 |
-| protected_file | 7 | 0.0230 |
-| protected_number | 8 | 0.0263 |
-| word | 86 | 0.2829 |
-| punctuation_symbol | 54 | 0.1776 |
-| other | 94 | 0.3092 |
+| suffix | 43 | 0.1473 |
+| apostrophe | 10 | 0.0342 |
+| protected_url | 2 | 0.0068 |
+| protected_file | 7 | 0.0240 |
+| protected_number | 8 | 0.0274 |
+| word | 81 | 0.2774 |
+| punctuation_symbol | 54 | 0.1849 |
+| other | 87 | 0.2979 |
 
 ## CATEGORY SUMMARY
 
 | category | examples | tokens | avg_tokens | suffix | protected | word | punctuation_symbol | other |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | ambiguity | 1 | 7 | 7.00 | 3 | 0 | 3 | 1 | 0 |
-| azerbaijani | 2 | 34 | 17.00 | 5 | 0 | 17 | 5 | 7 |
+| azerbaijani | 2 | 22 | 11.00 | 5 | 0 | 12 | 5 | 0 |
 | code_like | 1 | 13 | 13.00 | 0 | 2 | 5 | 6 | 0 |
 | code_mixed | 1 | 9 | 9.00 | 4 | 0 | 3 | 1 | 0 |
 | english_apostrophe | 1 | 9 | 9.00 | 2 | 0 | 4 | 1 | 0 |
@@ -50,12 +50,6 @@ Tokenizer behavior is not changed by this report.
 
 ## OTHER TOKEN EXAMPLES
 
-- category: `azerbaijani`
-  text: `Mənim adım Əli, Bakıda yaşayıram.`
-  other_tokens: `['ə', 'Ə']`
-- category: `azerbaijani`
-  text: `Xəbər: qız məktəbə gedir, dağ yolu uzundur.`
-  other_tokens: `['ə', 'ə', 'ə', 'ə', 'ə']`
 - category: `kazakh_cyrillic`
   text: `Қазақстан Республикасы — Алматы қаласы.`
   other_tokens: `['Қ', 'а', 'з', 'а', 'қ', 'с', 'т', 'а', 'н', 'Р', 'е', 'с', 'п', 'у', 'б', 'л', 'и', 'к', 'а', 'с', 'ы', 'А', 'л', 'м', 'а', 'т', 'ы', 'қ', 'а', 'л', 'а', 'с', 'ы']`

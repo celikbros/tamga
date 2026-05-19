@@ -94,13 +94,13 @@ Current public-stress baseline:
 
 ```text
 examples: 28
-roundtrip_exact: 23/28
+roundtrip_exact: 25/28
 protected_spans_preserved: 23/23
 ```
 
 URL protection is now covered by the public stress set. The remaining first
-weak spots are Azerbaijani-specific letters and Turkic Cyrillic pass-through.
-These are observations, not v1.x regression failures.
+weak spot is Turkic Cyrillic pass-through. These are observations, not v1.x
+regression failures.
 
 Current coverage telemetry:
 
@@ -114,15 +114,15 @@ expanded regression:
 
 public stress:
   examples: 28
-  tokens: 304
+  tokens: 292
   suffix tokens: 43
   protected tokens: 17
-  other tokens: 94
+  other tokens: 87
 ```
 
-The high `other` count in the stress set is concentrated in Azerbaijani and
-Kazakh/Kyrgyz/Tatar Cyrillic inputs. That is useful v2.0 routing/fallback
-evidence, not a v1.x production failure.
+The high `other` count in the stress set is concentrated in Kazakh/Kyrgyz/Tatar
+Cyrillic inputs. That is useful v2.0 routing/fallback evidence, not a v1.x
+production failure.
 
 ## Documentation Rule
 

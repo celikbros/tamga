@@ -473,3 +473,21 @@ def test_encode_v13_keeps_uzbek_apostrophe_words_intact():
     assert decode(encode("Oʻzbekcha: gʻisht, sanʼat, maʼno.")) == (
         "Oʻzbekcha: gʻisht, sanʼat, maʼno."
     )
+
+
+def test_encode_v13_keeps_azerbaijani_specific_words_intact():
+    assert encode("Mənim adım Əli, Bakıda yaşayıram.") == [
+        f"{WORD_START}Mənim",
+        f"{WORD_START}ad",
+        "+ım",
+        f"{WORD_START}Əli",
+        ",",
+        f"{WORD_START}Bak",
+        "+ı",
+        "+da",
+        f"{WORD_START}yaşayıram",
+        ".",
+    ]
+    assert decode(encode("Xəbər: qız məktəbə gedir, dağ yolu uzundur.")) == (
+        "Xəbər: qız məktəbə gedir, dağ yolu uzundur."
+    )

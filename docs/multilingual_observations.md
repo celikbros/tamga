@@ -80,6 +80,10 @@ Azerbaijani-specific letters such as `ə` are not handled correctly. The system
 partly applies Turkish suffix logic and partly splits around unsupported
 characters.
 
+Update: v1.3 later added a narrow pass-through guard for `ə/Ə`-bearing
+Azerbaijani Latin words. This note remains as historical context for why that
+guard was added; broader Azerbaijani morphology is still out of v1.x scope.
+
 ### Turkic Cyrillic
 
 ```text

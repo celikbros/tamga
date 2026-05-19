@@ -23,13 +23,20 @@ _UZBEK_APOSTROPHES = "\u02bb\u02bc"
 _UZBEK_APOSTROPHE_WORD = (
     rf"[{TURKISH_LETTERS}]+(?:[{_UZBEK_APOSTROPHES}][{TURKISH_LETTERS}]+)+"
 )
+_AZERBAIJANI_SPECIFIC_LETTERS = "\u018f\u0259"
+_AZERBAIJANI_WORD_CHARS = rf"{TURKISH_LETTERS}{_AZERBAIJANI_SPECIFIC_LETTERS}"
+_AZERBAIJANI_SPECIFIC_WORD = (
+    rf"(?=[{_AZERBAIJANI_WORD_CHARS}]*[{_AZERBAIJANI_SPECIFIC_LETTERS}])"
+    rf"[{_AZERBAIJANI_WORD_CHARS}]+"
+)
 _APOSTROPHE_FORM = rf"(?:{_FILE_LIKE}|{_NUMERIC_LIKE}|{_WORD})'(?:{_WORD})"
 _TOKEN_RE = re.compile(
-    rf"{_URL}|{_UZBEK_APOSTROPHE_WORD}|{_APOSTROPHE_FORM}|"
-    rf"{_FILE_LIKE}|{_NUMERIC_LIKE}|{_WORD}|\S"
+    rf"{_URL}|{_UZBEK_APOSTROPHE_WORD}|{_AZERBAIJANI_SPECIFIC_WORD}|"
+    rf"{_APOSTROPHE_FORM}|{_FILE_LIKE}|{_NUMERIC_LIKE}|{_WORD}|\S"
 )
 _WORD_RE = re.compile(rf"^{_WORD}$")
 _UZBEK_APOSTROPHE_WORD_RE = re.compile(rf"^{_UZBEK_APOSTROPHE_WORD}$")
+_AZERBAIJANI_SPECIFIC_WORD_RE = re.compile(rf"^{_AZERBAIJANI_SPECIFIC_WORD}$")
 _FILE_LIKE_RE = re.compile(rf"^{_FILE_LIKE}$")
 _NUMERIC_LIKE_RE = re.compile(rf"^{_NUMERIC_LIKE}$")
 _URL_RE = re.compile(rf"^{_URL}$")
@@ -42,6 +49,10 @@ def is_url_like_token(token: str) -> bool:
 
 def is_uzbek_apostrophe_word(token: str) -> bool:
     return bool(_UZBEK_APOSTROPHE_WORD_RE.match(token))
+
+
+def is_azerbaijani_specific_word(token: str) -> bool:
+    return bool(_AZERBAIJANI_SPECIFIC_WORD_RE.match(token))
 
 
 def is_file_like_token(token: str) -> bool:

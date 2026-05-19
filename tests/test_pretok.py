@@ -78,3 +78,23 @@ def test_pre_tokenize_keeps_uzbek_apostrophe_words_intact():
         "maʼno",
         ".",
     ]
+
+
+def test_pre_tokenize_keeps_azerbaijani_specific_words_intact():
+    assert pre_tokenize("Mənim adım Əli, Bakıda yaşayıram.") == [
+        "Mənim",
+        "adım",
+        "Əli",
+        ",",
+        "Bakıda",
+        "yaşayıram",
+        ".",
+    ]
+    assert pre_tokenize("Xəbər: qız məktəbə gedir.") == [
+        "Xəbər",
+        ":",
+        "qız",
+        "məktəbə",
+        "gedir",
+        ".",
+    ]

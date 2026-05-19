@@ -36,6 +36,8 @@
 - Preserved Uzbek apostrophe-like lexical spans such as `Oʻzbekiston`,
   `gʻisht`, and `sanʼat` without routing them through Turkish apostrophe suffix
   splitting.
+- Preserved Azerbaijani-specific `ə/Ə` Latin words as surface spans instead of
+  splitting around unsupported letters or forcing Turkish morphology.
 
 ## v1.3.0
 
