@@ -71,6 +71,24 @@ sp_bpe:          avg_tokens/word=2.7807, boundary_f1=0.6497
 sp_unigram:      avg_tokens/word=2.9321, boundary_f1=0.6225
 ```
 
+After Qwen tokenizer reference:
+
+```text
+expanded all-baseline report
+custom_tr_morph: avg_tokens/word=2.7438, boundary_f1=1.0000
+toy_bpe_1000:    avg_tokens/word=2.7438, boundary_f1=0.6277
+sp_bpe:          avg_tokens/word=2.7273, boundary_f1=0.6263
+sp_unigram:      avg_tokens/word=3.0744, boundary_f1=0.6325
+qwen:            avg_tokens/word=3.0661, boundary_f1=0.3317
+
+challenge all-baseline report
+custom_tr_morph: avg_tokens/word=2.1749, boundary_f1=0.9220
+toy_bpe_1000:    avg_tokens/word=2.7572, boundary_f1=0.6610
+sp_bpe:          avg_tokens/word=2.7807, boundary_f1=0.6497
+sp_unigram:      avg_tokens/word=2.9321, boundary_f1=0.6225
+qwen:            avg_tokens/word=2.8590, boundary_f1=0.3511
+```
+
 ## Do Not Forget
 
 The next step is not to blindly continue adding challenge-set rules.
@@ -90,7 +108,7 @@ These require separate decisions and tests.
 Proceed to the next phase of v1.5 real tokenizer baseline comparison:
 
 ```text
-Qwen reference tokenizer
+Qwen reference tokenizer: first expanded/challenge reports complete
 LLaMA/Mistral reference tokenizers
 SentencePiece BPE: first local demo baseline complete
 SentencePiece Unigram: first local demo baseline complete

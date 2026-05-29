@@ -163,6 +163,24 @@ sp_bpe          avg_tokens/word=2.7807, boundary_f1=0.6497
 sp_unigram      avg_tokens/word=2.9321, boundary_f1=0.6225
 ```
 
+First Qwen reference results:
+
+```text
+expanded:
+custom_tr_morph avg_tokens/word=2.7438, boundary_f1=1.0000
+qwen            avg_tokens/word=3.0661, boundary_f1=0.3317
+
+challenge:
+custom_tr_morph avg_tokens/word=2.1749, boundary_f1=0.9220
+qwen            avg_tokens/word=2.8590, boundary_f1=0.3511
+```
+
+Interpretation: this does not mean Qwen is a poor general tokenizer. Qwen is a
+multilingual LLM tokenizer, not a Turkish morpheme-boundary tokenizer. The
+useful signal is that Turkish-centered morphology preserves Turkish gold
+boundaries better at a comparable or lower token budget on these controlled
+sets.
+
 ### Step 1: Optional Dependency Boundary
 
 Do not force all users to install heavy tokenizer dependencies.
