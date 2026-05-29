@@ -1,6 +1,6 @@
 # v1.4 Candidate Shortlist
 
-Status: kickoff shortlist
+Status: Batch 1 implemented
 Date: 2026-05-29
 Tokenizer behavior: not changed
 
@@ -127,3 +127,43 @@ Do not implement S1-S5 in the same batch.
 
 After Batch 1, re-run the challenge analysis and decide whether S1 is worth a
 separate medium-risk batch.
+
+## Batch 1 Result
+
+Implemented:
+
+- exact protected lexical item: `peki`
+- exact protected lexical item: `yeni`
+
+Verification:
+
+```text
+python -m pytest
+80 passed
+
+tr_gold_expanded.tsv
+exact_match: 50/50
+f1: 1.0000
+
+tr_challenge.tsv
+exact_match: 43/108
+f1: 0.8233
+
+tr_stress_public.tsv
+roundtrip_exact: 28/28
+protected_spans_preserved: 23/23
+```
+
+Category movement:
+
+| Category | Before Batch 1 | After Batch 1 |
+| --- | ---: | ---: |
+| punctuation exact match | 6/9 | 8/9 |
+| punctuation F1 | 0.9388 | 0.9793 |
+| code_mixed exact match | 3/9 | 4/9 |
+| code_mixed F1 | 0.8485 | 0.8659 |
+| overall exact match | 40/108 | 43/108 |
+| overall F1 | 0.8184 | 0.8233 |
+
+No broad suffix rule was added. `negative_word`, `ambiguity`, frozen regression,
+and public stress guards remained stable.

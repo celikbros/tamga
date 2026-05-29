@@ -5,11 +5,11 @@
 | Metric | Value |
 | --- | ---: |
 | Examples | 108 |
-| Exact match | 40/108 |
-| Mismatches | 68 |
-| Precision | 0.8600 |
-| Recall | 0.7807 |
-| F1 | 0.8184 |
+| Exact match | 43/108 |
+| Mismatches | 65 |
+| Precision | 0.8667 |
+| Recall | 0.7839 |
+| F1 | 0.8233 |
 
 ## Category Summary
 
@@ -21,12 +21,12 @@
 | softening | 2/9 | 7 | 0.7260 | -1.5556 |
 | ambiguity | 2/9 | 7 | 0.7304 | -1.0000 |
 | informal | 3/9 | 6 | 0.6739 | -0.6667 |
-| code_mixed | 3/9 | 6 | 0.8485 | -0.7778 |
+| code_mixed | 4/9 | 5 | 0.8659 | -0.8889 |
 | question | 4/9 | 5 | 0.8841 | 0.0000 |
 | verb_past | 4/9 | 5 | 0.9029 | -0.3333 |
 | numbers_dates | 6/9 | 3 | 0.9091 | -0.2222 |
-| punctuation | 6/9 | 3 | 0.9388 | 0.1111 |
 | proper_name | 8/9 | 1 | 0.9785 | 0.0000 |
+| punctuation | 8/9 | 1 | 0.9793 | -0.1111 |
 
 ## Mismatch List
 
@@ -408,13 +408,6 @@
 - Expected only: `["▁alan","+lar","+ı"]`
 - Actual only: `["▁alanları"]`
 
-### code_mixed: CLI'da yeni komut gördüm.
-
-- Expected: `["▁CLI","'","+da","▁yeni","▁komut","▁gör","+dü","+m","."]`
-- Actual: `["▁CLI","'","+da","▁ye","+ni","▁komut","▁gör","+dü","+m","."]`
-- Expected only: `["▁yeni"]`
-- Actual only: `["▁ye","+ni"]`
-
 ### ambiguity: Yazın tatile gittik.
 
 - Expected: `["▁Yazın","▁tatil","+e","▁git","+ti","+k","."]`
@@ -492,20 +485,6 @@
 - Expected only: `["▁yap","+ma"]`
 - Actual only: `["▁yapma"]`
 
-### punctuation: Peki... sonra ne oldu?
-
-- Expected: `["▁Peki",".",".",".","▁sonra","▁ne","▁ol","+du","?"]`
-- Actual: `["▁Pe","+ki",".",".",".","▁sonra","▁ne","▁ol","+du","?"]`
-- Expected only: `["▁Peki"]`
-- Actual only: `["▁Pe","+ki"]`
-
-### punctuation: (Ankara'dan) yeni döndüm.
-
-- Expected: `["(","▁Ankara","'","+dan",")","▁yeni","▁dön","+dü","+m","."]`
-- Actual: `["(","▁Ankara","'","+dan",")","▁ye","+ni","▁dön","+dü","+m","."]`
-- Expected only: `["▁yeni"]`
-- Actual only: `["▁ye","+ni"]`
-
 ## Most Common Expected-Only Tokens
 
 | Token | Count |
@@ -535,8 +514,6 @@
 
 | Token | Count |
 | --- | ---: |
-| `▁ye` | 4 |
-| `+ni` | 4 |
 | `+da` | 3 |
 | `+den` | 3 |
 | `+iz` | 2 |
@@ -545,6 +522,8 @@
 | `+ın` | 2 |
 | `▁yakın` | 2 |
 | `▁yaz` | 2 |
+| `▁ye` | 2 |
+| `+ni` | 2 |
 | `▁sonucu` | 2 |
 | `▁Arabacı` | 1 |
 | `+in` | 1 |
@@ -596,7 +575,6 @@
 | `▁san` | 2 |
 | `▁sonuç` | 2 |
 | `▁Yaz` | 2 |
-| `▁yeni` | 2 |
 | `▁Araba` | 1 |
 | `▁bazı` | 1 |
 | `▁yenilen` | 1 |
@@ -605,6 +583,7 @@
 | `▁büyük` | 1 |
 | `▁boyan` | 1 |
 | `▁Çanta` | 1 |
+| `▁masa` | 1 |
 
 ## Suspected Over-Splitting Cases
 
@@ -621,11 +600,8 @@
 | informal | Napıyon burada? | `▁burada split as ["▁bura","+da"]` |
 | informal | Görücem sonucu yakında. | `▁yakında split as ["▁yakın","+da"]` |
 | code_mixed | server_v2.log içinde hata buldum. | `▁hata split as ["▁ha","+ta"]` |
-| code_mixed | CLI'da yeni komut gördüm. | `▁yeni split as ["▁ye","+ni"]` |
 | ambiguity | Yazın tatile gittik. | `▁Yazın split as ["▁Yaz","+ın"]` |
 | numbers_dates | 2024/05/01 tarihinde yazıldı. | `▁yazıl split as ["▁yaz","+ıl"]` |
-| punctuation | Peki... sonra ne oldu? | `▁Peki split as ["▁Pe","+ki"]` |
-| punctuation | (Ankara'dan) yeni döndüm. | `▁yeni split as ["▁ye","+ni"]` |
 
 ## Suspected Under-Splitting Cases
 
@@ -683,5 +659,5 @@
 | P8 | question | question clitic or person suffix pattern | Bu dosyayı açtın mı? | separate question-particle layer from general noun suffixing | medium |
 | P9 | verb_past | past tense stem alternation gap | Okudular ama anlamadılar. | add only known verb stems with tense-specific tests | medium |
 | P10 | numbers_dates | number/date punctuation boundary handling | 12:30'da toplantı başladı. | add guarded number/date pretokenizer tests before any rule change | medium |
-| P11 | punctuation | quoted punctuation or attached punctuation pattern | Hayır! Bunu yapma. | extend punctuation fixtures first, then add narrow pretokenizer cases | medium |
-| P12 | proper_name | apostrophe/proper-name suffix gap such as +sı | Mehmet'in arabasından ses geldi. | expand apostrophe suffix inventory with exact regression examples | low |
+| P11 | proper_name | apostrophe/proper-name suffix gap such as +sı | Mehmet'in arabasından ses geldi. | expand apostrophe suffix inventory with exact regression examples | low |
+| P12 | punctuation | quoted punctuation or attached punctuation pattern | Hayır! Bunu yapma. | extend punctuation fixtures first, then add narrow pretokenizer cases | medium |

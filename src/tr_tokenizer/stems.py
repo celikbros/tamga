@@ -72,7 +72,9 @@ PROTECTED_WORDS: tuple[str, ...] = (
     "altın",
     "bunu",
     "kadın",
+    "peki",
     "yakın",
+    "yeni",
 )
 
 _SURFACE_STEMS_BY_LENGTH = tuple(

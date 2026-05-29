@@ -44,6 +44,8 @@
   remaining limits, and v1.4 entry criteria.
 - Added `docs/v1_4_candidate_shortlist.md` and refreshed the v1.4 challenge
   mismatch analysis without changing tokenizer behavior.
+- Protected exact lexical items `peki` and `yeni` to avoid low-risk
+  over-splitting (`Pe +ki`, `ye +ni`) without broadening suffix rules.
 
 ## v1.3.0
 

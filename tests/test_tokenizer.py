@@ -505,3 +505,104 @@ def test_encode_v13_keeps_cyrillic_words_intact():
     assert decode(encode("Кыргызча: тоо, суу, өң, үн, жаңы күн.")) == (
         "Кыргызча: тоо, суу, өң, үн, жаңы күн."
     )
+
+
+def test_encode_v14_protects_exact_low_risk_words():
+    assert encode("Peki... sonra ne oldu?") == [
+        f"{WORD_START}Peki",
+        ".",
+        ".",
+        ".",
+        f"{WORD_START}sonra",
+        f"{WORD_START}ne",
+        f"{WORD_START}ol",
+        "+du",
+        "?",
+    ]
+    assert encode("(Ankara'dan) yeni döndüm.") == [
+        "(",
+        f"{WORD_START}Ankara",
+        "'",
+        "+dan",
+        ")",
+        f"{WORD_START}yeni",
+        f"{WORD_START}dön",
+        "+dü",
+        "+m",
+        ".",
+    ]
+
+
+def test_encode_v14_protection_regressions_stay_stable():
+    cases = {
+        "Kadın yakın altın kedi.": [
+            f"{WORD_START}Kadın",
+            f"{WORD_START}yakın",
+            f"{WORD_START}altın",
+            f"{WORD_START}kedi",
+            ".",
+        ],
+        "Yazın tatile gittik.": [
+            f"{WORD_START}Yaz",
+            "+ın",
+            f"{WORD_START}tatile",
+            f"{WORD_START}git",
+            "+ti",
+            "+k",
+            ".",
+        ],
+        "Yazarım ama göndermem.": [
+            f"{WORD_START}Yazar",
+            "+ım",
+            f"{WORD_START}ama",
+            f"{WORD_START}göndermem",
+            ".",
+        ],
+        "Arabalarımızdakilerdenmişsiniz.": [
+            f"{WORD_START}Araba",
+            "+lar",
+            "+ımız",
+            "+da",
+            "+ki",
+            "+ler",
+            "+den",
+            "+miş",
+            "+siniz",
+            ".",
+        ],
+        "OpenAIlaştırılamayanlardanmış.": [
+            f"{WORD_START}OpenAI",
+            "+laştır",
+            "+ıl",
+            "+ama",
+            "+yan",
+            "+lar",
+            "+dan",
+            "+mış",
+            ".",
+        ],
+        "Don't split John's book.": [
+            f"{WORD_START}Don",
+            "'",
+            "+t",
+            f"{WORD_START}split",
+            f"{WORD_START}John",
+            "'",
+            "+s",
+            f"{WORD_START}book",
+            ".",
+        ],
+        "Oʻzbekcha: gʻisht, sanʼat, maʼno.": [
+            f"{WORD_START}Oʻzbekcha",
+            ":",
+            f"{WORD_START}gʻisht",
+            ",",
+            f"{WORD_START}sanʼat",
+            ",",
+            f"{WORD_START}maʼno",
+            ".",
+        ],
+    }
+
+    for text, expected_tokens in cases.items():
+        assert encode(text) == expected_tokens
