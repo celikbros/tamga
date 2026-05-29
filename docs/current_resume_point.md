@@ -197,3 +197,11 @@ non-Turkish Latin guard: Straße, niño, Bogotá, università
 Azerbaijani routing guard: adım, Bakıda, gedir, uzundur
 Arabic/Greek script-span fallback
 ```
+
+Current recommended next step:
+
+```text
+docs/v1_6_do_no_harm_routing_plan.md
+```
+
+Implement v1.6 in small routing batches. Do not add broad morphology rules.

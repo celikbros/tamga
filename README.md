@@ -110,6 +110,9 @@ v1.5 English smoke bulgulari:
 v1.5 multilingual smoke bulgulari:
 [docs/v1_5_multilingual_smoke_findings.md](docs/v1_5_multilingual_smoke_findings.md)
 
+v1.6 do-no-harm routing plani:
+[docs/v1_6_do_no_harm_routing_plan.md](docs/v1_6_do_no_harm_routing_plan.md)
+
 v1.3 oncesi hidden/heldout eval protokolu:
 [docs/hidden_eval_protocol.md](docs/hidden_eval_protocol.md)
 ve etiketleme kilavuzu:

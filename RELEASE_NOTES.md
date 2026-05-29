@@ -73,6 +73,8 @@
 - Added `data/eval/multilingual_smoke.tsv` and
   `docs/v1_5_multilingual_smoke_findings.md` to measure cross-language
   do-no-harm behavior.
+- Added `docs/v1_6_do_no_harm_routing_plan.md` to plan low-risk routing fixes
+  without broadening Turkish morphology.
 - Added `docs/v1_5_baseline_findings.md` to summarize what the real-tokenizer
   comparisons do and do not prove.
 - Added the optional `baselines` dependency group for SentencePiece,
