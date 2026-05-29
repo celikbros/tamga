@@ -128,6 +128,9 @@ Do not implement S1-S5 in the same batch.
 After Batch 1, re-run the challenge analysis and decide whether S1 is worth a
 separate medium-risk batch.
 
+S1 risk notes are tracked separately in
+`docs/v1_4_s1_buffered_ablative_analysis.md`.
+
 ## Batch 1 Result
 
 Implemented:

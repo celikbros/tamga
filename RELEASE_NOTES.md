@@ -46,6 +46,8 @@
   mismatch analysis without changing tokenizer behavior.
 - Protected exact lexical items `peki` and `yeni` to avoid low-risk
   over-splitting (`Pe +ki`, `ye +ni`) without broadening suffix rules.
+- Added `docs/v1_4_s1_buffered_ablative_analysis.md` to scope the next
+  medium-risk candidate before implementation.
 
 ## v1.3.0
 
