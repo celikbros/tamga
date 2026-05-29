@@ -124,6 +124,17 @@ report: artifacts/v1_5_real_tokenizer_report_english_smoke.md
 findings: docs/v1_5_english_smoke_findings.md
 ```
 
+Multilingual smoke result:
+
+```text
+dataset: data/eval/multilingual_smoke.tsv
+custom_tr_morph exact_match: 8/20
+custom_tr_morph boundary_f1: 0.6775
+custom_tr_morph avg_tokens/word: 2.8493
+report: artifacts/v1_5_real_tokenizer_report_multilingual_smoke.md
+findings: docs/v1_5_multilingual_smoke_findings.md
+```
+
 ## Do Not Forget
 
 The next step is not to blindly continue adding challenge-set rules.
@@ -182,4 +193,7 @@ Do-no-harm candidates discovered by English smoke:
 English apostrophe guard: Don't, John's, We're, LLaMA's
 package/comparator protection: transformers>=4.40
 code-mixed loanword guard: data, code, OpenAI
+non-Turkish Latin guard: Straße, niño, Bogotá, università
+Azerbaijani routing guard: adım, Bakıda, gedir, uzundur
+Arabic/Greek script-span fallback
 ```
