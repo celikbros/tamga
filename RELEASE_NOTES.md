@@ -63,6 +63,8 @@
 - Added local SentencePiece BPE/Unigram v1.5 reports alongside the custom and
   diagnostic character baselines.
 - Added first Qwen tokenizer reference reports for expanded and challenge evals.
+- Added first Mistral tokenizer reference reports for expanded and challenge
+  evals.
 - Added the optional `baselines` dependency group for SentencePiece,
   Transformers, and Tokenizers without making them required runtime
   dependencies.

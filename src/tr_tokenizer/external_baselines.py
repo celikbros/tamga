@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from functools import lru_cache
 import importlib
 from pathlib import Path
 
@@ -55,14 +56,8 @@ def encode_huggingface(
             reason=_missing_package("transformers"),
         )
 
-    from transformers import AutoTokenizer  # type: ignore[import-not-found]
-
     try:
-        tokenizer = AutoTokenizer.from_pretrained(
-            model_id,
-            local_files_only=local_files_only,
-            trust_remote_code=False,
-        )
+        tokenizer = _load_huggingface_tokenizer(model_id, local_files_only)
     except Exception as exc:  # pragma: no cover - depends on local model cache.
         scope = "local cache" if local_files_only else "remote download"
         return BaselineEncoding(
@@ -74,6 +69,17 @@ def encode_huggingface(
 
     tokens = tokenizer.tokenize(text)
     return BaselineEncoding(name=name, tokens=list(tokens))
+
+
+@lru_cache(maxsize=16)
+def _load_huggingface_tokenizer(model_id: str, local_files_only: bool):
+    from transformers import AutoTokenizer  # type: ignore[import-not-found]
+
+    return AutoTokenizer.from_pretrained(
+        model_id,
+        local_files_only=local_files_only,
+        trust_remote_code=False,
+    )
 
 
 def encode_sentencepiece(
@@ -91,10 +97,8 @@ def encode_sentencepiece(
             reason=_missing_package("sentencepiece"),
         )
 
-    import sentencepiece as spm  # type: ignore[import-not-found]
-
     try:
-        processor = spm.SentencePieceProcessor(model_file=str(model_path))
+        processor = _load_sentencepiece_processor(str(model_path))
     except Exception as exc:  # pragma: no cover - depends on local model file.
         return BaselineEncoding(
             name=name,
@@ -104,6 +108,13 @@ def encode_sentencepiece(
         )
 
     return BaselineEncoding(name=name, tokens=list(processor.encode(text, out_type=str)))
+
+
+@lru_cache(maxsize=16)
+def _load_sentencepiece_processor(model_path: str):
+    import sentencepiece as spm  # type: ignore[import-not-found]
+
+    return spm.SentencePieceProcessor(model_file=model_path)
 
 
 def parse_named_spec(spec: str) -> tuple[str, str]:

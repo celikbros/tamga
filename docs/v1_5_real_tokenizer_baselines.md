@@ -181,6 +181,18 @@ useful signal is that Turkish-centered morphology preserves Turkish gold
 boundaries better at a comparable or lower token budget on these controlled
 sets.
 
+First Mistral reference results:
+
+```text
+expanded:
+custom_tr_morph avg_tokens/word=2.7438, boundary_f1=1.0000
+mistral         avg_tokens/word=4.3306, boundary_f1=0.5423
+
+challenge:
+custom_tr_morph avg_tokens/word=2.1749, boundary_f1=0.9220
+mistral         avg_tokens/word=3.9426, boundary_f1=0.5463
+```
+
 ### Step 1: Optional Dependency Boundary
 
 Do not force all users to install heavy tokenizer dependencies.

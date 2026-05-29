@@ -89,6 +89,18 @@ sp_unigram:      avg_tokens/word=2.9321, boundary_f1=0.6225
 qwen:            avg_tokens/word=2.8590, boundary_f1=0.3511
 ```
 
+After Mistral tokenizer reference:
+
+```text
+expanded all-baseline report
+custom_tr_morph: avg_tokens/word=2.7438, boundary_f1=1.0000
+mistral:         avg_tokens/word=4.3306, boundary_f1=0.5423
+
+challenge all-baseline report
+custom_tr_morph: avg_tokens/word=2.1749, boundary_f1=0.9220
+mistral:         avg_tokens/word=3.9426, boundary_f1=0.5463
+```
+
 ## Do Not Forget
 
 The next step is not to blindly continue adding challenge-set rules.
@@ -109,7 +121,8 @@ Proceed to the next phase of v1.5 real tokenizer baseline comparison:
 
 ```text
 Qwen reference tokenizer: first expanded/challenge reports complete
-LLaMA/Mistral reference tokenizers
+Mistral reference tokenizer: first expanded/challenge reports complete
+LLaMA reference tokenizer: not attempted yet; may require gated access
 SentencePiece BPE: first local demo baseline complete
 SentencePiece Unigram: first local demo baseline complete
 existing toy BPE sweep
