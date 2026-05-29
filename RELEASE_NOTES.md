@@ -40,6 +40,8 @@
   splitting around unsupported letters or forcing Turkish morphology.
 - Preserved Turkic Cyrillic word spans and dash width in public stress examples,
   bringing the public stress roundtrip report to 28/28 with no `other` tokens.
+- Added `docs/v1_3_closing_report.md` to summarize the v1.3 hardening outcome,
+  remaining limits, and v1.4 entry criteria.
 
 ## v1.3.0
 

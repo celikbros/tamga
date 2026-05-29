@@ -108,6 +108,8 @@ Bos public template:
 Dis insan etiketleyici/hoca sureci su an zorunlu kritik yol degildir. Teknik
 ilerleme icin pratik v1.3 hatti:
 [docs/v1_3_practical_track.md](docs/v1_3_practical_track.md).
+v1.3 kapanis raporu:
+[docs/v1_3_closing_report.md](docs/v1_3_closing_report.md).
 
 Gercek hidden eval dosyasi public repo'ya konmaz. Onerilen private path:
 `data/eval/private/tr_hidden_eval.tsv`. Public raporlarda yalnizca aggregate
