@@ -42,6 +42,8 @@
   bringing the public stress roundtrip report to 28/28 with no `other` tokens.
 - Added `docs/v1_3_closing_report.md` to summarize the v1.3 hardening outcome,
   remaining limits, and v1.4 entry criteria.
+- Added `docs/v1_4_candidate_shortlist.md` and refreshed the v1.4 challenge
+  mismatch analysis without changing tokenizer behavior.
 
 ## v1.3.0
 

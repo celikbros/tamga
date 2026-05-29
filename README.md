@@ -91,6 +91,8 @@ icindedir.
 
 v1.4 icin davranis degistirmeyen karar cercevesi:
 [docs/v1_4_decision_framework.md](docs/v1_4_decision_framework.md)
+v1.4 ilk aday listesi:
+[docs/v1_4_candidate_shortlist.md](docs/v1_4_candidate_shortlist.md)
 
 v1.3 oncesi hidden/heldout eval protokolu:
 [docs/hidden_eval_protocol.md](docs/hidden_eval_protocol.md)
