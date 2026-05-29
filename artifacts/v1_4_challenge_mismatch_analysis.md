@@ -5,11 +5,11 @@
 | Metric | Value |
 | --- | ---: |
 | Examples | 108 |
-| Exact match | 43/108 |
-| Mismatches | 65 |
-| Precision | 0.8667 |
-| Recall | 0.7839 |
-| F1 | 0.8233 |
+| Exact match | 44/108 |
+| Mismatches | 64 |
+| Precision | 0.8691 |
+| Recall | 0.7861 |
+| F1 | 0.8255 |
 
 ## Category Summary
 
@@ -25,8 +25,8 @@
 | question | 4/9 | 5 | 0.8841 | 0.0000 |
 | verb_past | 4/9 | 5 | 0.9029 | -0.3333 |
 | numbers_dates | 6/9 | 3 | 0.9091 | -0.2222 |
-| proper_name | 8/9 | 1 | 0.9785 | 0.0000 |
 | punctuation | 8/9 | 1 | 0.9793 | -0.1111 |
+| proper_name | 9/9 | 0 | 1.0000 | 0.0000 |
 
 ## Mismatch List
 
@@ -92,13 +92,6 @@
 - Actual: `["▁Dosya","+lar","+ımız","+dan","▁seçtiklerin","+iz","▁gönderildi","."]`
 - Expected only: `["▁seç","+tik","+ler","+iniz","▁gönderil","+di"]`
 - Actual only: `["▁seçtiklerin","+iz","▁gönderildi"]`
-
-### proper_name: Mehmet'in arabasından ses geldi.
-
-- Expected: `["▁Mehmet","'","+in","▁araba","+sı","+ndan","▁ses","▁gel","+di","."]`
-- Actual: `["▁Mehmet","'","+in","▁araba","+sın","+dan","▁ses","▁gel","+di","."]`
-- Expected only: `["+sı","+ndan"]`
-- Actual only: `["+sın","+dan"]`
 
 ### softening: Ağacın dalları kırılmıştı.
 
@@ -659,5 +652,4 @@
 | P8 | question | question clitic or person suffix pattern | Bu dosyayı açtın mı? | separate question-particle layer from general noun suffixing | medium |
 | P9 | verb_past | past tense stem alternation gap | Okudular ama anlamadılar. | add only known verb stems with tense-specific tests | medium |
 | P10 | numbers_dates | number/date punctuation boundary handling | 12:30'da toplantı başladı. | add guarded number/date pretokenizer tests before any rule change | medium |
-| P11 | proper_name | apostrophe/proper-name suffix gap such as +sı | Mehmet'in arabasından ses geldi. | expand apostrophe suffix inventory with exact regression examples | low |
-| P12 | punctuation | quoted punctuation or attached punctuation pattern | Hayır! Bunu yapma. | extend punctuation fixtures first, then add narrow pretokenizer cases | medium |
+| P11 | punctuation | quoted punctuation or attached punctuation pattern | Hayır! Bunu yapma. | extend punctuation fixtures first, then add narrow pretokenizer cases | medium |

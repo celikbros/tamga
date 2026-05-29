@@ -606,3 +606,113 @@ def test_encode_v14_protection_regressions_stay_stable():
 
     for text, expected_tokens in cases.items():
         assert encode(text) == expected_tokens
+
+
+def test_encode_v14_s1_splits_possessive_buffered_ablative():
+    cases = {
+        "Mehmet'in arabasından ses geldi.": [
+            f"{WORD_START}Mehmet",
+            "'",
+            "+in",
+            f"{WORD_START}araba",
+            "+sı",
+            "+ndan",
+            f"{WORD_START}ses",
+            f"{WORD_START}gel",
+            "+di",
+            ".",
+        ],
+        "Dosyasından bir not geldi.": [
+            f"{WORD_START}Dosya",
+            "+sı",
+            "+ndan",
+            f"{WORD_START}bir",
+            f"{WORD_START}not",
+            f"{WORD_START}gel",
+            "+di",
+            ".",
+        ],
+    }
+
+    for text, expected_tokens in cases.items():
+        assert encode(text) == expected_tokens
+
+
+def test_encode_v14_s1_regressions_stay_stable():
+    cases = {
+        "Ahmet'in evinden döndüm.": [
+            f"{WORD_START}Ahmet",
+            "'",
+            "+in",
+            f"{WORD_START}ev",
+            "+in",
+            "+den",
+            f"{WORD_START}dön",
+            "+dü",
+            "+m",
+            ".",
+        ],
+        "Zeynep'in dosyasını kapattım.": [
+            f"{WORD_START}Zeynep",
+            "'",
+            "+in",
+            f"{WORD_START}dosya",
+            "+sı",
+            "+nı",
+            f"{WORD_START}kapat",
+            "+tı",
+            "+m",
+            ".",
+        ],
+        "Alacak mısınız?": [
+            f"{WORD_START}Al",
+            "+acak",
+            f"{WORD_START}mı",
+            "+sınız",
+            "?",
+        ],
+        "Geliyom musun?": [
+            f"{WORD_START}Gel",
+            "+iyom",
+            f"{WORD_START}mu",
+            "+sun",
+            "?",
+        ],
+        "Kadın yakın altın kedi.": [
+            f"{WORD_START}Kadın",
+            f"{WORD_START}yakın",
+            f"{WORD_START}altın",
+            f"{WORD_START}kedi",
+            ".",
+        ],
+        "Yazın tatile gittik.": [
+            f"{WORD_START}Yaz",
+            "+ın",
+            f"{WORD_START}tatile",
+            f"{WORD_START}git",
+            "+ti",
+            "+k",
+            ".",
+        ],
+        "Yazarım ama göndermem.": [
+            f"{WORD_START}Yazar",
+            "+ım",
+            f"{WORD_START}ama",
+            f"{WORD_START}göndermem",
+            ".",
+        ],
+        "OpenAIlaştırılamayanlardanmış.": [
+            f"{WORD_START}OpenAI",
+            "+laştır",
+            "+ıl",
+            "+ama",
+            "+yan",
+            "+lar",
+            "+dan",
+            "+mış",
+            ".",
+        ],
+    }
+
+    for text, expected_tokens in cases.items():
+        assert encode(text) == expected_tokens

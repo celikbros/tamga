@@ -311,6 +311,25 @@ def split_mixed_case_suffix_chain(word: str) -> list[str] | None:
     return None
 
 
+def split_possessive_buffered_ablative(surface: str) -> list[str] | None:
+    """Split narrow 3rd-person possessive + buffered ablative chains."""
+    lowered = turkish_lower(surface)
+    patterns = {
+        "sından": ("sı", "ndan"),
+        "sinden": ("si", "nden"),
+        "sundan": ("su", "ndan"),
+        "sünden": ("sü", "nden"),
+    }
+    pattern = patterns.get(lowered)
+    if pattern is None:
+        return None
+
+    first, second = pattern
+    first_surface = surface[: len(first)]
+    second_surface = surface[len(first) :]
+    return [first_surface, second_surface]
+
+
 def split_by_surface_lexicon(word: str) -> list[str] | None:
     """Split only when a known surface stem explains the full suffix chain."""
     if is_protected_word(word):
@@ -324,6 +343,13 @@ def split_by_surface_lexicon(word: str) -> list[str] | None:
     suffix_surface = word[len(stem) :]
     if not suffix_surface:
         return [stem_surface]
+
+    possessive_buffered_ablative = split_possessive_buffered_ablative(suffix_surface)
+    if possessive_buffered_ablative is not None:
+        return [
+            stem_surface,
+            *(f"+{suffix}" for suffix in possessive_buffered_ablative),
+        ]
 
     suffixes = split_suffix_chain_by_inventory(suffix_surface)
     if suffixes is None:

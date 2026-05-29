@@ -48,6 +48,8 @@
   over-splitting (`Pe +ki`, `ye +ni`) without broadening suffix rules.
 - Added `docs/v1_4_s1_buffered_ablative_analysis.md` to scope the next
   medium-risk candidate before implementation.
+- Added a guarded possessive-buffered-ablative split for known surface stems,
+  fixing `arabasından -> araba +sı +ndan` without broad `+ndan/+nden` splitting.
 
 ## v1.3.0
 

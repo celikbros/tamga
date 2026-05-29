@@ -170,3 +170,46 @@ Category movement:
 
 No broad suffix rule was added. `negative_word`, `ambiguity`, frozen regression,
 and public stress guards remained stable.
+
+## Batch 2 Result
+
+Implemented:
+
+- guarded 3rd-person possessive + buffered ablative split after known surface
+  stems:
+  - `sından -> +sı +ndan`
+  - `sinden -> +si +nden`
+  - `sundan -> +su +ndan`
+  - `sünden -> +sü +nden`
+
+Verification:
+
+```text
+python -m pytest
+82 passed
+
+tr_gold_expanded.tsv
+exact_match: 50/50
+f1: 1.0000
+
+tr_challenge.tsv
+exact_match: 44/108
+f1: 0.8255
+
+tr_stress_public.tsv
+roundtrip_exact: 28/28
+protected_spans_preserved: 23/23
+```
+
+Category movement:
+
+| Category | Before Batch 2 | After Batch 2 |
+| --- | ---: | ---: |
+| proper_name exact match | 8/9 | 9/9 |
+| proper_name F1 | 0.9785 | 1.0000 |
+| overall exact match | 43/108 | 44/108 |
+| overall F1 | 0.8233 | 0.8255 |
+
+No broad `+ndan/+nden` greedy split was added. The fix is only active after a
+known surface stem and only for the exact possessive-buffered-ablative surface
+chains listed above.

@@ -1,8 +1,8 @@
 # v1.4 S1 Buffered Ablative Analysis
 
-Status: analysis only
+Status: Batch 2 implemented
 Date: 2026-05-29
-Tokenizer behavior: not changed by this document
+Tokenizer behavior: changed by the Batch 2 implementation
 
 ## Target
 
@@ -79,21 +79,26 @@ Alacak mısınız?
 Geliyom musun?
 ```
 
-## Proposed Implementation Shape
+## Implementation Shape
 
-If implemented later, S1 should use the narrowest possible change:
+S1 used the narrowest possible change:
 
-1. Add buffered ablative surfaces to the lexicon-aware suffix inventory:
+1. Do not add `+ndan/+nden` to the broad suffix inventory.
+
+2. Add a dedicated guarded helper for exactly these suffix surfaces after a
+   known surface stem:
 
 ```text
-ndan
-nden
+sından -> +sı +ndan
+sinden -> +si +nden
+sundan -> +su +ndan
+sünden -> +sü +nden
 ```
 
-2. Do not add them as a broad free-standing greedy split if that can affect
+3. Do not add them as a broad free-standing greedy split if that can affect
 unknown lowercase words.
 
-3. Prefer the segmentation:
+4. Prefer the segmentation:
 
 ```text
 sı +ndan
@@ -107,25 +112,25 @@ sın +dan
 
 only inside the guarded suffix-chain parser.
 
-4. Keep apostrophe suffix handling unchanged.
+5. Keep apostrophe suffix handling unchanged.
 
-## Positive Tests To Add Before Implementation
+## Positive Tests Added
 
-These should pass after implementation:
+These now pass:
 
 ```text
 Mehmet'in arabasından ses geldi.
 expected: ["▁Mehmet","'","+in","▁araba","+sı","+ndan","▁ses","▁gel","+di","."]
 
-Dosyasından bir not çıktı.
-expected: ["▁Dosya","+sı","+ndan","▁bir","▁not","▁çık","+tı","."]
+Dosyasından bir not geldi.
+expected: ["▁Dosya","+sı","+ndan","▁bir","▁not","▁gel","+di","."]
 ```
 
 The second example checks the same pattern outside a proper-name sentence.
 
-## Negative Regression Tests To Add Before Implementation
+## Negative Regression Tests Added
 
-These should remain stable:
+These remain stable:
 
 ```text
 Kadın yakın altın kedi.
@@ -153,18 +158,18 @@ Revert the S1 implementation if any of these happen:
 
 ## Expected Impact
 
-If implemented correctly:
+Implemented result:
 
 - `Mehmet'in arabasından ses geldi.` becomes exact match.
-- challenge exact match may improve from `43/108` to `44/108`.
-- proper_name may improve from `8/9` to `9/9`.
+- challenge exact match improved from `43/108` to `44/108`.
+- challenge F1 improved from `0.8233` to `0.8255`.
+- proper_name improved from `8/9` to `9/9`.
 
 This is a useful but small improvement. It should not be bundled with broader
 lexicon expansion, passive-stem handling, or `+ma` rules.
 
 ## Recommendation
 
-S1 is eligible for a separate v1.4 Batch 2 only if implemented as a guarded
-suffix-chain fix with tests first.
+S1 is complete as v1.4 Batch 2.
 
 Do not combine S1 with S2-S5.
