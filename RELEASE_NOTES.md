@@ -55,6 +55,12 @@
   SentencePiece BPE/Unigram comparisons beyond the toy BPE baseline.
 - Added `docs/current_resume_point.md` so the project can resume without losing
   the v1.4/v1.5 boundary.
+- Added optional real-tokenizer baseline infrastructure:
+  `src/tr_tokenizer/external_baselines.py` and
+  `scripts/compare_real_tokenizers.py`.
+- Added the optional `baselines` dependency group for SentencePiece,
+  Transformers, and Tokenizers without making them required runtime
+  dependencies.
 
 ## v1.3.0
 

@@ -1,7 +1,7 @@
 # v1.5 Real Tokenizer Baseline Plan
 
-Status: planning
-Date: 2026-05-29
+Status: infrastructure started
+Date: 2026-05-30
 Tokenizer behavior: not changed
 
 ## Purpose
@@ -135,11 +135,24 @@ No private hidden examples should be added to the public repo.
 
 ## Implementation Plan
 
+Current implementation:
+
+- `src/tr_tokenizer/external_baselines.py`
+- `scripts/compare_real_tokenizers.py`
+- built-in `custom_tr_morph` and `unicode_char` baselines
+- optional Hugging Face tokenizer adapter
+- optional SentencePiece adapter
+- optional toy BPE model adapter
+- Markdown report output
+
+The optional adapters skip cleanly when the package or local model is not
+available.
+
 ### Step 1: Optional Dependency Boundary
 
 Do not force all users to install heavy tokenizer dependencies.
 
-Add an optional extra later, for example:
+The optional extra is:
 
 ```toml
 [project.optional-dependencies]
@@ -195,7 +208,25 @@ Generate Markdown reports:
 ```powershell
 python scripts/compare_real_tokenizers.py data/eval/tr_gold_expanded.tsv --markdown-out artifacts/v1_5_real_tokenizer_report_expanded.md
 python scripts/compare_real_tokenizers.py data/eval/tr_challenge.tsv --markdown-out artifacts/v1_5_real_tokenizer_report_challenge.md
-python scripts/compare_real_tokenizers.py data/eval/tr_stress_public.tsv --markdown-out artifacts/v1_5_real_tokenizer_report_stress.md
+```
+
+Optional external references:
+
+```powershell
+python scripts/compare_real_tokenizers.py data/eval/tr_gold_expanded.tsv --hf qwen=Qwen/Qwen2.5-0.5B --markdown-out artifacts/v1_5_qwen_report.md
+python scripts/compare_real_tokenizers.py data/eval/tr_gold_expanded.tsv --sentencepiece sp_bpe=artifacts/sp_bpe.model
+python scripts/compare_real_tokenizers.py data/eval/tr_gold_expanded.tsv --toy-bpe toy_1000=artifacts/bpe_1000.json
+```
+
+By default, Hugging Face loading uses local cache only. Use `--allow-download`
+only when an external model download is intentional.
+
+`tr_stress_public.tsv` is not a morphology gold TSV. It stores protected spans
+for smoke testing, so it should remain on the stress-report path until real
+baseline protected-span metrics are added:
+
+```powershell
+python scripts/report_stress_public.py data/eval/tr_stress_public.tsv --markdown-out artifacts/stress_public_report.md
 ```
 
 Initial reports should contain:

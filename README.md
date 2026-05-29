@@ -160,6 +160,34 @@ python scripts/compare_bpe_sweep.py data/eval/tr_gold_expanded.tsv artifacts/bpe
 `data/train/tr_bpe_train.txt` eval cumlelerini birebir icermeyen demo corpus'tur;
 production corpus degildir.
 
+## Real Tokenizer Baselines
+
+v1.5, toy BPE disinda production-like tokenizer aileleriyle karsilastirma
+altyapisini baslatir. Dis tokenizer bagimliliklari opsiyoneldir; paketler veya
+local model cache yoksa ilgili baseline `skipped` olarak raporlanir.
+
+```powershell
+python scripts/compare_real_tokenizers.py data/eval/tr_gold_expanded.tsv --markdown-out artifacts/v1_5_real_tokenizer_report_expanded.md
+python scripts/compare_real_tokenizers.py data/eval/tr_challenge.tsv --markdown-out artifacts/v1_5_real_tokenizer_report_challenge.md
+```
+
+Opsiyonel Hugging Face veya SentencePiece baseline eklemek icin:
+
+```powershell
+python scripts/compare_real_tokenizers.py data/eval/tr_gold_expanded.tsv --hf qwen=Qwen/Qwen2.5-0.5B --markdown-out artifacts/v1_5_qwen_report.md
+python scripts/compare_real_tokenizers.py data/eval/tr_gold_expanded.tsv --sentencepiece sp_bpe=artifacts/sp_bpe.model
+```
+
+Varsayilan Hugging Face modu local cache ile sinirlidir. Eksik modeli indirmek
+icin bilincli olarak `--allow-download` verilir.
+
+`tr_stress_public.tsv` morfolojik gold degil, protected-span smoke setidir. Onun
+icin mevcut stress raporu kullanilir:
+
+```powershell
+python scripts/report_stress_public.py data/eval/tr_stress_public.tsv --markdown-out artifacts/stress_public_report.md
+```
+
 ## Tasarim Prensipleri
 
 - Kelime baslangici `▁` marker'iyle gosterilir.

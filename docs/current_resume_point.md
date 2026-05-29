@@ -1,10 +1,10 @@
 # Current Resume Point
 
-Date: 2026-05-29
+Date: 2026-05-30
 
 ## Current State
 
-The project is currently between v1.4 and v1.5.
+The project is currently in v1.5 baseline-infrastructure work.
 
 Completed:
 
@@ -38,6 +38,25 @@ roundtrip_exact: 28/28
 protected_spans_preserved: 23/23
 ```
 
+After v1.5 baseline infrastructure:
+
+```text
+python -m pytest
+91 passed
+
+expanded real-baseline report
+custom_tr_morph boundary_f1: 1.0000, exact_match: 50/50
+unicode_char boundary_f1: 0.4947, exact_match: 0/50
+
+challenge real-baseline report
+custom_tr_morph boundary_f1: 0.9220, exact_match: 44/108
+unicode_char boundary_f1: 0.4949, exact_match: 0/108
+
+public stress report
+roundtrip_exact: 28/28
+protected_spans_preserved: 23/23
+```
+
 ## Do Not Forget
 
 The next step is not to blindly continue adding challenge-set rules.
@@ -54,7 +73,7 @@ These require separate decisions and tests.
 
 ## Recommended Next Track
 
-Proceed to v1.5 real tokenizer baseline comparison:
+Proceed to the next phase of v1.5 real tokenizer baseline comparison:
 
 ```text
 Qwen reference tokenizer
@@ -78,3 +97,7 @@ Primary planning doc:
 ```text
 docs/v1_5_real_tokenizer_baselines.md
 ```
+
+Use optional dependencies or local model files, then run
+`scripts/compare_real_tokenizers.py` with `--hf`, `--sentencepiece`, or
+`--toy-bpe`.

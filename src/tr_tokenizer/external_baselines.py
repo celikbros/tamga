@@ -1,0 +1,117 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+import importlib
+from pathlib import Path
+
+
+@dataclass(frozen=True)
+class BaselineEncoding:
+    name: str
+    tokens: list[str]
+    status: str = "ok"
+    reason: str = ""
+
+    @property
+    def available(self) -> bool:
+        return self.status == "ok"
+
+
+def _missing_package(name: str) -> str:
+    return f"optional dependency not installed: {name}"
+
+
+def encode_unicode_chars(text: str, *, name: str = "unicode_char") -> BaselineEncoding:
+    tokens: list[str] = []
+    at_word_start = True
+
+    for char in text:
+        if char.isspace():
+            at_word_start = True
+            continue
+
+        if at_word_start and (char.isalnum() or char == "_"):
+            tokens.append(f"▁{char}")
+        else:
+            tokens.append(char)
+        at_word_start = False
+
+    return BaselineEncoding(name=name, tokens=tokens)
+
+
+def encode_huggingface(
+    text: str,
+    *,
+    model_id: str,
+    name: str,
+    local_files_only: bool = True,
+) -> BaselineEncoding:
+    transformers = importlib.util.find_spec("transformers")
+    if transformers is None:
+        return BaselineEncoding(
+            name=name,
+            tokens=[],
+            status="skipped",
+            reason=_missing_package("transformers"),
+        )
+
+    from transformers import AutoTokenizer  # type: ignore[import-not-found]
+
+    try:
+        tokenizer = AutoTokenizer.from_pretrained(
+            model_id,
+            local_files_only=local_files_only,
+            trust_remote_code=False,
+        )
+    except Exception as exc:  # pragma: no cover - depends on local model cache.
+        scope = "local cache" if local_files_only else "remote download"
+        return BaselineEncoding(
+            name=name,
+            tokens=[],
+            status="skipped",
+            reason=f"could not load {model_id!r} from {scope}: {exc}",
+        )
+
+    tokens = tokenizer.tokenize(text)
+    return BaselineEncoding(name=name, tokens=list(tokens))
+
+
+def encode_sentencepiece(
+    text: str,
+    *,
+    model_path: str | Path,
+    name: str,
+) -> BaselineEncoding:
+    sentencepiece = importlib.util.find_spec("sentencepiece")
+    if sentencepiece is None:
+        return BaselineEncoding(
+            name=name,
+            tokens=[],
+            status="skipped",
+            reason=_missing_package("sentencepiece"),
+        )
+
+    import sentencepiece as spm  # type: ignore[import-not-found]
+
+    try:
+        processor = spm.SentencePieceProcessor(model_file=str(model_path))
+    except Exception as exc:  # pragma: no cover - depends on local model file.
+        return BaselineEncoding(
+            name=name,
+            tokens=[],
+            status="skipped",
+            reason=f"could not load sentencepiece model {model_path!r}: {exc}",
+        )
+
+    return BaselineEncoding(name=name, tokens=list(processor.encode(text, out_type=str)))
+
+
+def parse_named_spec(spec: str) -> tuple[str, str]:
+    if "=" not in spec:
+        raise ValueError(f"expected NAME=VALUE, got {spec!r}")
+    name, value = spec.split("=", 1)
+    name = name.strip()
+    value = value.strip()
+    if not name or not value:
+        raise ValueError(f"expected NAME=VALUE, got {spec!r}")
+    return name, value
