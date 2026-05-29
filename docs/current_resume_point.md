@@ -113,6 +113,17 @@ reports:
   artifacts/v1_5_llama_report_challenge.md
 ```
 
+English smoke result:
+
+```text
+dataset: data/eval/en_smoke.tsv
+custom_tr_morph exact_match: 5/10
+custom_tr_morph boundary_f1: 0.7949
+custom_tr_morph avg_tokens/word: 1.2692
+report: artifacts/v1_5_real_tokenizer_report_english_smoke.md
+findings: docs/v1_5_english_smoke_findings.md
+```
+
 ## Do Not Forget
 
 The next step is not to blindly continue adding challenge-set rules.
@@ -164,3 +175,11 @@ docs/v1_5_baseline_findings.md
 Use optional dependencies or local model files, then run
 `scripts/compare_real_tokenizers.py` with `--hf`, `--sentencepiece`, or
 `--toy-bpe`.
+
+Do-no-harm candidates discovered by English smoke:
+
+```text
+English apostrophe guard: Don't, John's, We're, LLaMA's
+package/comparator protection: transformers>=4.40
+code-mixed loanword guard: data, code, OpenAI
+```

@@ -104,6 +104,9 @@ v1.5 real tokenizer baseline plani:
 v1.5 baseline bulgulari:
 [docs/v1_5_baseline_findings.md](docs/v1_5_baseline_findings.md)
 
+v1.5 English smoke bulgulari:
+[docs/v1_5_english_smoke_findings.md](docs/v1_5_english_smoke_findings.md)
+
 v1.3 oncesi hidden/heldout eval protokolu:
 [docs/hidden_eval_protocol.md](docs/hidden_eval_protocol.md)
 ve etiketleme kilavuzu:
