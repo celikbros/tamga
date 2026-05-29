@@ -94,13 +94,13 @@ Current public-stress baseline:
 
 ```text
 examples: 28
-roundtrip_exact: 25/28
+roundtrip_exact: 28/28
 protected_spans_preserved: 23/23
 ```
 
-URL protection is now covered by the public stress set. The remaining first
-weak spot is Turkic Cyrillic pass-through. These are observations, not v1.x
-regression failures.
+URL protection, code-like spacing, Uzbek apostrophe-like spans, Azerbaijani
+`ə/Ə` spans, and Turkic Cyrillic word pass-through are now covered by the public
+stress set. These are observability checks, not an independent human eval claim.
 
 Current coverage telemetry:
 
@@ -114,15 +114,15 @@ expanded regression:
 
 public stress:
   examples: 28
-  tokens: 292
+  tokens: 223
   suffix tokens: 43
   protected tokens: 17
-  other tokens: 87
+  other tokens: 0
 ```
 
-The high `other` count in the stress set is concentrated in Kazakh/Kyrgyz/Tatar
-Cyrillic inputs. That is useful v2.0 routing/fallback evidence, not a v1.x
-production failure.
+The public stress set now has no `other` tokens. That does not mean multilingual
+tokenization is solved; it means the current public smoke examples preserve
+surface text and avoid obvious pass-through damage.
 
 ## Documentation Rule
 

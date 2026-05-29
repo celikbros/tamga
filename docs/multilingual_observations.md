@@ -97,6 +97,10 @@ Observed:
 Cyrillic Turkic input falls to character-level segmentation. This should be
 treated as a v2.0 planning signal, not a v1.x regression.
 
+Update: v1.3 later added a narrow Cyrillic word-level pass-through guard and
+preserved dash width. The current goal is still surface preservation, not
+Kazak/Kyrgyz/Tatar morphology.
+
 ## Code-Mixed Note
 
 ```text

@@ -38,6 +38,8 @@
   splitting.
 - Preserved Azerbaijani-specific `ə/Ə` Latin words as surface spans instead of
   splitting around unsupported letters or forcing Turkish morphology.
+- Preserved Turkic Cyrillic word spans and dash width in public stress examples,
+  bringing the public stress roundtrip report to 28/28 with no `other` tokens.
 
 ## v1.3.0
 

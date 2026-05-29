@@ -98,3 +98,29 @@ def test_pre_tokenize_keeps_azerbaijani_specific_words_intact():
         "gedir",
         ".",
     ]
+
+
+def test_pre_tokenize_keeps_cyrillic_words_intact():
+    assert pre_tokenize("Қазақстан Республикасы — Алматы қаласы.") == [
+        "Қазақстан",
+        "Республикасы",
+        "—",
+        "Алматы",
+        "қаласы",
+        ".",
+    ]
+    assert pre_tokenize("Кыргызча: тоо, суу, өң, үн, жаңы күн.") == [
+        "Кыргызча",
+        ":",
+        "тоо",
+        ",",
+        "суу",
+        ",",
+        "өң",
+        ",",
+        "үн",
+        ",",
+        "жаңы",
+        "күн",
+        ".",
+    ]

@@ -11,8 +11,6 @@ _TRANSLATION_TABLE = str.maketrans(
         "´": "'",
         "`": "'",
         "＇": "'",
-        "–": "-",
-        "—": "-",
     }
 )
 

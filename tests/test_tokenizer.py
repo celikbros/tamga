@@ -491,3 +491,17 @@ def test_encode_v13_keeps_azerbaijani_specific_words_intact():
     assert decode(encode("Xəbər: qız məktəbə gedir, dağ yolu uzundur.")) == (
         "Xəbər: qız məktəbə gedir, dağ yolu uzundur."
     )
+
+
+def test_encode_v13_keeps_cyrillic_words_intact():
+    assert encode("Қазақстан Республикасы — Алматы қаласы.") == [
+        f"{WORD_START}Қазақстан",
+        f"{WORD_START}Республикасы",
+        "—",
+        f"{WORD_START}Алматы",
+        f"{WORD_START}қаласы",
+        ".",
+    ]
+    assert decode(encode("Кыргызча: тоо, суу, өң, үн, жаңы күн.")) == (
+        "Кыргызча: тоо, суу, өң, үн, жаңы күн."
+    )

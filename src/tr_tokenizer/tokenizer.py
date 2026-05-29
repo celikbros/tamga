@@ -7,6 +7,7 @@ from .morphology import split_apostrophe_suffix, split_known_suffixes
 from .pretok import (
     TURKISH_LETTERS,
     is_azerbaijani_specific_word,
+    is_cyrillic_word,
     is_file_like_token,
     is_numeric_like_token,
     is_uzbek_apostrophe_word,
@@ -78,6 +79,7 @@ class TurkishTokenizer:
                 is_url_like_token(token)
                 or is_uzbek_apostrophe_word(token)
                 or is_azerbaijani_specific_word(token)
+                or is_cyrillic_word(token)
                 or is_file_like_token(token)
                 or is_numeric_like_token(token)
             ):
