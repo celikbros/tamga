@@ -198,11 +198,12 @@ Official Meta LLaMA access attempt:
 ```text
 model_id: meta-llama/Llama-3.2-1B
 status: skipped
-reason: gated Hugging Face repository; requires approved access and authentication
+reason: gated Hugging Face repository; authentication was available, but the
+account was not authorized for this model yet
 ```
 
 If official LLaMA comparison is required later, authenticate with a Hugging Face
-token that has access to the model, then rerun:
+token from an account that has access to the model, then rerun:
 
 ```powershell
 python scripts/compare_real_tokenizers.py data/eval/tr_gold_expanded.tsv --hf llama=meta-llama/Llama-3.2-1B --allow-download --markdown-out artifacts/v1_5_llama_report_expanded.md

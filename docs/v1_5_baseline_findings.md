@@ -54,8 +54,9 @@ The official Meta LLaMA reference was attempted with:
 meta-llama/Llama-3.2-1B
 ```
 
-It was skipped because the Hugging Face repository is gated and requires
-approved access plus authentication. See:
+It was skipped because the Hugging Face repository is gated. Authentication was
+available during the second attempt, but the account was not authorized for this
+model yet. See:
 
 ```text
 artifacts/v1_5_llama_report_expanded.md

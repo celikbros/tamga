@@ -8,10 +8,10 @@
 | unicode_char | ok | 18.1600 | 7.5041 | 0.4947 | 0/50 |  |
 | llama | skipped | 0.0000 | 0.0000 | 0.0000 | 0/0 | could not load 'meta-llama/Llama-3.2-1B' from remote download: You are trying to access a gated repo.
 Make sure to have access to it at https://huggingface.co/meta-llama/Llama-3.2-1B.
-401 Client Error. (Request ID: Root=1-6a1a1963-0a54d3013d17f0e13f0e41f3;be1b026a-ea44-4520-9c74-46306b02deb7)
+403 Client Error. (Request ID: Root=1-6a1a1b62-6311c0c87c2390cc5ed93c7c;df32c837-34d1-4181-aaa1-0bcae6b3e817)
 
 Cannot access gated repo for url https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/config.json.
-Access to model meta-llama/Llama-3.2-1B is restricted. You must have access to it and be authenticated to access it. Please log in. |
+Access to model meta-llama/Llama-3.2-1B is restricted and you are not in the authorized list. Visit https://huggingface.co/meta-llama/Llama-3.2-1B to ask for access. |
 
 ## Category Summary
 

@@ -106,8 +106,8 @@ LLaMA access attempt:
 ```text
 model_id: meta-llama/Llama-3.2-1B
 status: skipped
-reason: official Meta LLaMA Hugging Face repo is gated and requires approved
-access plus authentication.
+reason: official Meta LLaMA Hugging Face repo is gated. Authentication was
+available, but the account was not authorized for this model yet.
 report: artifacts/v1_5_llama_report_expanded.md
 ```
 
@@ -132,7 +132,8 @@ Proceed to the next phase of v1.5 real tokenizer baseline comparison:
 ```text
 Qwen reference tokenizer: first expanded/challenge reports complete
 Mistral reference tokenizer: first expanded/challenge reports complete
-LLaMA reference tokenizer: attempted; official Meta repo requires gated access
+LLaMA reference tokenizer: attempted; official Meta repo requires account-level
+authorization
 SentencePiece BPE: first local demo baseline complete
 SentencePiece Unigram: first local demo baseline complete
 existing toy BPE sweep
