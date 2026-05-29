@@ -101,16 +101,16 @@ custom_tr_morph: avg_tokens/word=2.1749, boundary_f1=0.9220
 mistral:         avg_tokens/word=3.9426, boundary_f1=0.5463
 ```
 
-LLaMA access attempt:
+LLaMA reference result:
 
 ```text
 model_id: meta-llama/Llama-3.2-1B
-status: skipped
-reason: official Meta LLaMA Hugging Face repo is gated. Authentication was
-available, but the account was not authorized for this model yet.
-report: artifacts/v1_5_llama_report_expanded.md
-documentation-only reference:
-https://github.com/meta-llama/llama-models/blob/main/models/llama4/MODEL_CARD.md
+status: ok
+expanded:  avg_tokens/word=2.9008, boundary_f1=0.3259
+challenge: avg_tokens/word=2.5744, boundary_f1=0.3501
+reports:
+  artifacts/v1_5_llama_report_expanded.md
+  artifacts/v1_5_llama_report_challenge.md
 ```
 
 ## Do Not Forget
@@ -134,8 +134,7 @@ Proceed to the next phase of v1.5 real tokenizer baseline comparison:
 ```text
 Qwen reference tokenizer: first expanded/challenge reports complete
 Mistral reference tokenizer: first expanded/challenge reports complete
-LLaMA reference tokenizer: attempted; official Meta repo requires account-level
-authorization
+LLaMA reference tokenizer: first expanded/challenge reports complete
 SentencePiece BPE: first local demo baseline complete
 SentencePiece Unigram: first local demo baseline complete
 existing toy BPE sweep

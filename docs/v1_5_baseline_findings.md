@@ -13,7 +13,7 @@ v1.5 added comparison against stronger tokenizer baselines:
 - local SentencePiece Unigram
 - Qwen tokenizer reference
 - Mistral tokenizer reference
-- official Meta LLaMA tokenizer access attempt
+- official Meta LLaMA tokenizer reference
 - Unicode character diagnostic baseline
 
 The main result is:
@@ -45,32 +45,22 @@ it should be read as a core-behavior check, not a broad benchmark.
 | sp_bpe | 2.7273 | 0.6263 | 1/50 |
 | sp_unigram | 3.0744 | 0.6325 | 0/50 |
 | qwen | 3.0661 | 0.3317 | 0/50 |
+| llama | 2.9008 | 0.3259 | 0/50 |
 | mistral | 4.3306 | 0.5423 | 0/50 |
 | unicode_char | 7.5041 | 0.4947 | 0/50 |
 
-The official Meta LLaMA reference was attempted with:
+The official Meta LLaMA reference was evaluated with:
 
 ```text
 meta-llama/Llama-3.2-1B
 ```
 
-It was skipped because the Hugging Face repository is gated. Authentication was
-available during the second attempt, but the account was not authorized for this
-model yet. See:
+Reports:
 
 ```text
 artifacts/v1_5_llama_report_expanded.md
+artifacts/v1_5_llama_report_challenge.md
 ```
-
-Until gated access is approved, the public Meta model-card repository is useful
-as documentation but not as a tokenizer baseline source:
-
-```text
-https://github.com/meta-llama/llama-models/blob/main/models/llama4/MODEL_CARD.md
-```
-
-That file can support background notes about LLaMA model families and licensing,
-but it does not provide the tokenizer files needed by the baseline script.
 
 ### Interpretation
 
@@ -104,6 +94,7 @@ planning, not for final claims.
 | sp_bpe | 2.7807 | 0.6497 | 0/108 |
 | sp_unigram | 2.9321 | 0.6225 | 0/108 |
 | qwen | 2.8590 | 0.3511 | 0/108 |
+| llama | 2.5744 | 0.3501 | 0/108 |
 | mistral | 3.9426 | 0.5463 | 0/108 |
 | unicode_char | 6.6214 | 0.4949 | 0/108 |
 

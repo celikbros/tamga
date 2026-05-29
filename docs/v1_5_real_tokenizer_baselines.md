@@ -193,30 +193,19 @@ custom_tr_morph avg_tokens/word=2.1749, boundary_f1=0.9220
 mistral         avg_tokens/word=3.9426, boundary_f1=0.5463
 ```
 
-Official Meta LLaMA access attempt:
+Official Meta LLaMA reference results:
 
 ```text
 model_id: meta-llama/Llama-3.2-1B
-status: skipped
-reason: gated Hugging Face repository; authentication was available, but the
-account was not authorized for this model yet
+expanded:  avg_tokens/word=2.9008, boundary_f1=0.3259
+challenge: avg_tokens/word=2.5744, boundary_f1=0.3501
 ```
 
-If official LLaMA comparison is required later, authenticate with a Hugging Face
-token from an account that has access to the model, then rerun:
-
-```powershell
-python scripts/compare_real_tokenizers.py data/eval/tr_gold_expanded.tsv --hf llama=meta-llama/Llama-3.2-1B --allow-download --markdown-out artifacts/v1_5_llama_report_expanded.md
-```
-
-While access is pending, the public Meta GitHub model card is documentation-only:
+The public Meta GitHub model card remains useful as documentation:
 
 ```text
 https://github.com/meta-llama/llama-models/blob/main/models/llama4/MODEL_CARD.md
 ```
-
-It does not replace the Hugging Face tokenizer files required for a real
-tokenization comparison.
 
 ### Step 1: Optional Dependency Boundary
 

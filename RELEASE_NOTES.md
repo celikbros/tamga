@@ -65,10 +65,9 @@
 - Added first Qwen tokenizer reference reports for expanded and challenge evals.
 - Added first Mistral tokenizer reference reports for expanded and challenge
   evals.
-- Recorded the official Meta LLaMA tokenizer access attempt as authenticated but
-  not authorized for the gated model.
-- Added the public Meta LLaMA model-card link as a documentation-only reference
-  while tokenizer access remains pending.
+- Added official Meta LLaMA tokenizer reference reports for expanded and
+  challenge evals.
+- Added the public Meta LLaMA model-card link as documentation context.
 - Added `docs/v1_5_baseline_findings.md` to summarize what the real-tokenizer
   comparisons do and do not prove.
 - Added the optional `baselines` dependency group for SentencePiece,
