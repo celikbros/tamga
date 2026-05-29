@@ -65,6 +65,8 @@
 - Added first Qwen tokenizer reference reports for expanded and challenge evals.
 - Added first Mistral tokenizer reference reports for expanded and challenge
   evals.
+- Added `docs/v1_5_baseline_findings.md` to summarize what the real-tokenizer
+  comparisons do and do not prove.
 - Added the optional `baselines` dependency group for SentencePiece,
   Transformers, and Tokenizers without making them required runtime
   dependencies.

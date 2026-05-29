@@ -143,6 +143,12 @@ Primary planning doc:
 docs/v1_5_real_tokenizer_baselines.md
 ```
 
+Current findings summary:
+
+```text
+docs/v1_5_baseline_findings.md
+```
+
 Use optional dependencies or local model files, then run
 `scripts/compare_real_tokenizers.py` with `--hf`, `--sentencepiece`, or
 `--toy-bpe`.
