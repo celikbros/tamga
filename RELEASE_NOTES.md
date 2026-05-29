@@ -65,6 +65,7 @@
 - Added first Qwen tokenizer reference reports for expanded and challenge evals.
 - Added first Mistral tokenizer reference reports for expanded and challenge
   evals.
+- Recorded the official Meta LLaMA tokenizer access attempt as gated/skipped.
 - Added `docs/v1_5_baseline_findings.md` to summarize what the real-tokenizer
   comparisons do and do not prove.
 - Added the optional `baselines` dependency group for SentencePiece,

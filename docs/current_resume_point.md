@@ -101,6 +101,16 @@ custom_tr_morph: avg_tokens/word=2.1749, boundary_f1=0.9220
 mistral:         avg_tokens/word=3.9426, boundary_f1=0.5463
 ```
 
+LLaMA access attempt:
+
+```text
+model_id: meta-llama/Llama-3.2-1B
+status: skipped
+reason: official Meta LLaMA Hugging Face repo is gated and requires approved
+access plus authentication.
+report: artifacts/v1_5_llama_report_expanded.md
+```
+
 ## Do Not Forget
 
 The next step is not to blindly continue adding challenge-set rules.
@@ -122,7 +132,7 @@ Proceed to the next phase of v1.5 real tokenizer baseline comparison:
 ```text
 Qwen reference tokenizer: first expanded/challenge reports complete
 Mistral reference tokenizer: first expanded/challenge reports complete
-LLaMA reference tokenizer: not attempted yet; may require gated access
+LLaMA reference tokenizer: attempted; official Meta repo requires gated access
 SentencePiece BPE: first local demo baseline complete
 SentencePiece Unigram: first local demo baseline complete
 existing toy BPE sweep

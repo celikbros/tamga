@@ -13,6 +13,7 @@ v1.5 added comparison against stronger tokenizer baselines:
 - local SentencePiece Unigram
 - Qwen tokenizer reference
 - Mistral tokenizer reference
+- official Meta LLaMA tokenizer access attempt
 - Unicode character diagnostic baseline
 
 The main result is:
@@ -46,6 +47,19 @@ it should be read as a core-behavior check, not a broad benchmark.
 | qwen | 3.0661 | 0.3317 | 0/50 |
 | mistral | 4.3306 | 0.5423 | 0/50 |
 | unicode_char | 7.5041 | 0.4947 | 0/50 |
+
+The official Meta LLaMA reference was attempted with:
+
+```text
+meta-llama/Llama-3.2-1B
+```
+
+It was skipped because the Hugging Face repository is gated and requires
+approved access plus authentication. See:
+
+```text
+artifacts/v1_5_llama_report_expanded.md
+```
 
 ### Interpretation
 
