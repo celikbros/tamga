@@ -51,6 +51,11 @@
 - Added a guarded possessive-buffered-ablative split for known surface stems,
   fixing `arabasından -> araba +sı +ndan` without broad `+ndan/+nden` splitting.
 
+- Added `docs/v1_5_real_tokenizer_baselines.md` to plan Qwen/LLaMA/Mistral and
+  SentencePiece BPE/Unigram comparisons beyond the toy BPE baseline.
+- Added `docs/current_resume_point.md` so the project can resume without losing
+  the v1.4/v1.5 boundary.
+
 ## v1.3.0
 
 v1.3.0 adds the hidden/heldout evaluation protocol and aggregate-only hidden

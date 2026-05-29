@@ -28,6 +28,9 @@ and [docs/multilingual_reviewer_response_form.md](docs/multilingual_reviewer_res
 Fictional reviewer response examples:
 [docs/reviewer_response_examples/README.md](docs/reviewer_response_examples/README.md)
 
+Current resume point:
+[docs/current_resume_point.md](docs/current_resume_point.md)
+
 ## Ilk Calistirma
 
 ```powershell
@@ -95,6 +98,8 @@ v1.4 ilk aday listesi:
 [docs/v1_4_candidate_shortlist.md](docs/v1_4_candidate_shortlist.md)
 v1.4 S1 buffered ablative analiz notu:
 [docs/v1_4_s1_buffered_ablative_analysis.md](docs/v1_4_s1_buffered_ablative_analysis.md)
+v1.5 real tokenizer baseline plani:
+[docs/v1_5_real_tokenizer_baselines.md](docs/v1_5_real_tokenizer_baselines.md)
 
 v1.3 oncesi hidden/heldout eval protokolu:
 [docs/hidden_eval_protocol.md](docs/hidden_eval_protocol.md)
