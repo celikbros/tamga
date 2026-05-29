@@ -57,6 +57,20 @@ roundtrip_exact: 28/28
 protected_spans_preserved: 23/23
 ```
 
+After local SentencePiece demo baselines:
+
+```text
+expanded real-baseline report
+custom_tr_morph: avg_tokens/word=2.7438, boundary_f1=1.0000
+sp_bpe:          avg_tokens/word=2.7273, boundary_f1=0.6263
+sp_unigram:      avg_tokens/word=3.0744, boundary_f1=0.6325
+
+challenge real-baseline report
+custom_tr_morph: avg_tokens/word=2.1749, boundary_f1=0.9220
+sp_bpe:          avg_tokens/word=2.7807, boundary_f1=0.6497
+sp_unigram:      avg_tokens/word=2.9321, boundary_f1=0.6225
+```
+
 ## Do Not Forget
 
 The next step is not to blindly continue adding challenge-set rules.
@@ -78,8 +92,8 @@ Proceed to the next phase of v1.5 real tokenizer baseline comparison:
 ```text
 Qwen reference tokenizer
 LLaMA/Mistral reference tokenizers
-SentencePiece BPE
-SentencePiece Unigram
+SentencePiece BPE: first local demo baseline complete
+SentencePiece Unigram: first local demo baseline complete
 existing toy BPE sweep
 ```
 

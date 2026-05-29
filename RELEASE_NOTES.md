@@ -58,6 +58,10 @@
 - Added optional real-tokenizer baseline infrastructure:
   `src/tr_tokenizer/external_baselines.py` and
   `scripts/compare_real_tokenizers.py`.
+- Added `scripts/train_sentencepiece_baselines.py` for local demo
+  SentencePiece BPE/Unigram baselines.
+- Added local SentencePiece BPE/Unigram v1.5 reports alongside the custom and
+  diagnostic character baselines.
 - Added the optional `baselines` dependency group for SentencePiece,
   Transformers, and Tokenizers without making them required runtime
   dependencies.

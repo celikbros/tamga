@@ -174,8 +174,10 @@ python scripts/compare_real_tokenizers.py data/eval/tr_challenge.tsv --markdown-
 Opsiyonel Hugging Face veya SentencePiece baseline eklemek icin:
 
 ```powershell
+python scripts/train_sentencepiece_baselines.py data/train/tr_bpe_train.txt artifacts/sp_bpe_1000 --model-type bpe --vocab-size 1000
+python scripts/train_sentencepiece_baselines.py data/train/tr_bpe_train.txt artifacts/sp_unigram_1000 --model-type unigram --vocab-size 1000
 python scripts/compare_real_tokenizers.py data/eval/tr_gold_expanded.tsv --hf qwen=Qwen/Qwen2.5-0.5B --markdown-out artifacts/v1_5_qwen_report.md
-python scripts/compare_real_tokenizers.py data/eval/tr_gold_expanded.tsv --sentencepiece sp_bpe=artifacts/sp_bpe.model
+python scripts/compare_real_tokenizers.py data/eval/tr_gold_expanded.tsv --sentencepiece sp_bpe=artifacts/sp_bpe_1000.model --sentencepiece sp_unigram=artifacts/sp_unigram_1000.model
 ```
 
 Varsayilan Hugging Face modu local cache ile sinirlidir. Eksik modeli indirmek

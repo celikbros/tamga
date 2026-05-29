@@ -139,6 +139,7 @@ Current implementation:
 
 - `src/tr_tokenizer/external_baselines.py`
 - `scripts/compare_real_tokenizers.py`
+- `scripts/train_sentencepiece_baselines.py`
 - built-in `custom_tr_morph` and `unicode_char` baselines
 - optional Hugging Face tokenizer adapter
 - optional SentencePiece adapter
@@ -147,6 +148,20 @@ Current implementation:
 
 The optional adapters skip cleanly when the package or local model is not
 available.
+
+First local SentencePiece demo results:
+
+```text
+expanded:
+custom_tr_morph avg_tokens/word=2.7438, boundary_f1=1.0000
+sp_bpe          avg_tokens/word=2.7273, boundary_f1=0.6263
+sp_unigram      avg_tokens/word=3.0744, boundary_f1=0.6325
+
+challenge:
+custom_tr_morph avg_tokens/word=2.1749, boundary_f1=0.9220
+sp_bpe          avg_tokens/word=2.7807, boundary_f1=0.6497
+sp_unigram      avg_tokens/word=2.9321, boundary_f1=0.6225
+```
 
 ### Step 1: Optional Dependency Boundary
 
@@ -214,7 +229,9 @@ Optional external references:
 
 ```powershell
 python scripts/compare_real_tokenizers.py data/eval/tr_gold_expanded.tsv --hf qwen=Qwen/Qwen2.5-0.5B --markdown-out artifacts/v1_5_qwen_report.md
-python scripts/compare_real_tokenizers.py data/eval/tr_gold_expanded.tsv --sentencepiece sp_bpe=artifacts/sp_bpe.model
+python scripts/train_sentencepiece_baselines.py data/train/tr_bpe_train.txt artifacts/sp_bpe_1000 --model-type bpe --vocab-size 1000
+python scripts/train_sentencepiece_baselines.py data/train/tr_bpe_train.txt artifacts/sp_unigram_1000 --model-type unigram --vocab-size 1000
+python scripts/compare_real_tokenizers.py data/eval/tr_gold_expanded.tsv --sentencepiece sp_bpe=artifacts/sp_bpe_1000.model --sentencepiece sp_unigram=artifacts/sp_unigram_1000.model
 python scripts/compare_real_tokenizers.py data/eval/tr_gold_expanded.tsv --toy-bpe toy_1000=artifacts/bpe_1000.json
 ```
 

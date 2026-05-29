@@ -6,23 +6,25 @@
 | --- | --- | ---: | ---: | ---: | ---: | --- |
 | custom_tr_morph | ok | 7.7130 | 2.1749 | 0.9220 | 44/108 |  |
 | unicode_char | ok | 23.4815 | 6.6214 | 0.4949 | 0/108 |  |
+| sp_bpe | ok | 9.8611 | 2.7807 | 0.6497 | 0/108 |  |
+| sp_unigram | ok | 10.3981 | 2.9321 | 0.6225 | 0/108 |  |
 
 ## Category Summary
 
-| Category | custom_tr_morph F1 | unicode_char F1 |
-| --- | ---: | ---: |
-| ambiguity | 0.8866 | 0.5436 |
-| code_mixed | 0.9315 | 0.4695 |
-| informal | 0.8649 | 0.4444 |
-| negative_word | 0.8317 | 0.4291 |
-| numbers_dates | 0.9649 | 0.4545 |
-| proper_name | 1.0000 | 0.5367 |
-| punctuation | 0.9921 | 0.4956 |
-| question | 0.9500 | 0.5128 |
-| softening | 0.8906 | 0.5240 |
-| suffix_chain | 0.8958 | 0.4858 |
-| verb_future | 0.8246 | 0.4735 |
-| verb_past | 0.9554 | 0.5634 |
+| Category | custom_tr_morph F1 | unicode_char F1 | sp_bpe F1 | sp_unigram F1 |
+| --- | ---: | ---: | ---: | ---: |
+| ambiguity | 0.8866 | 0.5436 | 0.6720 | 0.6032 |
+| code_mixed | 0.9315 | 0.4695 | 0.6335 | 0.6044 |
+| informal | 0.8649 | 0.4444 | 0.7750 | 0.6364 |
+| negative_word | 0.8317 | 0.4291 | 0.7634 | 0.6767 |
+| numbers_dates | 0.9649 | 0.4545 | 0.5125 | 0.5576 |
+| proper_name | 1.0000 | 0.5367 | 0.6995 | 0.7033 |
+| punctuation | 0.9921 | 0.4956 | 0.6536 | 0.5882 |
+| question | 0.9500 | 0.5128 | 0.7742 | 0.7200 |
+| softening | 0.8906 | 0.5240 | 0.6331 | 0.5833 |
+| suffix_chain | 0.8958 | 0.4858 | 0.5241 | 0.5918 |
+| verb_future | 0.8246 | 0.4735 | 0.5833 | 0.5714 |
+| verb_past | 0.9554 | 0.5634 | 0.7044 | 0.6627 |
 
 ## Notes
 
