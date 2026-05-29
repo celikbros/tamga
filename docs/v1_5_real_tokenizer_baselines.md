@@ -209,6 +209,15 @@ token from an account that has access to the model, then rerun:
 python scripts/compare_real_tokenizers.py data/eval/tr_gold_expanded.tsv --hf llama=meta-llama/Llama-3.2-1B --allow-download --markdown-out artifacts/v1_5_llama_report_expanded.md
 ```
 
+While access is pending, the public Meta GitHub model card is documentation-only:
+
+```text
+https://github.com/meta-llama/llama-models/blob/main/models/llama4/MODEL_CARD.md
+```
+
+It does not replace the Hugging Face tokenizer files required for a real
+tokenization comparison.
+
 ### Step 1: Optional Dependency Boundary
 
 Do not force all users to install heavy tokenizer dependencies.

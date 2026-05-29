@@ -62,6 +62,16 @@ model yet. See:
 artifacts/v1_5_llama_report_expanded.md
 ```
 
+Until gated access is approved, the public Meta model-card repository is useful
+as documentation but not as a tokenizer baseline source:
+
+```text
+https://github.com/meta-llama/llama-models/blob/main/models/llama4/MODEL_CARD.md
+```
+
+That file can support background notes about LLaMA model families and licensing,
+but it does not provide the tokenizer files needed by the baseline script.
+
 ### Interpretation
 
 The strongest comparison here is against `toy_bpe_1000` and `sp_bpe`, because

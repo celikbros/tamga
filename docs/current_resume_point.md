@@ -109,6 +109,8 @@ status: skipped
 reason: official Meta LLaMA Hugging Face repo is gated. Authentication was
 available, but the account was not authorized for this model yet.
 report: artifacts/v1_5_llama_report_expanded.md
+documentation-only reference:
+https://github.com/meta-llama/llama-models/blob/main/models/llama4/MODEL_CARD.md
 ```
 
 ## Do Not Forget
