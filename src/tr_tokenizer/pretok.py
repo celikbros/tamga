@@ -35,16 +35,23 @@ _AZERBAIJANI_SPECIFIC_WORD = (
     rf"[{_AZERBAIJANI_WORD_CHARS}]+"
 )
 _CYRILLIC_WORD = r"[\u0400-\u04FF]+"
+_ARABIC_LETTERS = r"\u0621-\u063A\u0641-\u064A\u066E-\u066F\u0671-\u06D3\u06FA-\u06FC"
+_ARABIC_MARKS = r"\u064B-\u065F\u0670"
+_ARABIC_WORD = rf"[{_ARABIC_LETTERS}](?:[{_ARABIC_LETTERS}{_ARABIC_MARKS}])*"
+_GREEK_WORD = r"[\u0386-\u038A\u038C\u038E-\u03A1\u03A3-\u03FF\u1F00-\u1FFF]+"
 _APOSTROPHE_FORM = rf"(?:{_FILE_LIKE}|{_NUMERIC_LIKE}|{_WORD})'(?:{_WORD})"
 _TOKEN_RE = re.compile(
     rf"{_URL}|{_UZBEK_APOSTROPHE_WORD}|{_AZERBAIJANI_SPECIFIC_WORD}|"
     rf"{_APOSTROPHE_FORM}|{_TECHNICAL_COMPARATOR}|{_FILE_LIKE}|"
-    rf"{_NUMERIC_LIKE}|{_CYRILLIC_WORD}|{_WORD}|\S"
+    rf"{_NUMERIC_LIKE}|{_CYRILLIC_WORD}|{_ARABIC_WORD}|{_GREEK_WORD}|"
+    rf"{_WORD}|\S"
 )
 _WORD_RE = re.compile(rf"^{_WORD}$")
 _UZBEK_APOSTROPHE_WORD_RE = re.compile(rf"^{_UZBEK_APOSTROPHE_WORD}$")
 _AZERBAIJANI_SPECIFIC_WORD_RE = re.compile(rf"^{_AZERBAIJANI_SPECIFIC_WORD}$")
 _CYRILLIC_WORD_RE = re.compile(rf"^{_CYRILLIC_WORD}$")
+_ARABIC_WORD_RE = re.compile(rf"^{_ARABIC_WORD}$")
+_GREEK_WORD_RE = re.compile(rf"^{_GREEK_WORD}$")
 _FILE_LIKE_RE = re.compile(rf"^{_FILE_LIKE}$")
 _NUMERIC_LIKE_RE = re.compile(rf"^{_NUMERIC_LIKE}$")
 _TECHNICAL_COMPARATOR_RE = re.compile(rf"^{_TECHNICAL_COMPARATOR}$")
@@ -66,6 +73,14 @@ def is_azerbaijani_specific_word(token: str) -> bool:
 
 def is_cyrillic_word(token: str) -> bool:
     return bool(_CYRILLIC_WORD_RE.match(token))
+
+
+def is_arabic_word(token: str) -> bool:
+    return bool(_ARABIC_WORD_RE.match(token))
+
+
+def is_greek_word(token: str) -> bool:
+    return bool(_GREEK_WORD_RE.match(token))
 
 
 def is_file_like_token(token: str) -> bool:

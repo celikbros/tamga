@@ -156,3 +156,37 @@ def test_pre_tokenize_keeps_cyrillic_words_intact():
         "күн",
         ".",
     ]
+
+
+def test_pre_tokenize_keeps_arabic_and_greek_words_intact():
+    arabic = "\u0645\u0631\u062d\u0628\u0627 \u0628\u0627\u0644\u0639\u0627\u0644\u0645."
+    greek = (
+        "\u0391\u03b8\u03ae\u03bd\u03b1 "
+        "\u03b5\u03af\u03bd\u03b1\u03b9 "
+        "\u03cc\u03bc\u03bf\u03c1\u03c6\u03b7 "
+        "\u03c0\u03cc\u03bb\u03b7."
+    )
+
+    assert pre_tokenize(arabic) == [
+        "\u0645\u0631\u062d\u0628\u0627",
+        "\u0628\u0627\u0644\u0639\u0627\u0644\u0645",
+        ".",
+    ]
+    assert pre_tokenize(greek) == [
+        "\u0391\u03b8\u03ae\u03bd\u03b1",
+        "\u03b5\u03af\u03bd\u03b1\u03b9",
+        "\u03cc\u03bc\u03bf\u03c1\u03c6\u03b7",
+        "\u03c0\u03cc\u03bb\u03b7",
+        ".",
+    ]
+
+
+def test_pre_tokenize_keeps_arabic_punctuation_separate():
+    assert pre_tokenize(
+        "\u0645\u0631\u062d\u0628\u0627\u060c \u0628\u0627\u0644\u0639\u0627\u0644\u0645\u061f"
+    ) == [
+        "\u0645\u0631\u062d\u0628\u0627",
+        "\u060c",
+        "\u0628\u0627\u0644\u0639\u0627\u0644\u0645",
+        "\u061f",
+    ]

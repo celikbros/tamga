@@ -4,12 +4,12 @@ Date: 2026-05-30
 
 ## Current State
 
-The project has completed v1.6b Batch 1 do-no-harm routing work.
+The project has completed v1.6b Batch 2 do-no-harm routing work.
 
 Current next step:
 
 ```text
-Start v1.6b Batch 2 with R4 Arabic/Greek script word fallback.
+Start v1.6b Batch 3 with R1 English/European apostrophe guard.
 ```
 
 Completed:
@@ -17,6 +17,9 @@ Completed:
 - v1.6b Batch 1: technical comparator/package span guard:
   - `transformers>=4.40 -> ▁transformers>=4.40`
   - `tokenizers>=0.19 -> ▁tokenizers>=0.19`
+- v1.6b Batch 2: Arabic/Greek script word fallback:
+  - `مرحبا بالعالم. -> ▁مرحبا ▁بالعالم .`
+  - `Αθήνα είναι όμορφη πόλη. -> ▁Αθήνα ▁είναι ▁όμορφη ▁πόλη .`
 - v1.4 Batch 1: protected exact lexical items `peki` and `yeni`.
 - v1.4 Batch 2: guarded possessive-buffered-ablative split:
   - `sından -> +sı +ndan`
@@ -28,7 +31,7 @@ Current verified metrics:
 
 ```text
 python -m pytest
-108 passed
+112 passed
 
 tr_gold_expanded.tsv
 exact_match: 50/50
@@ -43,12 +46,16 @@ exact_match: 9/9
 f1: 1.0000
 
 tr_stress_public.tsv
-roundtrip_exact: 29/29
+roundtrip_exact: 31/31
 protected_spans_preserved: 25/25
 
 en_smoke.tsv
 exact_match: 6/10
 f1: 0.8000
+
+multilingual_smoke.tsv
+exact_match: 11/20
+f1: 0.7883
 ```
 
 After v1.5 baseline infrastructure:
@@ -279,7 +286,7 @@ Then move to v1.6b low-risk routing guards.
 Bootstrap confidence intervals, protected-span break metrics, and natural/demo
 corpus fertility reporting are now complete.
 
-v1.6b Batch 1 is now complete:
+v1.6b Batch 1 and Batch 2 are now complete:
 
 ```text
 docs/v1_6b_batch1_technical_comparator_guard.md
@@ -287,12 +294,17 @@ artifacts/v1_6b_public_stress_report.md
 artifacts/v1_6b_protected_span_report_stress.md
 artifacts/v1_6b_real_tokenizer_report_english_smoke.md
 artifacts/v1_6b_ci_all_en_smoke.md
+docs/v1_6b_batch2_arabic_greek_fallback.md
+artifacts/v1_6b_batch2_public_stress_report.md
+artifacts/v1_6b_batch2_protected_span_report_stress.md
+artifacts/v1_6b_batch2_real_tokenizer_report_multilingual_smoke.md
+artifacts/v1_6b_batch2_ci_all_multilingual_smoke.md
 ```
 
 Next recommended step:
 
 ```text
-Start v1.6b Batch 2 with R4 Arabic/Greek script word fallback.
+Start v1.6b Batch 3 with R1 English/European apostrophe guard.
 ```
 
 Guardrails for v1.6b:
@@ -300,7 +312,7 @@ Guardrails for v1.6b:
 ```text
 python -m pytest
 tr_gold_expanded.tsv must remain 50/50
-tr_stress_public.tsv must remain 29/29 roundtrip
+tr_stress_public.tsv must remain 31/31 roundtrip
 custom protected span break rate must remain 0.0000
 Do not add broad Turkish morphology rules
 Do not start with Azerbaijani morphology

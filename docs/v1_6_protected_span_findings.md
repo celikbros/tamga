@@ -80,6 +80,25 @@ break_rate:          0.0000
 avg_tokens/word:     1.4805
 ```
 
+## v1.6b Batch 2 Update
+
+Arabic and Greek public stress rows were added after the script word fallback.
+They are not protected spans, but they do verify roundtrip behavior for
+non-Turkish scripts.
+
+Updated report:
+
+```text
+artifacts/v1_6b_batch2_protected_span_report_stress.md
+
+examples: 31
+custom_tr_morph
+protected_preserved: 25/25
+protected_broken:    0
+break_rate:          0.0000
+avg_tokens/word:     1.5325
+```
+
 ## Interpretation
 
 This is a do-no-harm metric, not a full tokenizer-quality metric.
@@ -112,9 +131,10 @@ code-like spans, the guard should be reverted or narrowed.
 
 ## Next Step
 
-The v1.6a natural/demo corpus fertility report is complete, and v1.6b Batch 1
-has now protected technical comparator spans. The next guard candidate is:
+The v1.6a natural/demo corpus fertility report is complete. v1.6b Batch 1
+protected technical comparator spans, and Batch 2 added Arabic/Greek script word
+fallback. The next guard candidate is:
 
 ```text
-R4 Arabic/Greek script word fallback
+R1 English/European apostrophe guard
 ```

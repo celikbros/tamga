@@ -136,6 +136,9 @@ Revert if:
 
 ### R4: Arabic/Greek Script Word Fallback
 
+Status: implemented in v1.6b Batch 2. See
+`docs/v1_6b_batch2_arabic_greek_fallback.md`.
+
 Problem:
 
 ```text
@@ -191,7 +194,7 @@ Revert if:
 Updated after advisor feedback and v1.6a measurement work:
 
 1. R5 technical comparator span guard: completed in v1.6b Batch 1
-2. R4 Arabic/Greek script word fallback
+2. R4 Arabic/Greek script word fallback: completed in v1.6b Batch 2
 3. R1 English/European apostrophe guard
 4. R2 non-Turkish Latin word guard
 5. R3 Azerbaijani routing guard

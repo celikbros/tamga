@@ -97,6 +97,9 @@
 - Added the v1.6b Batch 1 technical comparator span guard for package/version
   expressions such as `transformers>=4.40`, plus public stress and protected
   span reports for the updated behavior.
+- Added the v1.6b Batch 2 Arabic/Greek script word fallback, reducing
+  character-level fragmentation for non-Turkish scripts without adding
+  multilingual morphology.
 - Added `docs/v1_5_baseline_findings.md` to summarize what the real-tokenizer
   comparisons do and do not prove.
 - Added the optional `baselines` dependency group for SentencePiece,

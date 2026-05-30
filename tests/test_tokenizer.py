@@ -743,3 +743,37 @@ def test_encode_v14_s1_regressions_stay_stable():
 
     for text, expected_tokens in cases.items():
         assert encode(text) == expected_tokens
+
+
+def test_encode_v16b_keeps_arabic_and_greek_script_words_intact():
+    arabic = "\u0645\u0631\u062d\u0628\u0627 \u0628\u0627\u0644\u0639\u0627\u0644\u0645."
+    greek = (
+        "\u0391\u03b8\u03ae\u03bd\u03b1 "
+        "\u03b5\u03af\u03bd\u03b1\u03b9 "
+        "\u03cc\u03bc\u03bf\u03c1\u03c6\u03b7 "
+        "\u03c0\u03cc\u03bb\u03b7."
+    )
+
+    assert encode(arabic) == [
+        f"{WORD_START}\u0645\u0631\u062d\u0628\u0627",
+        f"{WORD_START}\u0628\u0627\u0644\u0639\u0627\u0644\u0645",
+        ".",
+    ]
+    assert encode(greek) == [
+        f"{WORD_START}\u0391\u03b8\u03ae\u03bd\u03b1",
+        f"{WORD_START}\u03b5\u03af\u03bd\u03b1\u03b9",
+        f"{WORD_START}\u03cc\u03bc\u03bf\u03c1\u03c6\u03b7",
+        f"{WORD_START}\u03c0\u03cc\u03bb\u03b7",
+        ".",
+    ]
+    assert decode(encode(arabic)) == arabic
+    assert decode(encode(greek)) == greek
+
+
+def test_decode_v16b_preserves_arabic_punctuation_spacing():
+    text = (
+        "\u0645\u0631\u062d\u0628\u0627\u060c "
+        "\u0628\u0627\u0644\u0639\u0627\u0644\u0645\u061f"
+    )
+
+    assert decode(encode(text)) == text

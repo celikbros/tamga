@@ -6,9 +6,11 @@ import re
 from .morphology import split_apostrophe_suffix, split_known_suffixes
 from .pretok import (
     TURKISH_LETTERS,
+    is_arabic_word,
     is_azerbaijani_specific_word,
     is_cyrillic_word,
     is_file_like_token,
+    is_greek_word,
     is_numeric_like_token,
     is_technical_comparator_token,
     is_uzbek_apostrophe_word,
@@ -18,7 +20,7 @@ from .pretok import (
 
 WORD_START = "▁"
 _WORD_RE = re.compile(rf"^[{TURKISH_LETTERS}]+$")
-_NO_SPACE_BEFORE = set(".,!?;:%)]}»”")
+_NO_SPACE_BEFORE = set(".,!?;:%)]}»”\u060C\u061B\u061F\u037E")
 _NO_SPACE_AFTER = set("([{«“%")
 
 
@@ -81,6 +83,8 @@ class TurkishTokenizer:
                 or is_uzbek_apostrophe_word(token)
                 or is_azerbaijani_specific_word(token)
                 or is_cyrillic_word(token)
+                or is_arabic_word(token)
+                or is_greek_word(token)
                 or is_file_like_token(token)
                 or is_numeric_like_token(token)
                 or is_technical_comparator_token(token)

@@ -111,10 +111,10 @@ quality.
 
 ## Next Candidate
 
-Next recommended v1.6b batch:
+Completed after this batch:
 
 ```text
 R4 Arabic/Greek script word fallback
 ```
 
-That candidate is still a do-no-harm guard, not a Turkish morphology expansion.
+See `docs/v1_6b_batch2_arabic_greek_fallback.md`.

@@ -131,6 +131,9 @@ v1.6 do-no-harm routing plani:
 v1.6b Batch 1 technical comparator guard:
 [docs/v1_6b_batch1_technical_comparator_guard.md](docs/v1_6b_batch1_technical_comparator_guard.md)
 
+v1.6b Batch 2 Arabic/Greek script fallback:
+[docs/v1_6b_batch2_arabic_greek_fallback.md](docs/v1_6b_batch2_arabic_greek_fallback.md)
+
 v1.3 oncesi hidden/heldout eval protokolu:
 [docs/hidden_eval_protocol.md](docs/hidden_eval_protocol.md)
 ve etiketleme kilavuzu:
@@ -307,6 +310,8 @@ Daha ayrintili gerekceler icin [docs/design.md](docs/design.md) dosyasina bakin.
   comparator/package span guard (`transformers>=4.40`, `tokenizers>=0.19`).
   Batch 1 tamamlandi; English smoke `5/10 -> 6/10`, public stress `29/29`,
   protected spans `25/25`.
+  Batch 2 tamamlandi; Arabic/Greek script fallback ile multilingual smoke
+  `8/20 -> 11/20`, public stress `31/31`, protected spans `25/25`.
 - v1.7: independent heldout eval plani, missing baseline plani
   (Morfessor, Turkish-trained BPE/Unigram, BERTurk/XLM-R/mT5) ve downstream probe
   protokolu.
