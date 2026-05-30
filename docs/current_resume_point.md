@@ -10,7 +10,7 @@ Azerbaijani routing after advisor review.
 Current next step:
 
 ```text
-Continue v1.7 with the v2.0 router/MorphBPE RFC skeleton.
+v1.7 planning docs are complete enough to begin implementation tasks.
 ```
 
 Completed:
@@ -290,8 +290,7 @@ Close v1.6b at Batch 4 and move to v1.7.
 Current recommended next step:
 
 ```text
-docs/v1_7_plan.md
-docs/v2_0_router_morphbpe_rfc.md
+Create configs/v1_7_baselines.toml and baseline matrix implementation tasks.
 ```
 
 Updated after advisor feedback:
@@ -339,12 +338,13 @@ docs/v1_7_plan.md
 docs/v1_7_heldout_eval_plan.md
 docs/v1_7_missing_baseline_protocol.md
 docs/v1_7_downstream_probe_protocol.md
+docs/v2_0_router_morphbpe_rfc.md
 ```
 
 Next recommended step:
 
 ```text
-Start docs/v2_0_router_morphbpe_rfc.md.
+Start configs/v1_7_baselines.toml and baseline matrix implementation tasks.
 ```
 
 Guardrails after v1.6b:

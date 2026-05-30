@@ -155,6 +155,9 @@ v1.7 missing baseline protocol:
 v1.7 downstream probe protocol:
 [docs/v1_7_downstream_probe_protocol.md](docs/v1_7_downstream_probe_protocol.md)
 
+v2.0 router/MorphBPE RFC:
+[docs/v2_0_router_morphbpe_rfc.md](docs/v2_0_router_morphbpe_rfc.md)
+
 v1.3 oncesi hidden/heldout eval protokolu:
 [docs/hidden_eval_protocol.md](docs/hidden_eval_protocol.md)
 ve etiketleme kilavuzu:
@@ -340,8 +343,8 @@ Daha ayrintili gerekceler icin [docs/design.md](docs/design.md) dosyasina bakin.
 - v1.6b R3 Azerice routing guard uygulanmadi; danisman konsensusu ile v2.0
   router/MorphBPE planina ertelendi.
 - v1.7: independent heldout eval plani, missing baseline plani
-  (Morfessor, Turkish-trained BPE/Unigram, BERTurk/XLM-R/mT5) ve downstream probe
-  protokolu.
+  (Morfessor, Turkish-trained BPE/Unigram, BERTurk/XLM-R/mT5), downstream probe
+  protokolu ve v2.0 router/MorphBPE RFC iskeleti.
 - v2.0: MorphBPE/hybrid prototype; full Turkic/multilingual morphology iddiasi
   yok, once routing/fallback mimarisi.
 - Uzun vadede: Turkce/Turk dilleri subword fallback, Ingilizce/kod cluster,

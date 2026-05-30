@@ -115,6 +115,9 @@
   tokenizer references.
 - Added the v1.7 downstream probe protocol for byte-normalized small-LM
   comparison of tokenizer usefulness.
+- Added the v2.0 router/MorphBPE RFC skeleton tying together protected spans,
+  conservative routing, Turkish deterministic morphology, learned fallback, and
+  byte fallback.
 - Added `docs/v1_5_baseline_findings.md` to summarize what the real-tokenizer
   comparisons do and do not prove.
 - Added the optional `baselines` dependency group for SentencePiece,
