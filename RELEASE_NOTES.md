@@ -106,6 +106,10 @@
 - Added the v1.6b Batch 4 non-Turkish Latin word guard so words such as
   `Straße`, `niño`, `Bogotá`, and `università` stay intact without broad
   language detection.
+- Documented the v1.6b R3 Azerbaijani routing decision: no v1.6b behavior
+  change, defer span-level Turkic routing to v2.0 planning.
+- Added the v1.7 measurement-first plan for heldout evaluation, missing
+  baselines, downstream probe protocol, and v2.0 router/MorphBPE RFC.
 - Added `docs/v1_5_baseline_findings.md` to summarize what the real-tokenizer
   comparisons do and do not prove.
 - Added the optional `baselines` dependency group for SentencePiece,

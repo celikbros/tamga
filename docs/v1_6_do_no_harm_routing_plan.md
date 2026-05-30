@@ -118,6 +118,9 @@ Revert if:
 
 ### R3: Azerbaijani Routing Guard
 
+Status: deferred after advisor review. See
+`docs/v1_6b_r3_deferred_decision.md`.
+
 Problem:
 
 ```text
@@ -203,7 +206,7 @@ Updated after advisor feedback and v1.6a measurement work:
 2. R4 Arabic/Greek script word fallback: completed in v1.6b Batch 2
 3. R1 English/European apostrophe guard: completed in v1.6b Batch 3
 4. R2 non-Turkish Latin word guard: completed in v1.6b Batch 4
-5. R3 Azerbaijani routing guard: design review required before implementation
+5. R3 Azerbaijani routing guard: deferred to v2.0 router/MorphBPE planning
 
 R5 is first because package/comparator spans are narrow and less linguistically
 ambiguous than apostrophe or language-routing decisions. R3 is last because it

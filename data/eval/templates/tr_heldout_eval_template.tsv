@@ -1,0 +1,12 @@
+id	domain	category_hint	text	gold_independent	gold_policy	divergence_note	visibility	review_status
+CAL-001	calibration	suffix_chain		[]	[]		calibration	draft
+CAL-002	calibration	negative_word		[]	[]		calibration	draft
+CAL-003	calibration	informal		[]	[]		calibration	draft
+CAL-004	calibration	code_mixed		[]	[]		calibration	draft
+CAL-005	calibration	ambiguity		[]	[]		calibration	draft
+HOLD-001	news_formal			[]	[]		private	draft
+HOLD-002	user_generated_informal			[]	[]		private	draft
+HOLD-003	technical_code_mixed			[]	[]		private	draft
+HOLD-004	institutional_formal			[]	[]		private	draft
+HOLD-005	names_numbers_dates			[]	[]		private	draft
+HOLD-006	ambiguity_negative			[]	[]		private	draft

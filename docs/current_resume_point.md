@@ -1,15 +1,16 @@
 # Current Resume Point
 
-Date: 2026-05-30
+Date: 2026-05-31
 
 ## Current State
 
-The project has completed v1.6b Batch 4 do-no-harm routing work.
+The project has completed v1.6b Batch 4 do-no-harm routing work and deferred R3
+Azerbaijani routing after advisor review.
 
 Current next step:
 
 ```text
-Start v1.6b Batch 5 with R3 Azerbaijani routing guard design review.
+Continue v1.7 with the missing baseline protocol.
 ```
 
 Completed:
@@ -28,6 +29,10 @@ Completed:
   - `Straße -> ▁Straße`
   - `niño -> ▁niño`
   - `all'università -> ▁all'università`
+- v1.6b R3 Azerbaijani routing decision:
+  - no v1.6b behavior change
+  - documented as a known limitation
+  - deferred to v2.0 router/MorphBPE planning
 - v1.4 Batch 1: protected exact lexical items `peki` and `yeni`.
 - v1.4 Batch 2: guarded possessive-buffered-ablative split:
   - `sından -> +sı +ndan`
@@ -54,7 +59,7 @@ exact_match: 9/9
 f1: 1.0000
 
 tr_stress_public.tsv
-roundtrip_exact: 31/31
+roundtrip_exact: 34/34
 protected_spans_preserved: 25/25
 
 en_smoke.tsv
@@ -273,11 +278,20 @@ Azerbaijani routing guard: adım, Bakıda, gedir, uzundur
 Arabic/Greek script-span fallback
 ```
 
+Advisor-reviewed R3 decision:
+
+```text
+Do not implement Azerbaijani routing in v1.6b.
+Token-level schwa guard does not fix the visible failures.
+Span-level routing belongs to v2.0.
+Close v1.6b at Batch 4 and move to v1.7.
+```
+
 Current recommended next step:
 
 ```text
-docs/v1_6_do_no_harm_routing_plan.md
-docs/advisor_feedback_triage_v1_6.md
+docs/v1_7_plan.md
+docs/v1_7_missing_baseline_protocol.md
 ```
 
 Updated after advisor feedback:
@@ -294,7 +308,7 @@ Then move to v1.6b low-risk routing guards.
 Bootstrap confidence intervals, protected-span break metrics, and natural/demo
 corpus fertility reporting are now complete.
 
-v1.6b Batch 1 through Batch 4 are now complete:
+v1.6b Batch 1 through Batch 4 are complete and v1.6b is now closed:
 
 ```text
 docs/v1_6b_batch1_technical_comparator_guard.md
@@ -319,21 +333,25 @@ artifacts/v1_6b_batch4_public_stress_report.md
 artifacts/v1_6b_batch4_protected_span_report_stress.md
 artifacts/v1_6b_batch4_real_tokenizer_report_multilingual_smoke.md
 artifacts/v1_6b_batch4_ci_all_multilingual_smoke.md
+docs/advisor_request_v1_6b_r3_azerbaijani.md
+docs/v1_6b_r3_deferred_decision.md
+docs/v1_7_plan.md
+docs/v1_7_heldout_eval_plan.md
 ```
 
 Next recommended step:
 
 ```text
-Start v1.6b Batch 5 with R3 Azerbaijani routing guard design review.
+Start docs/v1_7_missing_baseline_protocol.md.
 ```
 
-Guardrails for v1.6b:
+Guardrails after v1.6b:
 
 ```text
 python -m pytest
 tr_gold_expanded.tsv must remain 50/50
-tr_stress_public.tsv must remain 31/31 roundtrip
+tr_stress_public.tsv must remain 34/34 roundtrip
 custom protected span break rate must remain 0.0000
 Do not add broad Turkish morphology rules
-Do not start with Azerbaijani morphology
+Do not start with Azerbaijani morphology or span-level routing
 ```

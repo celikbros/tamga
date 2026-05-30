@@ -170,9 +170,12 @@ code-like spans, the guard should be reverted or narrowed.
 The v1.6a natural/demo corpus fertility report is complete. v1.6b Batch 1
 protected technical comparator spans, Batch 2 added Arabic/Greek script word
 fallback, and Batch 3 narrowed apostrophe suffix splitting to Turkish suffix
-tails. Batch 4 added a narrow non-Turkish Latin word guard. The next guard
-candidate needs a design review before implementation:
+tails. Batch 4 added a narrow non-Turkish Latin word guard.
+
+After advisor review, R3 Azerbaijani routing is deferred because the visible
+failures require span-level routing rather than a narrow token guard. The next
+project step is:
 
 ```text
-R3 Azerbaijani routing guard
+v1.7 heldout evaluation planning
 ```

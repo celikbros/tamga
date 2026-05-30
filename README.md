@@ -140,6 +140,15 @@ v1.6b Batch 3 English/European apostrophe guard:
 v1.6b Batch 4 non-Turkish Latin word guard:
 [docs/v1_6b_batch4_non_turkish_latin_guard.md](docs/v1_6b_batch4_non_turkish_latin_guard.md)
 
+v1.6b R3 Azerbaijani routing decision:
+[docs/v1_6b_r3_deferred_decision.md](docs/v1_6b_r3_deferred_decision.md)
+
+v1.7 plan:
+[docs/v1_7_plan.md](docs/v1_7_plan.md)
+
+v1.7 heldout eval plan:
+[docs/v1_7_heldout_eval_plan.md](docs/v1_7_heldout_eval_plan.md)
+
 v1.3 oncesi hidden/heldout eval protokolu:
 [docs/hidden_eval_protocol.md](docs/hidden_eval_protocol.md)
 ve etiketleme kilavuzu:
@@ -322,6 +331,8 @@ Daha ayrintili gerekceler icin [docs/design.md](docs/design.md) dosyasina bakin.
   `11/20 -> 12/20`, Turkish apostrophe regression `50/50` korundu.
   Batch 4 tamamlandi; non-Turkish Latin word guard ile multilingual smoke
   `12/20 -> 17/20`, Turkish regression `50/50` korundu.
+- v1.6b R3 Azerice routing guard uygulanmadi; danisman konsensusu ile v2.0
+  router/MorphBPE planina ertelendi.
 - v1.7: independent heldout eval plani, missing baseline plani
   (Morfessor, Turkish-trained BPE/Unigram, BERTurk/XLM-R/mT5) ve downstream probe
   protokolu.
