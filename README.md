@@ -152,6 +152,9 @@ v1.7 heldout eval plan:
 v1.7 missing baseline protocol:
 [docs/v1_7_missing_baseline_protocol.md](docs/v1_7_missing_baseline_protocol.md)
 
+v1.7 baseline matrix config:
+[configs/v1_7_baselines.toml](configs/v1_7_baselines.toml)
+
 v1.7 downstream probe protocol:
 [docs/v1_7_downstream_probe_protocol.md](docs/v1_7_downstream_probe_protocol.md)
 
@@ -239,6 +242,25 @@ python scripts/compare_real_tokenizers.py data/eval/tr_gold_expanded.tsv --sente
 
 Varsayilan Hugging Face modu local cache ile sinirlidir. Eksik modeli indirmek
 icin bilincli olarak `--allow-download` verilir.
+
+v1.7 visible baseline matrix config'i:
+
+```powershell
+python scripts/report_baseline_matrix.py configs/v1_7_baselines.toml
+```
+
+Bu komut expanded, challenge, English smoke ve multilingual smoke icin ayri
+Markdown raporlari uretir:
+
+```text
+artifacts/v1_7_baseline_matrix_expanded.md
+artifacts/v1_7_baseline_matrix_challenge.md
+artifacts/v1_7_baseline_matrix_english_smoke.md
+artifacts/v1_7_baseline_matrix_multilingual_smoke.md
+```
+
+Config varsayilan olarak Hugging Face modellerini kapali tutar; yerel cache veya
+bilincli indirme izni olmadan external model indirmez.
 
 ## Metric Confidence Intervals
 
@@ -344,7 +366,8 @@ Daha ayrintili gerekceler icin [docs/design.md](docs/design.md) dosyasina bakin.
   router/MorphBPE planina ertelendi.
 - v1.7: independent heldout eval plani, missing baseline plani
   (Morfessor, Turkish-trained BPE/Unigram, BERTurk/XLM-R/mT5), downstream probe
-  protokolu ve v2.0 router/MorphBPE RFC iskeleti.
+  protokolu, visible baseline matrix config'i ve v2.0 router/MorphBPE RFC
+  iskeleti.
 - v2.0: MorphBPE/hybrid prototype; full Turkic/multilingual morphology iddiasi
   yok, once routing/fallback mimarisi.
 - Uzun vadede: Turkce/Turk dilleri subword fallback, Ingilizce/kod cluster,

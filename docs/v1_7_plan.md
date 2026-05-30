@@ -73,6 +73,8 @@ Required output:
 
 ```text
 docs/v1_7_missing_baseline_protocol.md
+configs/v1_7_baselines.toml
+scripts/report_baseline_matrix.py
 ```
 
 This protocol should separate:
@@ -80,6 +82,14 @@ This protocol should separate:
 - morphology-boundary intrinsic metrics
 - token fertility / byte fallback / protected-span metrics
 - downstream probe metrics
+
+Implementation prep:
+
+- keep the visible baseline set in a config file rather than scattered shell
+  commands
+- keep Hugging Face references disabled by default unless local cache or
+  explicit download permission is available
+- generate one Markdown matrix report per visible eval set
 
 ## Workstream 3: Small Downstream Probe Protocol
 

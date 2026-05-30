@@ -259,6 +259,40 @@ This tokenizer solves Turkic/multilingual routing.
 
 Those require heldout eval and downstream probes.
 
+## v1.7 Implementation Prep
+
+The visible baseline matrix is now driven by:
+
+```text
+configs/v1_7_baselines.toml
+scripts/report_baseline_matrix.py
+```
+
+Default behavior:
+
+- run custom, unicode character, toy BPE, and local demo SentencePiece baselines
+- keep Hugging Face references disabled unless intentionally enabled
+- keep `allow_download = false` unless the run explicitly permits model download
+- write one Markdown report per visible eval set
+
+Command:
+
+```powershell
+python scripts/report_baseline_matrix.py configs/v1_7_baselines.toml
+```
+
+Generated visible reports:
+
+```text
+artifacts/v1_7_baseline_matrix_expanded.md
+artifacts/v1_7_baseline_matrix_challenge.md
+artifacts/v1_7_baseline_matrix_english_smoke.md
+artifacts/v1_7_baseline_matrix_multilingual_smoke.md
+```
+
+These reports are still visible-set diagnostics. They are not hidden eval
+evidence and do not prove downstream LLM quality.
+
 ## Implementation Plan
 
 ### Step 1: Protocol-Only Commit

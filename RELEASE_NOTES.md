@@ -118,6 +118,11 @@
 - Added the v2.0 router/MorphBPE RFC skeleton tying together protected spans,
   conservative routing, Turkish deterministic morphology, learned fallback, and
   byte fallback.
+- Added `configs/v1_7_baselines.toml` and
+  `scripts/report_baseline_matrix.py` so visible baseline comparisons can be run
+  from a reproducible config instead of scattered command lines.
+- Added v1.7 baseline matrix reports for expanded, challenge, English smoke,
+  and multilingual smoke visible eval sets.
 - Added `docs/v1_5_baseline_findings.md` to summarize what the real-tokenizer
   comparisons do and do not prove.
 - Added the optional `baselines` dependency group for SentencePiece,

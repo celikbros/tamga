@@ -10,7 +10,9 @@ Azerbaijani routing after advisor review.
 Current next step:
 
 ```text
-v1.7 planning docs are complete enough to begin implementation tasks.
+v1.7 baseline matrix config and visible reports are now available.
+Next: add the Turkish-trained SentencePiece sweep plan/config or begin the
+downstream-probe runner skeleton.
 ```
 
 Completed:
@@ -44,7 +46,7 @@ Current verified metrics:
 
 ```text
 python -m pytest
-116 passed
+118 passed
 
 tr_gold_expanded.tsv
 exact_match: 50/50
@@ -339,12 +341,20 @@ docs/v1_7_heldout_eval_plan.md
 docs/v1_7_missing_baseline_protocol.md
 docs/v1_7_downstream_probe_protocol.md
 docs/v2_0_router_morphbpe_rfc.md
+configs/v1_7_baselines.toml
+scripts/report_baseline_matrix.py
+artifacts/v1_7_baseline_matrix_expanded.md
+artifacts/v1_7_baseline_matrix_challenge.md
+artifacts/v1_7_baseline_matrix_english_smoke.md
+artifacts/v1_7_baseline_matrix_multilingual_smoke.md
+artifacts/v1_7_public_stress_report.md
 ```
 
 Next recommended step:
 
 ```text
-Start configs/v1_7_baselines.toml and baseline matrix implementation tasks.
+Add Turkish-trained SentencePiece sweep scaffolding, or start the
+downstream-probe runner skeleton. Do not add new tokenizer morphology rules.
 ```
 
 Guardrails after v1.6b:

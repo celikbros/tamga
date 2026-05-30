@@ -1,0 +1,68 @@
+[settings]
+allow_download = false
+
+[[datasets]]
+name = "expanded"
+path = "data/eval/tr_gold_expanded.tsv"
+markdown_out = "artifacts/v1_7_baseline_matrix_expanded.md"
+
+[[datasets]]
+name = "challenge"
+path = "data/eval/tr_challenge.tsv"
+markdown_out = "artifacts/v1_7_baseline_matrix_challenge.md"
+
+[[datasets]]
+name = "english_smoke"
+path = "data/eval/en_smoke.tsv"
+markdown_out = "artifacts/v1_7_baseline_matrix_english_smoke.md"
+
+[[datasets]]
+name = "multilingual_smoke"
+path = "data/eval/multilingual_smoke.tsv"
+markdown_out = "artifacts/v1_7_baseline_matrix_multilingual_smoke.md"
+
+[[baselines]]
+name = "custom_tr_morph"
+kind = "custom"
+enabled = true
+
+[[baselines]]
+name = "unicode_char"
+kind = "unicode_char"
+enabled = true
+
+[[baselines]]
+name = "toy_bpe_1000"
+kind = "toy_bpe"
+path = "artifacts/bpe_1000.json"
+enabled = true
+
+[[baselines]]
+name = "sp_bpe_1000"
+kind = "sentencepiece"
+path = "artifacts/sp_bpe_1000.model"
+enabled = true
+
+[[baselines]]
+name = "sp_unigram_1000"
+kind = "sentencepiece"
+path = "artifacts/sp_unigram_1000.model"
+enabled = true
+
+[[baselines]]
+name = "qwen"
+kind = "hf"
+model = "Qwen/Qwen2.5-0.5B"
+enabled = false
+
+[[baselines]]
+name = "mistral"
+kind = "hf"
+model = "mistralai/Mistral-7B-v0.1"
+enabled = false
+
+[[baselines]]
+name = "llama"
+kind = "hf"
+model = "meta-llama/Llama-3.2-1B"
+enabled = false
