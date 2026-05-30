@@ -79,6 +79,11 @@
   risks, and questions for external advisor review.
 - Added `docs/advisor_feedback_triage_v1_6.md` to incorporate advisor feedback
   and reprioritize v1.6 toward evaluation-strengthening before new guards.
+- Added `scripts/report_confidence_intervals.py` plus v1.6 bootstrap CI reports
+  for expanded, challenge, English smoke, and multilingual smoke metrics,
+  including all-baseline visible evals.
+- Added `docs/v1_6_confidence_interval_findings.md` to document what the CI
+  reports do and do not prove.
 - Added `docs/v1_5_baseline_findings.md` to summarize what the real-tokenizer
   comparisons do and do not prove.
 - Added the optional `baselines` dependency group for SentencePiece,

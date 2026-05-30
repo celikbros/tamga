@@ -19,6 +19,9 @@ v1.6 oncesi danisman degerlendirme istegi:
 v1.6 danisman geri bildirimi triage:
 [docs/advisor_feedback_triage_v1_6.md](docs/advisor_feedback_triage_v1_6.md)
 
+v1.6 confidence interval findings:
+[docs/v1_6_confidence_interval_findings.md](docs/v1_6_confidence_interval_findings.md)
+
 Multilingual/Turkic long-term strategy notes:
 [docs/multilingual_strategy.md](docs/multilingual_strategy.md) and
 [docs/multilingual_observations.md](docs/multilingual_observations.md)
@@ -200,6 +203,30 @@ python scripts/compare_real_tokenizers.py data/eval/tr_gold_expanded.tsv --sente
 
 Varsayilan Hugging Face modu local cache ile sinirlidir. Eksik modeli indirmek
 icin bilincli olarak `--allow-download` verilir.
+
+## Metric Confidence Intervals
+
+v1.6a adds bootstrap confidence interval reporting for visible eval metrics. This
+does not replace hidden eval; it only makes small-set uncertainty explicit.
+
+```powershell
+python scripts/report_confidence_intervals.py data/eval/tr_gold_expanded.tsv --samples 1000 --markdown-out artifacts/v1_6_ci_expanded.md
+python scripts/report_confidence_intervals.py data/eval/tr_challenge.tsv --samples 1000 --markdown-out artifacts/v1_6_ci_challenge.md
+```
+
+All-baseline CI reports can include toy BPE, SentencePiece, and local-cache
+Hugging Face tokenizers:
+
+```powershell
+python scripts/report_confidence_intervals.py data/eval/tr_challenge.tsv --samples 500 --toy-bpe toy_bpe_1000=artifacts/bpe_1000.json --sentencepiece sp_bpe=artifacts/sp_bpe_1000.model --sentencepiece sp_unigram=artifacts/sp_unigram_1000.model --hf qwen=Qwen/Qwen2.5-0.5B --hf mistral=mistralai/Mistral-7B-v0.1 --hf llama=meta-llama/Llama-3.2-1B --markdown-out artifacts/v1_6_ci_all_challenge.md
+```
+
+Findings summary:
+[docs/v1_6_confidence_interval_findings.md](docs/v1_6_confidence_interval_findings.md)
+
+Generated CI reports also include English and multilingual smoke sets:
+`artifacts/v1_6_ci_all_en_smoke.md` and
+`artifacts/v1_6_ci_all_multilingual_smoke.md`.
 
 `tr_stress_public.tsv` morfolojik gold degil, protected-span smoke setidir. Onun
 icin mevcut stress raporu kullanilir:

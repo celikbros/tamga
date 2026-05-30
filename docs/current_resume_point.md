@@ -4,7 +4,7 @@ Date: 2026-05-30
 
 ## Current State
 
-The project is currently in v1.5 baseline-infrastructure work.
+The project is currently in v1.6a evaluation-strengthening work.
 
 Completed:
 
@@ -135,6 +135,32 @@ report: artifacts/v1_5_real_tokenizer_report_multilingual_smoke.md
 findings: docs/v1_5_multilingual_smoke_findings.md
 ```
 
+After v1.6a bootstrap confidence intervals:
+
+```text
+python -m pytest
+95 passed
+
+tr_gold_expanded.tsv
+custom_tr_morph exact_match_rate: 1.0000 [1.0000, 1.0000]
+custom_tr_morph boundary_f1:      1.0000 [1.0000, 1.0000]
+custom_tr_morph avg_tokens/word:  2.7438 [2.4542, 3.1402]
+
+tr_challenge.tsv
+custom_tr_morph exact_match_rate: 0.4074 [0.3056, 0.5093]
+custom_tr_morph boundary_f1:      0.9220 [0.9043, 0.9382]
+custom_tr_morph avg_tokens/word:  2.1749 [2.0544, 2.3080]
+
+reports:
+  artifacts/v1_6_ci_expanded.md
+  artifacts/v1_6_ci_challenge.md
+  artifacts/v1_6_ci_all_expanded.md
+  artifacts/v1_6_ci_all_challenge.md
+  artifacts/v1_6_ci_all_en_smoke.md
+  artifacts/v1_6_ci_all_multilingual_smoke.md
+  docs/v1_6_confidence_interval_findings.md
+```
+
 ## Do Not Forget
 
 The next step is not to blindly continue adding challenge-set rules.
@@ -214,4 +240,10 @@ Start v1.6a with evaluation-strengthening:
 - protected-span break metrics
 - natural/demo corpus fertility reports
 Then move to v1.6b low-risk routing guards.
+```
+
+Bootstrap confidence intervals are now complete. Next recommended step:
+
+```text
+Add protected-span break metrics to baseline/smoke reports.
 ```

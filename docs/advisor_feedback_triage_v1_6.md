@@ -145,6 +145,8 @@ fixes.
 
 ### A1: Add Confidence Intervals
 
+Status: implemented in `scripts/report_confidence_intervals.py`.
+
 Add script support for bootstrap CIs:
 
 ```text
@@ -160,6 +162,18 @@ tr_gold_expanded.tsv
 tr_challenge.tsv
 en_smoke.tsv
 multilingual_smoke.tsv
+```
+
+Initial reports:
+
+```text
+artifacts/v1_6_ci_expanded.md
+artifacts/v1_6_ci_challenge.md
+artifacts/v1_6_ci_all_expanded.md
+artifacts/v1_6_ci_all_challenge.md
+artifacts/v1_6_ci_all_en_smoke.md
+artifacts/v1_6_ci_all_multilingual_smoke.md
+docs/v1_6_confidence_interval_findings.md
 ```
 
 ### A2: Add Protected Span Break Rate To Baseline Reports
