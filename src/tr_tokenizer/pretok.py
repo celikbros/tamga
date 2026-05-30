@@ -1,11 +1,16 @@
 from __future__ import annotations
 
 import re
+import unicodedata
 
 from .morphology import split_apostrophe_suffix_chain
 from .normalizer import normalize_text
 
 TURKISH_LETTERS = "A-Za-zÇĞİÖŞÜçğıöşü"
+TURKISH_ALPHABET = set(
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+    "ÇĞİÖŞÜçğıöşü"
+)
 
 _FILE_CHARS = rf"0-9{TURKISH_LETTERS}"
 _FILE_LIKE = (
@@ -40,12 +45,23 @@ _ARABIC_LETTERS = r"\u0621-\u063A\u0641-\u064A\u066E-\u066F\u0671-\u06D3\u06FA-\
 _ARABIC_MARKS = r"\u064B-\u065F\u0670"
 _ARABIC_WORD = rf"[{_ARABIC_LETTERS}](?:[{_ARABIC_LETTERS}{_ARABIC_MARKS}])*"
 _GREEK_WORD = r"[\u0386-\u038A\u038C\u038E-\u03A1\u03A3-\u03FF\u1F00-\u1FFF]+"
+_LATIN_EXTENDED_LETTERS = r"\u00C0-\u024F\u1E00-\u1EFF"
+_LATIN_EXTENDED_WORD_CHARS = rf"{TURKISH_LETTERS}{_LATIN_EXTENDED_LETTERS}"
+_LATIN_EXTENDED_WORD = (
+    rf"(?=[{_LATIN_EXTENDED_WORD_CHARS}]*[{_LATIN_EXTENDED_LETTERS}])"
+    rf"[{_LATIN_EXTENDED_WORD_CHARS}]+"
+)
+_LATIN_EXTENDED_APOSTROPHE_WORD = (
+    rf"(?=[{_LATIN_EXTENDED_WORD_CHARS}']*[{_LATIN_EXTENDED_LETTERS}])"
+    rf"[{_LATIN_EXTENDED_WORD_CHARS}]+(?:'[{_LATIN_EXTENDED_WORD_CHARS}]+)+"
+)
 _APOSTROPHE_FORM = rf"(?:{_FILE_LIKE}|{_NUMERIC_LIKE}|{_WORD})'(?:{_WORD})"
 _TOKEN_RE = re.compile(
     rf"{_URL}|{_UZBEK_APOSTROPHE_WORD}|{_AZERBAIJANI_SPECIFIC_WORD}|"
-    rf"{_APOSTROPHE_FORM}|{_TECHNICAL_COMPARATOR}|{_FILE_LIKE}|"
+    rf"{_LATIN_EXTENDED_APOSTROPHE_WORD}|{_APOSTROPHE_FORM}|"
+    rf"{_TECHNICAL_COMPARATOR}|{_FILE_LIKE}|"
     rf"{_NUMERIC_LIKE}|{_CYRILLIC_WORD}|{_ARABIC_WORD}|{_GREEK_WORD}|"
-    rf"{_WORD}|\S"
+    rf"{_LATIN_EXTENDED_WORD}|{_WORD}|\S"
 )
 _WORD_RE = re.compile(rf"^{_WORD}$")
 _UZBEK_APOSTROPHE_WORD_RE = re.compile(rf"^{_UZBEK_APOSTROPHE_WORD}$")
@@ -53,6 +69,9 @@ _AZERBAIJANI_SPECIFIC_WORD_RE = re.compile(rf"^{_AZERBAIJANI_SPECIFIC_WORD}$")
 _CYRILLIC_WORD_RE = re.compile(rf"^{_CYRILLIC_WORD}$")
 _ARABIC_WORD_RE = re.compile(rf"^{_ARABIC_WORD}$")
 _GREEK_WORD_RE = re.compile(rf"^{_GREEK_WORD}$")
+_LATIN_EXTENDED_WORD_RE = re.compile(
+    rf"^(?:{_LATIN_EXTENDED_APOSTROPHE_WORD}|{_LATIN_EXTENDED_WORD})$"
+)
 _APOSTROPHE_FORM_RE = re.compile(rf"^{_APOSTROPHE_FORM}$")
 _FILE_LIKE_RE = re.compile(rf"^{_FILE_LIKE}$")
 _NUMERIC_LIKE_RE = re.compile(rf"^{_NUMERIC_LIKE}$")
@@ -83,6 +102,17 @@ def is_arabic_word(token: str) -> bool:
 
 def is_greek_word(token: str) -> bool:
     return bool(_GREEK_WORD_RE.match(token))
+
+
+def is_non_turkish_latin_word(token: str) -> bool:
+    if not _LATIN_EXTENDED_WORD_RE.match(token):
+        return False
+    return any(
+        "LATIN" in unicodedata.name(char, "")
+        and char.isalpha()
+        and char not in TURKISH_ALPHABET
+        for char in token
+    )
 
 
 def is_file_like_token(token: str) -> bool:

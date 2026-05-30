@@ -92,6 +92,9 @@ Revert if:
 
 ### R2: Non-Turkish Latin Word Guard
 
+Status: implemented in v1.6b Batch 4. See
+`docs/v1_6b_batch4_non_turkish_latin_guard.md`.
+
 Problem:
 
 ```text
@@ -199,8 +202,8 @@ Updated after advisor feedback and v1.6a measurement work:
 1. R5 technical comparator span guard: completed in v1.6b Batch 1
 2. R4 Arabic/Greek script word fallback: completed in v1.6b Batch 2
 3. R1 English/European apostrophe guard: completed in v1.6b Batch 3
-4. R2 non-Turkish Latin word guard
-5. R3 Azerbaijani routing guard
+4. R2 non-Turkish Latin word guard: completed in v1.6b Batch 4
+5. R3 Azerbaijani routing guard: design review required before implementation
 
 R5 is first because package/comparator spans are narrow and less linguistically
 ambiguous than apostrophe or language-routing decisions. R3 is last because it

@@ -490,6 +490,39 @@ def test_encode_v16b_keeps_non_turkish_apostrophe_words_intact():
     )
 
 
+def test_encode_v16b_keeps_non_turkish_latin_words_intact():
+    spanish = "El ni\u00f1o comi\u00f3 pi\u00f1ata en Bogot\u00e1."
+    german = "Die Stra\u00dfe ist gro\u00df."
+    italian = "L'amico va all'universit\u00e0 oggi."
+
+    assert encode(spanish) == [
+        f"{WORD_START}El",
+        f"{WORD_START}ni\u00f1o",
+        f"{WORD_START}comi\u00f3",
+        f"{WORD_START}pi\u00f1ata",
+        f"{WORD_START}en",
+        f"{WORD_START}Bogot\u00e1",
+        ".",
+    ]
+    assert encode(german) == [
+        f"{WORD_START}Die",
+        f"{WORD_START}Stra\u00dfe",
+        f"{WORD_START}ist",
+        f"{WORD_START}gro\u00df",
+        ".",
+    ]
+    assert encode(italian) == [
+        f"{WORD_START}L'amico",
+        f"{WORD_START}va",
+        f"{WORD_START}all'universit\u00e0",
+        f"{WORD_START}oggi",
+        ".",
+    ]
+    assert decode(encode(spanish)) == spanish
+    assert decode(encode(german)) == german
+    assert decode(encode(italian)) == italian
+
+
 def test_decode_v13_preserves_smart_double_quote_spacing():
     assert decode(encode("“Merhaba,” dedi.")) == "“Merhaba,” dedi."
 

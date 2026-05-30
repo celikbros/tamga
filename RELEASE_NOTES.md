@@ -103,6 +103,9 @@
 - Added the v1.6b Batch 3 English/European apostrophe guard so non-Turkish
   forms such as `Don't`, `John's`, and `L'amico` stay intact while Turkish
   apostrophe suffix forms still split.
+- Added the v1.6b Batch 4 non-Turkish Latin word guard so words such as
+  `Straße`, `niño`, `Bogotá`, and `università` stay intact without broad
+  language detection.
 - Added `docs/v1_5_baseline_findings.md` to summarize what the real-tokenizer
   comparisons do and do not prove.
 - Added the optional `baselines` dependency group for SentencePiece,

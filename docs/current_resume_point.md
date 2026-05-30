@@ -4,12 +4,12 @@ Date: 2026-05-30
 
 ## Current State
 
-The project has completed v1.6b Batch 3 do-no-harm routing work.
+The project has completed v1.6b Batch 4 do-no-harm routing work.
 
 Current next step:
 
 ```text
-Start v1.6b Batch 4 with R2 non-Turkish Latin word guard.
+Start v1.6b Batch 5 with R3 Azerbaijani routing guard design review.
 ```
 
 Completed:
@@ -24,6 +24,10 @@ Completed:
   - `Don't -> ▁Don't`
   - `John's -> ▁John's`
   - `L'amico -> ▁L'amico`
+- v1.6b Batch 4: non-Turkish Latin word guard:
+  - `Straße -> ▁Straße`
+  - `niño -> ▁niño`
+  - `all'università -> ▁all'università`
 - v1.4 Batch 1: protected exact lexical items `peki` and `yeni`.
 - v1.4 Batch 2: guarded possessive-buffered-ablative split:
   - `sından -> +sı +ndan`
@@ -35,7 +39,7 @@ Current verified metrics:
 
 ```text
 python -m pytest
-114 passed
+116 passed
 
 tr_gold_expanded.tsv
 exact_match: 50/50
@@ -58,8 +62,8 @@ exact_match: 8/10
 f1: 0.8889
 
 multilingual_smoke.tsv
-exact_match: 12/20
-f1: 0.8542
+exact_match: 17/20
+f1: 0.9404
 ```
 
 After v1.5 baseline infrastructure:
@@ -290,7 +294,7 @@ Then move to v1.6b low-risk routing guards.
 Bootstrap confidence intervals, protected-span break metrics, and natural/demo
 corpus fertility reporting are now complete.
 
-v1.6b Batch 1 through Batch 3 are now complete:
+v1.6b Batch 1 through Batch 4 are now complete:
 
 ```text
 docs/v1_6b_batch1_technical_comparator_guard.md
@@ -310,12 +314,17 @@ artifacts/v1_6b_batch3_real_tokenizer_report_english_smoke.md
 artifacts/v1_6b_batch3_real_tokenizer_report_multilingual_smoke.md
 artifacts/v1_6b_batch3_ci_all_en_smoke.md
 artifacts/v1_6b_batch3_ci_all_multilingual_smoke.md
+docs/v1_6b_batch4_non_turkish_latin_guard.md
+artifacts/v1_6b_batch4_public_stress_report.md
+artifacts/v1_6b_batch4_protected_span_report_stress.md
+artifacts/v1_6b_batch4_real_tokenizer_report_multilingual_smoke.md
+artifacts/v1_6b_batch4_ci_all_multilingual_smoke.md
 ```
 
 Next recommended step:
 
 ```text
-Start v1.6b Batch 4 with R2 non-Turkish Latin word guard.
+Start v1.6b Batch 5 with R3 Azerbaijani routing guard design review.
 ```
 
 Guardrails for v1.6b:

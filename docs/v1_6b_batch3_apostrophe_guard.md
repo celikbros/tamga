@@ -126,18 +126,18 @@ Turkish apostrophe suffix flow.
 
 Remaining visible failures are expected:
 
-- `code`, `data`, `OpenAI`, and `code-mixed` still need a separate non-Turkish
-  Latin/code-mixed guard.
-- `à`, `ñ`, `ß`, `á` and similar non-Turkish Latin letters still need R2.
+- `code`, `data`, `OpenAI`, and `code-mixed` still need a separate ASCII
+  English/code-mixed guard.
+- `à`, `ñ`, `ß`, `á` and similar non-Turkish Latin letters were addressed in
+  v1.6b Batch 4.
 - Azerbaijani over-splitting remains intentionally deferred.
 
 ## Next Candidate
 
-Next recommended v1.6b batch:
+Completed after this batch:
 
 ```text
 R2 non-Turkish Latin word guard
 ```
 
-That candidate should target clear non-Turkish Latin characters without
-disabling Turkish diacritics or Turkish morphology in normal Turkish text.
+See `docs/v1_6b_batch4_non_turkish_latin_guard.md`.

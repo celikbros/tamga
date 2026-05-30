@@ -12,6 +12,7 @@ from .pretok import (
     is_cyrillic_word,
     is_file_like_token,
     is_greek_word,
+    is_non_turkish_latin_word,
     is_numeric_like_token,
     is_technical_comparator_token,
     is_uzbek_apostrophe_word,
@@ -86,6 +87,7 @@ class TurkishTokenizer:
                 or is_cyrillic_word(token)
                 or is_arabic_word(token)
                 or is_greek_word(token)
+                or is_non_turkish_latin_word(token)
                 or is_apostrophe_surface_token(token)
                 or is_file_like_token(token)
                 or is_numeric_like_token(token)

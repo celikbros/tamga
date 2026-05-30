@@ -32,6 +32,32 @@ def test_pre_tokenize_keeps_non_turkish_apostrophe_words_intact():
     ]
 
 
+def test_pre_tokenize_keeps_non_turkish_latin_words_intact():
+    assert pre_tokenize("El ni\u00f1o comi\u00f3 pi\u00f1ata en Bogot\u00e1.") == [
+        "El",
+        "ni\u00f1o",
+        "comi\u00f3",
+        "pi\u00f1ata",
+        "en",
+        "Bogot\u00e1",
+        ".",
+    ]
+    assert pre_tokenize("Die Stra\u00dfe ist gro\u00df.") == [
+        "Die",
+        "Stra\u00dfe",
+        "ist",
+        "gro\u00df",
+        ".",
+    ]
+    assert pre_tokenize("L'amico va all'universit\u00e0 oggi.") == [
+        "L'amico",
+        "va",
+        "all'universit\u00e0",
+        "oggi",
+        ".",
+    ]
+
+
 def test_pre_tokenize_keeps_numbers_and_punctuation():
     assert pre_tokenize("3'ün 12,5!") == ["3", "'", "+ün", "12,5", "!"]
 

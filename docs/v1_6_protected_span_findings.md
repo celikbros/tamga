@@ -117,6 +117,24 @@ break_rate:          0.0000
 avg_tokens/word:     1.4935
 ```
 
+## v1.6b Batch 4 Update
+
+The non-Turkish Latin word guard does not add protected spans, but it should
+reduce unnecessary fragmentation while preserving existing protected spans.
+
+Updated report:
+
+```text
+artifacts/v1_6b_batch4_protected_span_report_stress.md
+
+examples: 34
+custom_tr_morph
+protected_preserved: 25/25
+protected_broken:    0
+break_rate:          0.0000
+avg_tokens/word:     1.4277
+```
+
 ## Interpretation
 
 This is a do-no-harm metric, not a full tokenizer-quality metric.
@@ -152,8 +170,9 @@ code-like spans, the guard should be reverted or narrowed.
 The v1.6a natural/demo corpus fertility report is complete. v1.6b Batch 1
 protected technical comparator spans, Batch 2 added Arabic/Greek script word
 fallback, and Batch 3 narrowed apostrophe suffix splitting to Turkish suffix
-tails. The next guard candidate is:
+tails. Batch 4 added a narrow non-Turkish Latin word guard. The next guard
+candidate needs a design review before implementation:
 
 ```text
-R2 non-Turkish Latin word guard
+R3 Azerbaijani routing guard
 ```
