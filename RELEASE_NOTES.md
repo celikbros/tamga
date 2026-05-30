@@ -113,6 +113,8 @@
 - Added the v1.7 missing baseline protocol covering Turkish-trained
   SentencePiece BPE/Unigram, Morfessor, BERTurk/XLM-R/mT5, and production LLM
   tokenizer references.
+- Added the v1.7 downstream probe protocol for byte-normalized small-LM
+  comparison of tokenizer usefulness.
 - Added `docs/v1_5_baseline_findings.md` to summarize what the real-tokenizer
   comparisons do and do not prove.
 - Added the optional `baselines` dependency group for SentencePiece,

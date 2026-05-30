@@ -10,7 +10,7 @@ Azerbaijani routing after advisor review.
 Current next step:
 
 ```text
-Continue v1.7 with the downstream probe protocol.
+Continue v1.7 with the v2.0 router/MorphBPE RFC skeleton.
 ```
 
 Completed:
@@ -291,7 +291,7 @@ Current recommended next step:
 
 ```text
 docs/v1_7_plan.md
-docs/v1_7_downstream_probe_protocol.md
+docs/v2_0_router_morphbpe_rfc.md
 ```
 
 Updated after advisor feedback:
@@ -338,12 +338,13 @@ docs/v1_6b_r3_deferred_decision.md
 docs/v1_7_plan.md
 docs/v1_7_heldout_eval_plan.md
 docs/v1_7_missing_baseline_protocol.md
+docs/v1_7_downstream_probe_protocol.md
 ```
 
 Next recommended step:
 
 ```text
-Start docs/v1_7_downstream_probe_protocol.md.
+Start docs/v2_0_router_morphbpe_rfc.md.
 ```
 
 Guardrails after v1.6b:

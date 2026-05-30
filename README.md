@@ -152,6 +152,9 @@ v1.7 heldout eval plan:
 v1.7 missing baseline protocol:
 [docs/v1_7_missing_baseline_protocol.md](docs/v1_7_missing_baseline_protocol.md)
 
+v1.7 downstream probe protocol:
+[docs/v1_7_downstream_probe_protocol.md](docs/v1_7_downstream_probe_protocol.md)
+
 v1.3 oncesi hidden/heldout eval protokolu:
 [docs/hidden_eval_protocol.md](docs/hidden_eval_protocol.md)
 ve etiketleme kilavuzu:
