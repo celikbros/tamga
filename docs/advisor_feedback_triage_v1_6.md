@@ -262,25 +262,25 @@ Do not:
 
 ## Updated Next Step
 
-The next commit should not be a tokenizer behavior change.
+v1.6a measurement-strengthening is now complete at minimum scope.
+
+Completed:
+
+```text
+bootstrap CI script/report
+protected-span break metric implementation
+natural/demo corpus fertility report
+updated findings docs with uncertainty language
+```
 
 Recommended next work:
 
 ```text
-v1.6a: evaluation-strengthening
-```
-
-Minimum scope:
-
-1. bootstrap CI script/report
-2. protected-span break metric plan or implementation
-3. updated findings docs with uncertainty language
-
-Only after that:
-
-```text
 v1.6b: low-risk do-no-harm routing guard batch
 ```
+
+Start with the narrow technical comparator/package span guard, then Arabic/Greek
+script-span fallback. Leave Azerbaijani routing for later.
 
 ## Short Answer
 

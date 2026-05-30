@@ -293,12 +293,20 @@ Daha ayrintili gerekceler icin [docs/design.md](docs/design.md) dosyasina bakin.
 - v1.0: frozen deterministic research prototype, raporlar ve regression setleri.
 - v1.1: low-risk pretokenizer fixes, number/date/file-like guards.
 - v1.2: challenge mismatch taxonomy, davranis degisikligi olmadan planlama.
-- v1.3: public stress tests, telemetry ve baseline hazirligi; hidden eval
-  optional external validation olarak tutulur.
-- v1.4: yalnizca dusuk riskli safe-rule candidate batch.
-- v1.5: lexicon batch discipline ve independent morphological reference
-  integration hazirligi.
-- v2.0: deterministic morphology layer + MorphBPE trainer.
+- v1.3: public stress tests, telemetry, hidden-eval protokolu ve aggregate-only
+  raporlama.
+- v1.4: dusuk riskli safe-rule candidate batch; broad suffix expansion yok.
+- v1.5: real tokenizer baselines, SentencePiece/HF karsilastirmalari, English ve
+  multilingual smoke setleri.
+- v1.6a: measurement strengthening tamamlandi: confidence intervals,
+  protected-span break metrics, natural/demo corpus fertility report.
+- v1.6b: low-risk do-no-harm routing guards; ilk aday technical
+  comparator/package span guard (`transformers>=4.40`, `tokenizers>=0.19`).
+- v1.7: independent heldout eval plani, missing baseline plani
+  (Morfessor, Turkish-trained BPE/Unigram, BERTurk/XLM-R/mT5) ve downstream probe
+  protokolu.
+- v2.0: MorphBPE/hybrid prototype; full Turkic/multilingual morphology iddiasi
+  yok, once routing/fallback mimarisi.
 - Uzun vadede: Turkce/Turk dilleri subword fallback, Ingilizce/kod cluster,
   byte fallback ve cok dilli vocabulary allocation.
 

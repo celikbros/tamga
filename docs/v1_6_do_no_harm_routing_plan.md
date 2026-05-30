@@ -185,13 +185,18 @@ Revert if:
 
 ## Proposed Order
 
-1. R1 English/European apostrophe guard
-2. R2 non-Turkish Latin word guard
-3. R4 Arabic/Greek script word fallback
-4. R5 technical comparator span guard
+Updated after advisor feedback and v1.6a measurement work:
+
+1. R5 technical comparator span guard
+2. R4 Arabic/Greek script word fallback
+3. R1 English/European apostrophe guard
+4. R2 non-Turkish Latin word guard
 5. R3 Azerbaijani routing guard
 
-R3 is last because it may need local context, not only token-level checks.
+R5 is first because package/comparator spans are narrow and less linguistically
+ambiguous than apostrophe or language-routing decisions. R3 is last because it
+may need local context, not only token-level checks, and v1.x should not claim
+Azerbaijani morphology.
 
 ## Success Criteria
 
@@ -203,6 +208,7 @@ python scripts/evaluate_tokenizer.py data/eval/tr_gold_expanded.tsv
 python scripts/evaluate_tokenizer.py data/eval/en_smoke.tsv
 python scripts/evaluate_tokenizer.py data/eval/multilingual_smoke.tsv
 python scripts/report_stress_public.py data/eval/tr_stress_public.tsv --markdown-out artifacts/stress_public_report.md
+python scripts/report_protected_spans.py data/eval/tr_stress_public.tsv --toy-bpe toy_bpe_1000=artifacts/bpe_1000.json --sentencepiece sp_bpe=artifacts/sp_bpe_1000.model --sentencepiece sp_unigram=artifacts/sp_unigram_1000.model --hf qwen=Qwen/Qwen2.5-0.5B --hf mistral=mistralai/Mistral-7B-v0.1 --hf llama=meta-llama/Llama-3.2-1B --markdown-out artifacts/v1_6_protected_span_report_stress.md
 ```
 
 Expected:
@@ -212,6 +218,8 @@ Expected:
 - Multilingual smoke exact match improves above 8/20.
 - English/French/Italian apostrophe mismatches decrease.
 - Arabic/Greek no longer fall to character-level sequences.
+- Protected span break rate for `custom_tr_morph` remains `0.0000`.
+- Natural/demo corpus fertility does not regress unexpectedly.
 
 ## Interpretation Guard
 

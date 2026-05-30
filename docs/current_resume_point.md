@@ -4,7 +4,7 @@ Date: 2026-05-30
 
 ## Current State
 
-The project is currently in v1.6a evaluation-strengthening work.
+The project is ready to enter v1.6b do-no-harm routing work.
 
 Completed:
 
@@ -209,43 +209,30 @@ S2-S5 remain on hold:
 
 These require separate decisions and tests.
 
-## Recommended Next Track
+## Completed Measurement Track
 
-Proceed to the next phase of v1.5 real tokenizer baseline comparison:
+v1.5 and v1.6a baseline/measurement work is complete enough to start a narrow
+v1.6b guard batch.
 
-```text
-Qwen reference tokenizer: first expanded/challenge reports complete
-Mistral reference tokenizer: first expanded/challenge reports complete
-LLaMA reference tokenizer: first expanded/challenge reports complete
-SentencePiece BPE: first local demo baseline complete
-SentencePiece Unigram: first local demo baseline complete
-existing toy BPE sweep
-```
-
-The goal is to compare:
+Completed evidence:
 
 ```text
 token budget
 boundary F1
+confidence intervals
 protected span integrity
-byte/fallback coverage
+natural/demo corpus fertility
+English/multilingual smoke observations
 ```
 
-Primary planning doc:
-
-```text
-docs/v1_5_real_tokenizer_baselines.md
-```
-
-Current findings summary:
+Primary findings:
 
 ```text
 docs/v1_5_baseline_findings.md
+docs/v1_6_confidence_interval_findings.md
+docs/v1_6_protected_span_findings.md
+docs/v1_6_fertility_findings.md
 ```
-
-Use optional dependencies or local model files, then run
-`scripts/compare_real_tokenizers.py` with `--hf`, `--sentencepiece`, or
-`--toy-bpe`.
 
 Do-no-harm candidates discovered by English smoke:
 
@@ -283,4 +270,15 @@ Next recommended step:
 
 ```text
 Start v1.6b with the narrow technical comparator/package span guard.
+```
+
+Guardrails for v1.6b:
+
+```text
+python -m pytest
+tr_gold_expanded.tsv must remain 50/50
+tr_stress_public.tsv must remain 28/28 roundtrip
+custom protected span break rate must remain 0.0000
+Do not add broad Turkish morphology rules
+Do not start with Azerbaijani morphology
 ```
