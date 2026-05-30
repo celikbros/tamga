@@ -75,6 +75,8 @@
   do-no-harm behavior.
 - Added `docs/v1_6_do_no_harm_routing_plan.md` to plan low-risk routing fixes
   without broadening Turkish morphology.
+- Added `docs/advisor_update_v1_6_request.md` to summarize current evidence,
+  risks, and questions for external advisor review.
 - Added `docs/v1_5_baseline_findings.md` to summarize what the real-tokenizer
   comparisons do and do not prove.
 - Added the optional `baselines` dependency group for SentencePiece,

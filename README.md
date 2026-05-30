@@ -13,6 +13,9 @@ comparison ve LLM tokenizer research basliklarina genisleyebilir.
 Danismanlar icin ayrintili durum raporu:
 [docs/advisor_brief.md](docs/advisor_brief.md)
 
+v1.6 oncesi danisman degerlendirme istegi:
+[docs/advisor_update_v1_6_request.md](docs/advisor_update_v1_6_request.md)
+
 Multilingual/Turkic long-term strategy notes:
 [docs/multilingual_strategy.md](docs/multilingual_strategy.md) and
 [docs/multilingual_observations.md](docs/multilingual_observations.md)
