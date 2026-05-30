@@ -134,6 +134,9 @@ v1.6b Batch 1 technical comparator guard:
 v1.6b Batch 2 Arabic/Greek script fallback:
 [docs/v1_6b_batch2_arabic_greek_fallback.md](docs/v1_6b_batch2_arabic_greek_fallback.md)
 
+v1.6b Batch 3 English/European apostrophe guard:
+[docs/v1_6b_batch3_apostrophe_guard.md](docs/v1_6b_batch3_apostrophe_guard.md)
+
 v1.3 oncesi hidden/heldout eval protokolu:
 [docs/hidden_eval_protocol.md](docs/hidden_eval_protocol.md)
 ve etiketleme kilavuzu:
@@ -312,6 +315,8 @@ Daha ayrintili gerekceler icin [docs/design.md](docs/design.md) dosyasina bakin.
   protected spans `25/25`.
   Batch 2 tamamlandi; Arabic/Greek script fallback ile multilingual smoke
   `8/20 -> 11/20`, public stress `31/31`, protected spans `25/25`.
+  Batch 3 tamamlandi; English smoke `6/10 -> 8/10`, multilingual smoke
+  `11/20 -> 12/20`, Turkish apostrophe regression `50/50` korundu.
 - v1.7: independent heldout eval plani, missing baseline plani
   (Morfessor, Turkish-trained BPE/Unigram, BERTurk/XLM-R/mT5) ve downstream probe
   protokolu.

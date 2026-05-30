@@ -99,6 +99,24 @@ break_rate:          0.0000
 avg_tokens/word:     1.5325
 ```
 
+## v1.6b Batch 3 Update
+
+The English/European apostrophe guard does not add protected spans, but it must
+not break existing protected spans.
+
+Updated report:
+
+```text
+artifacts/v1_6b_batch3_protected_span_report_stress.md
+
+examples: 31
+custom_tr_morph
+protected_preserved: 25/25
+protected_broken:    0
+break_rate:          0.0000
+avg_tokens/word:     1.4935
+```
+
 ## Interpretation
 
 This is a do-no-harm metric, not a full tokenizer-quality metric.
@@ -132,9 +150,10 @@ code-like spans, the guard should be reverted or narrowed.
 ## Next Step
 
 The v1.6a natural/demo corpus fertility report is complete. v1.6b Batch 1
-protected technical comparator spans, and Batch 2 added Arabic/Greek script word
-fallback. The next guard candidate is:
+protected technical comparator spans, Batch 2 added Arabic/Greek script word
+fallback, and Batch 3 narrowed apostrophe suffix splitting to Turkish suffix
+tails. The next guard candidate is:
 
 ```text
-R1 English/European apostrophe guard
+R2 non-Turkish Latin word guard
 ```

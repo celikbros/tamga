@@ -16,6 +16,22 @@ def test_pre_tokenize_splits_words_apostrophe_suffixes_and_punctuation():
     ]
 
 
+def test_pre_tokenize_keeps_non_turkish_apostrophe_words_intact():
+    assert pre_tokenize("Don't split John's book.") == [
+        "Don't",
+        "split",
+        "John's",
+        "book",
+        ".",
+    ]
+    assert pre_tokenize("L'amico visits d'Istanbul.") == [
+        "L'amico",
+        "visits",
+        "d'Istanbul",
+        ".",
+    ]
+
+
 def test_pre_tokenize_keeps_numbers_and_punctuation():
     assert pre_tokenize("3'ün 12,5!") == ["3", "'", "+ün", "12,5", "!"]
 

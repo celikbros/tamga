@@ -103,11 +103,10 @@ Remaining visible multilingual smoke failures are still expected:
 
 ## Next Candidate
 
-Next recommended v1.6b batch:
+Completed after this batch:
 
 ```text
 R1 English/European apostrophe guard
 ```
 
-That candidate is riskier than R4 and must keep Turkish apostrophe examples such
-as `Türkiye'den`, `API'den`, `README.md'yi`, and `2026'da` intact.
+See `docs/v1_6b_batch3_apostrophe_guard.md`.

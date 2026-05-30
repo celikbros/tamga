@@ -477,6 +477,19 @@ def test_encode_v16b_plain_comparators_stay_punctuation():
     ]
 
 
+def test_encode_v16b_keeps_non_turkish_apostrophe_words_intact():
+    assert encode("Don't split John's book.") == [
+        f"{WORD_START}Don't",
+        f"{WORD_START}split",
+        f"{WORD_START}John's",
+        f"{WORD_START}book",
+        ".",
+    ]
+    assert decode(encode("L'amico visits d'Istanbul.")) == (
+        "L'amico visits d'Istanbul."
+    )
+
+
 def test_decode_v13_preserves_smart_double_quote_spacing():
     assert decode(encode("“Merhaba,” dedi.")) == "“Merhaba,” dedi."
 
@@ -609,13 +622,9 @@ def test_encode_v14_protection_regressions_stay_stable():
             ".",
         ],
         "Don't split John's book.": [
-            f"{WORD_START}Don",
-            "'",
-            "+t",
+            f"{WORD_START}Don't",
             f"{WORD_START}split",
-            f"{WORD_START}John",
-            "'",
-            "+s",
+            f"{WORD_START}John's",
             f"{WORD_START}book",
             ".",
         ],

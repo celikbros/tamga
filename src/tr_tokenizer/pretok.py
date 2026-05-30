@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 
+from .morphology import split_apostrophe_suffix_chain
 from .normalizer import normalize_text
 
 TURKISH_LETTERS = "A-Za-zÇĞİÖŞÜçğıöşü"
@@ -52,6 +53,7 @@ _AZERBAIJANI_SPECIFIC_WORD_RE = re.compile(rf"^{_AZERBAIJANI_SPECIFIC_WORD}$")
 _CYRILLIC_WORD_RE = re.compile(rf"^{_CYRILLIC_WORD}$")
 _ARABIC_WORD_RE = re.compile(rf"^{_ARABIC_WORD}$")
 _GREEK_WORD_RE = re.compile(rf"^{_GREEK_WORD}$")
+_APOSTROPHE_FORM_RE = re.compile(rf"^{_APOSTROPHE_FORM}$")
 _FILE_LIKE_RE = re.compile(rf"^{_FILE_LIKE}$")
 _NUMERIC_LIKE_RE = re.compile(rf"^{_NUMERIC_LIKE}$")
 _TECHNICAL_COMPARATOR_RE = re.compile(rf"^{_TECHNICAL_COMPARATOR}$")
@@ -95,6 +97,10 @@ def is_technical_comparator_token(token: str) -> bool:
     return bool(_TECHNICAL_COMPARATOR_RE.match(token))
 
 
+def is_apostrophe_surface_token(token: str) -> bool:
+    return bool(_APOSTROPHE_FORM_RE.match(token))
+
+
 def split_url_token(token: str) -> list[str]:
     """Keep URLs intact while leaving sentence punctuation outside."""
     if not is_url_like_token(token):
@@ -117,7 +123,7 @@ def split_apostrophe_token(token: str) -> list[str]:
         return [token]
 
     stem, suffix = token.split("'", 1)
-    if stem and suffix and _WORD_RE.match(suffix):
+    if stem and suffix and split_apostrophe_suffix_chain(suffix) is not None:
         return [stem, "'", f"+{suffix}"]
 
     return [token]

@@ -4,12 +4,12 @@ Date: 2026-05-30
 
 ## Current State
 
-The project has completed v1.6b Batch 2 do-no-harm routing work.
+The project has completed v1.6b Batch 3 do-no-harm routing work.
 
 Current next step:
 
 ```text
-Start v1.6b Batch 3 with R1 English/European apostrophe guard.
+Start v1.6b Batch 4 with R2 non-Turkish Latin word guard.
 ```
 
 Completed:
@@ -20,6 +20,10 @@ Completed:
 - v1.6b Batch 2: Arabic/Greek script word fallback:
   - `مرحبا بالعالم. -> ▁مرحبا ▁بالعالم .`
   - `Αθήνα είναι όμορφη πόλη. -> ▁Αθήνα ▁είναι ▁όμορφη ▁πόλη .`
+- v1.6b Batch 3: English/European apostrophe guard:
+  - `Don't -> ▁Don't`
+  - `John's -> ▁John's`
+  - `L'amico -> ▁L'amico`
 - v1.4 Batch 1: protected exact lexical items `peki` and `yeni`.
 - v1.4 Batch 2: guarded possessive-buffered-ablative split:
   - `sından -> +sı +ndan`
@@ -31,7 +35,7 @@ Current verified metrics:
 
 ```text
 python -m pytest
-112 passed
+114 passed
 
 tr_gold_expanded.tsv
 exact_match: 50/50
@@ -50,12 +54,12 @@ roundtrip_exact: 31/31
 protected_spans_preserved: 25/25
 
 en_smoke.tsv
-exact_match: 6/10
-f1: 0.8000
+exact_match: 8/10
+f1: 0.8889
 
 multilingual_smoke.tsv
-exact_match: 11/20
-f1: 0.7883
+exact_match: 12/20
+f1: 0.8542
 ```
 
 After v1.5 baseline infrastructure:
@@ -286,7 +290,7 @@ Then move to v1.6b low-risk routing guards.
 Bootstrap confidence intervals, protected-span break metrics, and natural/demo
 corpus fertility reporting are now complete.
 
-v1.6b Batch 1 and Batch 2 are now complete:
+v1.6b Batch 1 through Batch 3 are now complete:
 
 ```text
 docs/v1_6b_batch1_technical_comparator_guard.md
@@ -299,12 +303,19 @@ artifacts/v1_6b_batch2_public_stress_report.md
 artifacts/v1_6b_batch2_protected_span_report_stress.md
 artifacts/v1_6b_batch2_real_tokenizer_report_multilingual_smoke.md
 artifacts/v1_6b_batch2_ci_all_multilingual_smoke.md
+docs/v1_6b_batch3_apostrophe_guard.md
+artifacts/v1_6b_batch3_public_stress_report.md
+artifacts/v1_6b_batch3_protected_span_report_stress.md
+artifacts/v1_6b_batch3_real_tokenizer_report_english_smoke.md
+artifacts/v1_6b_batch3_real_tokenizer_report_multilingual_smoke.md
+artifacts/v1_6b_batch3_ci_all_en_smoke.md
+artifacts/v1_6b_batch3_ci_all_multilingual_smoke.md
 ```
 
 Next recommended step:
 
 ```text
-Start v1.6b Batch 3 with R1 English/European apostrophe guard.
+Start v1.6b Batch 4 with R2 non-Turkish Latin word guard.
 ```
 
 Guardrails for v1.6b:
