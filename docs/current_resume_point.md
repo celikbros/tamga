@@ -174,6 +174,27 @@ all-baseline report:
   docs/v1_6_protected_span_findings.md
 ```
 
+After v1.6a natural/demo corpus fertility report:
+
+```text
+data/train/tr_bpe_train.txt
+lines: 310
+words: 1326
+
+custom_tr_morph avg_tokens/word: 1.9419
+toy_bpe_1000 avg_tokens/word:    2.1953
+sp_bpe avg_tokens/word:          2.2097
+sp_unigram avg_tokens/word:      2.4555
+llama avg_tokens/word:           2.5505
+qwen avg_tokens/word:            2.8190
+mistral avg_tokens/word:         3.9306
+
+custom_tr_morph protected candidates: 16/16
+report:
+  artifacts/v1_6_fertility_report_demo_corpus.md
+  docs/v1_6_fertility_findings.md
+```
+
 ## Do Not Forget
 
 The next step is not to blindly continue adding challenge-set rules.
@@ -255,9 +276,11 @@ Start v1.6a with evaluation-strengthening:
 Then move to v1.6b low-risk routing guards.
 ```
 
-Bootstrap confidence intervals and protected-span break metrics are now complete.
+Bootstrap confidence intervals, protected-span break metrics, and natural/demo
+corpus fertility reporting are now complete.
+
 Next recommended step:
 
 ```text
-Add natural/demo corpus fertility reporting.
+Start v1.6b with the narrow technical comparator/package span guard.
 ```

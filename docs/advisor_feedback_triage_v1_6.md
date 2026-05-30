@@ -200,6 +200,8 @@ docs/v1_6_protected_span_findings.md
 
 ### A3: Add Natural Corpus Fertility Report
 
+Status: implemented in `scripts/report_fertility.py`.
+
 Use existing demo/public corpus first:
 
 ```text
@@ -216,6 +218,13 @@ protected span behavior where applicable
 ```
 
 This is not a final benchmark, but it reduces curated-set bias.
+
+Initial report:
+
+```text
+artifacts/v1_6_fertility_report_demo_corpus.md
+docs/v1_6_fertility_findings.md
+```
 
 ### A4: Plan Independent Heldout Eval
 

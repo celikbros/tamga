@@ -25,6 +25,9 @@ v1.6 confidence interval findings:
 v1.6 protected span findings:
 [docs/v1_6_protected_span_findings.md](docs/v1_6_protected_span_findings.md)
 
+v1.6 natural/demo corpus fertility findings:
+[docs/v1_6_fertility_findings.md](docs/v1_6_fertility_findings.md)
+
 Multilingual/Turkic long-term strategy notes:
 [docs/multilingual_strategy.md](docs/multilingual_strategy.md) and
 [docs/multilingual_observations.md](docs/multilingual_observations.md)
@@ -246,6 +249,15 @@ python scripts/report_protected_spans.py data/eval/tr_stress_public.tsv --toy-bp
 
 Findings summary:
 [docs/v1_6_protected_span_findings.md](docs/v1_6_protected_span_findings.md)
+
+Natural/demo corpus fertility report:
+
+```powershell
+python scripts/report_fertility.py data/train/tr_bpe_train.txt --toy-bpe toy_bpe_1000=artifacts/bpe_1000.json --sentencepiece sp_bpe=artifacts/sp_bpe_1000.model --sentencepiece sp_unigram=artifacts/sp_unigram_1000.model --hf qwen=Qwen/Qwen2.5-0.5B --hf mistral=mistralai/Mistral-7B-v0.1 --hf llama=meta-llama/Llama-3.2-1B --markdown-out artifacts/v1_6_fertility_report_demo_corpus.md
+```
+
+Findings summary:
+[docs/v1_6_fertility_findings.md](docs/v1_6_fertility_findings.md)
 
 ## Tasarim Prensipleri
 

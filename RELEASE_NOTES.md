@@ -89,6 +89,11 @@
   rates across custom, toy BPE, SentencePiece, and HF tokenizer baselines.
 - Added `docs/v1_6_protected_span_findings.md` to make protected-span
   interpretation and v1.6b guardrails explicit.
+- Added `scripts/report_fertility.py` and
+  `artifacts/v1_6_fertility_report_demo_corpus.md` for natural/demo corpus
+  token fertility and protected-candidate telemetry.
+- Added `docs/v1_6_fertility_findings.md` to close the minimum v1.6a
+  measurement-first loop before routing guard implementation.
 - Added `docs/v1_5_baseline_findings.md` to summarize what the real-tokenizer
   comparisons do and do not prove.
 - Added the optional `baselines` dependency group for SentencePiece,
