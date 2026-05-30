@@ -202,6 +202,16 @@ Current recommended next step:
 
 ```text
 docs/v1_6_do_no_harm_routing_plan.md
+docs/advisor_feedback_triage_v1_6.md
 ```
 
-Implement v1.6 in small routing batches. Do not add broad morphology rules.
+Updated after advisor feedback:
+
+```text
+Do not start with more tokenizer rules.
+Start v1.6a with evaluation-strengthening:
+- bootstrap confidence intervals
+- protected-span break metrics
+- natural/demo corpus fertility reports
+Then move to v1.6b low-risk routing guards.
+```

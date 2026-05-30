@@ -16,6 +16,9 @@ Danismanlar icin ayrintili durum raporu:
 v1.6 oncesi danisman degerlendirme istegi:
 [docs/advisor_update_v1_6_request.md](docs/advisor_update_v1_6_request.md)
 
+v1.6 danisman geri bildirimi triage:
+[docs/advisor_feedback_triage_v1_6.md](docs/advisor_feedback_triage_v1_6.md)
+
 Multilingual/Turkic long-term strategy notes:
 [docs/multilingual_strategy.md](docs/multilingual_strategy.md) and
 [docs/multilingual_observations.md](docs/multilingual_observations.md)
