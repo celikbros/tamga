@@ -10,7 +10,7 @@ Azerbaijani routing after advisor review.
 Current next step:
 
 ```text
-Continue v1.7 with the missing baseline protocol.
+Continue v1.7 with the downstream probe protocol.
 ```
 
 Completed:
@@ -291,7 +291,7 @@ Current recommended next step:
 
 ```text
 docs/v1_7_plan.md
-docs/v1_7_missing_baseline_protocol.md
+docs/v1_7_downstream_probe_protocol.md
 ```
 
 Updated after advisor feedback:
@@ -337,12 +337,13 @@ docs/advisor_request_v1_6b_r3_azerbaijani.md
 docs/v1_6b_r3_deferred_decision.md
 docs/v1_7_plan.md
 docs/v1_7_heldout_eval_plan.md
+docs/v1_7_missing_baseline_protocol.md
 ```
 
 Next recommended step:
 
 ```text
-Start docs/v1_7_missing_baseline_protocol.md.
+Start docs/v1_7_downstream_probe_protocol.md.
 ```
 
 Guardrails after v1.6b:

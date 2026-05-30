@@ -136,7 +136,7 @@ no new broad tokenizer behavior is shipped without a pre-registered reason
 ## Recommended Order
 
 1. `docs/v1_7_heldout_eval_plan.md` (started)
-2. `docs/v1_7_missing_baseline_protocol.md`
+2. `docs/v1_7_missing_baseline_protocol.md` (started)
 3. `docs/v1_7_downstream_probe_protocol.md`
 4. `docs/v2_0_router_morphbpe_rfc.md`
 

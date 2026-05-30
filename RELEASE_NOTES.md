@@ -110,6 +110,9 @@
   change, defer span-level Turkic routing to v2.0 planning.
 - Added the v1.7 measurement-first plan for heldout evaluation, missing
   baselines, downstream probe protocol, and v2.0 router/MorphBPE RFC.
+- Added the v1.7 missing baseline protocol covering Turkish-trained
+  SentencePiece BPE/Unigram, Morfessor, BERTurk/XLM-R/mT5, and production LLM
+  tokenizer references.
 - Added `docs/v1_5_baseline_findings.md` to summarize what the real-tokenizer
   comparisons do and do not prove.
 - Added the optional `baselines` dependency group for SentencePiece,
