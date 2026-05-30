@@ -26,6 +26,12 @@ def test_protected_candidates_detects_file_and_number() -> None:
     assert protected_candidates("README.md 3.14 yazıldı.") == ["README.md", "3.14"]
 
 
+def test_protected_candidates_detects_technical_comparators() -> None:
+    assert protected_candidates("Install transformers>=4.40.") == [
+        "transformers>=4.40",
+    ]
+
+
 def test_unknown_or_byte_proxy() -> None:
     assert is_unknown_or_byte_token("<unk>")
     assert is_unknown_or_byte_token("<0xE2>")

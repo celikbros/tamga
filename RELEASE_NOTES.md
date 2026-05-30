@@ -94,6 +94,9 @@
   token fertility and protected-candidate telemetry.
 - Added `docs/v1_6_fertility_findings.md` to close the minimum v1.6a
   measurement-first loop before routing guard implementation.
+- Added the v1.6b Batch 1 technical comparator span guard for package/version
+  expressions such as `transformers>=4.40`, plus public stress and protected
+  span reports for the updated behavior.
 - Added `docs/v1_5_baseline_findings.md` to summarize what the real-tokenizer
   comparisons do and do not prove.
 - Added the optional `baselines` dependency group for SentencePiece,

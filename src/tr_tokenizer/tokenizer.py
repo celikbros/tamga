@@ -10,6 +10,7 @@ from .pretok import (
     is_cyrillic_word,
     is_file_like_token,
     is_numeric_like_token,
+    is_technical_comparator_token,
     is_uzbek_apostrophe_word,
     is_url_like_token,
     pre_tokenize,
@@ -82,6 +83,7 @@ class TurkishTokenizer:
                 or is_cyrillic_word(token)
                 or is_file_like_token(token)
                 or is_numeric_like_token(token)
+                or is_technical_comparator_token(token)
             ):
                 encoded.extend(_mark_word_start([token]))
             else:

@@ -18,6 +18,11 @@ _SLASH_NUMBER = r"\d+(?:/\d+)+"
 _HYPHEN_CODE = rf"\d+(?:-[0-9{TURKISH_LETTERS}]+)+"
 _ALNUM_NUMBER = rf"(?:\d+[{TURKISH_LETTERS}]+|[{TURKISH_LETTERS}]+\d+)[0-9{TURKISH_LETTERS}]*"
 _NUMERIC_LIKE = rf"(?:{_SLASH_NUMBER}|{_TIME}|{_HYPHEN_CODE}|{_ALNUM_NUMBER}|{_NUMBER})"
+_VERSION = rf"\d+(?:[._-]?[0-9{TURKISH_LETTERS}]+)*(?:[-+][0-9{TURKISH_LETTERS}._-]+)?"
+_TECHNICAL_COMPARATOR = (
+    rf"[{TURKISH_LETTERS}][0-9{TURKISH_LETTERS}_.-]*"
+    rf"(?:>=|<=|==|~=|!=){_VERSION}"
+)
 _URL = r"https?://[^\s<>()\"']+"
 _UZBEK_APOSTROPHES = "\u02bb\u02bc"
 _UZBEK_APOSTROPHE_WORD = (
@@ -33,8 +38,8 @@ _CYRILLIC_WORD = r"[\u0400-\u04FF]+"
 _APOSTROPHE_FORM = rf"(?:{_FILE_LIKE}|{_NUMERIC_LIKE}|{_WORD})'(?:{_WORD})"
 _TOKEN_RE = re.compile(
     rf"{_URL}|{_UZBEK_APOSTROPHE_WORD}|{_AZERBAIJANI_SPECIFIC_WORD}|"
-    rf"{_APOSTROPHE_FORM}|{_FILE_LIKE}|{_NUMERIC_LIKE}|{_CYRILLIC_WORD}|"
-    rf"{_WORD}|\S"
+    rf"{_APOSTROPHE_FORM}|{_TECHNICAL_COMPARATOR}|{_FILE_LIKE}|"
+    rf"{_NUMERIC_LIKE}|{_CYRILLIC_WORD}|{_WORD}|\S"
 )
 _WORD_RE = re.compile(rf"^{_WORD}$")
 _UZBEK_APOSTROPHE_WORD_RE = re.compile(rf"^{_UZBEK_APOSTROPHE_WORD}$")
@@ -42,6 +47,7 @@ _AZERBAIJANI_SPECIFIC_WORD_RE = re.compile(rf"^{_AZERBAIJANI_SPECIFIC_WORD}$")
 _CYRILLIC_WORD_RE = re.compile(rf"^{_CYRILLIC_WORD}$")
 _FILE_LIKE_RE = re.compile(rf"^{_FILE_LIKE}$")
 _NUMERIC_LIKE_RE = re.compile(rf"^{_NUMERIC_LIKE}$")
+_TECHNICAL_COMPARATOR_RE = re.compile(rf"^{_TECHNICAL_COMPARATOR}$")
 _URL_RE = re.compile(rf"^{_URL}$")
 _URL_TRAILING_PUNCTUATION = ".,!?;:"
 
@@ -68,6 +74,10 @@ def is_file_like_token(token: str) -> bool:
 
 def is_numeric_like_token(token: str) -> bool:
     return bool(_NUMERIC_LIKE_RE.match(token))
+
+
+def is_technical_comparator_token(token: str) -> bool:
+    return bool(_TECHNICAL_COMPARATOR_RE.match(token))
 
 
 def split_url_token(token: str) -> list[str]:

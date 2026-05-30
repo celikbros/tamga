@@ -450,6 +450,33 @@ def test_encode_v13_keeps_urls_as_protected_spans():
     )
 
 
+def test_encode_v16b_keeps_technical_comparator_spans_intact():
+    assert encode("Install transformers>=4.40 and tokenizers>=0.19.") == [
+        f"{WORD_START}Install",
+        f"{WORD_START}transformers>=4.40",
+        f"{WORD_START}and",
+        f"{WORD_START}tokenizers>=0.19",
+        ".",
+    ]
+    assert decode(encode("Use lib<=2.0 pkg==1.2 tool~=3.1 bad!=0.9.")) == (
+        "Use lib<=2.0 pkg==1.2 tool~=3.1 bad!=0.9."
+    )
+
+
+def test_encode_v16b_plain_comparators_stay_punctuation():
+    assert encode("A >= B and x>y.") == [
+        f"{WORD_START}A",
+        ">",
+        "=",
+        f"{WORD_START}B",
+        f"{WORD_START}and",
+        f"{WORD_START}x",
+        ">",
+        f"{WORD_START}y",
+        ".",
+    ]
+
+
 def test_decode_v13_preserves_smart_double_quote_spacing():
     assert decode(encode("“Merhaba,” dedi.")) == "“Merhaba,” dedi."
 

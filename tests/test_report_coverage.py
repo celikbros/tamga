@@ -16,6 +16,7 @@ def test_classify_token_kinds():
     assert classify_token(f"{WORD_START}https://example.com/a") == "protected_url"
     assert classify_token(f"{WORD_START}README.md") == "protected_file"
     assert classify_token(f"{WORD_START}3.14") == "protected_number"
+    assert classify_token(f"{WORD_START}transformers>=4.40") == "protected_technical"
     assert classify_token(f"{WORD_START}Gel") == "word"
     assert classify_token(".") == "punctuation_symbol"
     assert classify_token("ə") == "other"

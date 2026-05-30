@@ -20,6 +20,7 @@ from scripts.report_protected_spans import is_span_preserved  # noqa: E402
 from tr_tokenizer.pretok import (  # noqa: E402
     is_file_like_token,
     is_numeric_like_token,
+    is_technical_comparator_token,
     is_url_like_token,
     pre_tokenize,
 )
@@ -119,6 +120,7 @@ def protected_candidates(text: str) -> list[str]:
             is_url_like_token(token)
             or is_file_like_token(token)
             or is_numeric_like_token(token)
+            or is_technical_comparator_token(token)
         ) and token not in seen:
             candidates.append(token)
             seen.add(token)

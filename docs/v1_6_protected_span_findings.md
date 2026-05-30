@@ -58,6 +58,28 @@ Selected baselines:
 | llama | 1/23 | 0.9565 | 2.7329 |
 | mistral | 1/23 | 0.9565 | 3.5959 |
 
+## v1.6b Batch 1 Update
+
+The technical comparator guard added two more protected spans to the public
+stress set:
+
+```text
+transformers>=4.40
+tokenizers>=0.19
+```
+
+Updated report:
+
+```text
+artifacts/v1_6b_protected_span_report_stress.md
+
+custom_tr_morph
+protected_preserved: 25/25
+protected_broken:    0
+break_rate:          0.0000
+avg_tokens/word:     1.4805
+```
+
 ## Interpretation
 
 This is a do-no-harm metric, not a full tokenizer-quality metric.
@@ -88,12 +110,11 @@ If a routing guard fixes English or multilingual smoke examples but breaks
 `README.md`, URLs, dates, file names, Uzbek apostrophe-like lexical spans, or
 code-like spans, the guard should be reverted or narrowed.
 
-## Next Measurement Step
+## Next Step
 
-Proceed with:
+The v1.6a natural/demo corpus fertility report is complete, and v1.6b Batch 1
+has now protected technical comparator spans. The next guard candidate is:
 
 ```text
-natural/demo corpus fertility report
+R4 Arabic/Greek script word fallback
 ```
-
-Then v1.6b can start with the lowest-risk guard batch.

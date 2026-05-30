@@ -14,6 +14,7 @@ from tr_tokenizer import TurkishTokenizer  # noqa: E402
 from tr_tokenizer.pretok import (  # noqa: E402
     is_file_like_token,
     is_numeric_like_token,
+    is_technical_comparator_token,
     is_url_like_token,
 )
 from tr_tokenizer.tokenizer import WORD_START  # noqa: E402
@@ -24,6 +25,7 @@ TOKEN_KINDS = (
     "protected_url",
     "protected_file",
     "protected_number",
+    "protected_technical",
     "word",
     "punctuation_symbol",
     "other",
@@ -48,6 +50,7 @@ class CoverageResult:
             self.counts["protected_url"]
             + self.counts["protected_file"]
             + self.counts["protected_number"]
+            + self.counts["protected_technical"]
         )
 
 
@@ -97,6 +100,8 @@ def classify_token(token: str) -> str:
         return "protected_file"
     if is_numeric_like_token(surface):
         return "protected_number"
+    if is_technical_comparator_token(surface):
+        return "protected_technical"
     if token.startswith(WORD_START):
         return "word"
     if len(surface) == 1 and unicodedata.category(surface)[0] in {"P", "S"}:
@@ -163,6 +168,7 @@ def _category_row(category: str, results: list[CoverageResult]) -> str:
         counts["protected_url"]
         + counts["protected_file"]
         + counts["protected_number"]
+        + counts["protected_technical"]
     )
     avg_tokens = tokens / examples if examples else 0.0
     return (

@@ -128,6 +128,9 @@ v1.5 multilingual smoke bulgulari:
 v1.6 do-no-harm routing plani:
 [docs/v1_6_do_no_harm_routing_plan.md](docs/v1_6_do_no_harm_routing_plan.md)
 
+v1.6b Batch 1 technical comparator guard:
+[docs/v1_6b_batch1_technical_comparator_guard.md](docs/v1_6b_batch1_technical_comparator_guard.md)
+
 v1.3 oncesi hidden/heldout eval protokolu:
 [docs/hidden_eval_protocol.md](docs/hidden_eval_protocol.md)
 ve etiketleme kilavuzu:
@@ -302,6 +305,8 @@ Daha ayrintili gerekceler icin [docs/design.md](docs/design.md) dosyasina bakin.
   protected-span break metrics, natural/demo corpus fertility report.
 - v1.6b: low-risk do-no-harm routing guards; ilk aday technical
   comparator/package span guard (`transformers>=4.40`, `tokenizers>=0.19`).
+  Batch 1 tamamlandi; English smoke `5/10 -> 6/10`, public stress `29/29`,
+  protected spans `25/25`.
 - v1.7: independent heldout eval plani, missing baseline plani
   (Morfessor, Turkish-trained BPE/Unigram, BERTurk/XLM-R/mT5) ve downstream probe
   protokolu.

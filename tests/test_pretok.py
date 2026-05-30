@@ -28,6 +28,38 @@ def test_pre_tokenize_keeps_file_like_tokens_intact():
     ]
 
 
+def test_pre_tokenize_keeps_technical_comparator_spans_intact():
+    assert pre_tokenize("Install transformers>=4.40 and tokenizers>=0.19.") == [
+        "Install",
+        "transformers>=4.40",
+        "and",
+        "tokenizers>=0.19",
+        ".",
+    ]
+    assert pre_tokenize("Use lib<=2.0 pkg==1.2 tool~=3.1 bad!=0.9.") == [
+        "Use",
+        "lib<=2.0",
+        "pkg==1.2",
+        "tool~=3.1",
+        "bad!=0.9",
+        ".",
+    ]
+
+
+def test_pre_tokenize_does_not_make_plain_comparators_sticky():
+    assert pre_tokenize("A >= B and x>y.") == [
+        "A",
+        ">",
+        "=",
+        "B",
+        "and",
+        "x",
+        ">",
+        "y",
+        ".",
+    ]
+
+
 def test_pre_tokenize_v11_keeps_guarded_number_and_file_forms():
     assert pre_tokenize("README.md'yi 3.14 34-ABC-1907.") == [
         "README.md",
