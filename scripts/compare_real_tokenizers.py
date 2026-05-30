@@ -113,6 +113,15 @@ def _encoding_for_spec(
     raise ValueError(f"unknown baseline kind: {spec.kind}")
 
 
+def encode_with_spec(
+    spec: RealBaselineSpec,
+    text: str,
+    *,
+    local_files_only: bool = True,
+) -> BaselineEncoding:
+    return _encoding_for_spec(spec, text, local_files_only=local_files_only)
+
+
 def _boundary_tokens(spec: RealBaselineSpec, tokens: list[str]) -> list[str]:
     if spec.kind in {"hf", "sentencepiece"}:
         return canonicalize_external_tokens(tokens)

@@ -161,6 +161,19 @@ reports:
   docs/v1_6_confidence_interval_findings.md
 ```
 
+After v1.6a protected-span baseline metrics:
+
+```text
+data/eval/tr_stress_public.tsv
+custom_tr_morph protected_preserved: 23/23
+custom_tr_morph protected_broken:    0
+custom_tr_morph break_rate:          0.0000
+
+all-baseline report:
+  artifacts/v1_6_protected_span_report_stress.md
+  docs/v1_6_protected_span_findings.md
+```
+
 ## Do Not Forget
 
 The next step is not to blindly continue adding challenge-set rules.
@@ -242,8 +255,9 @@ Start v1.6a with evaluation-strengthening:
 Then move to v1.6b low-risk routing guards.
 ```
 
-Bootstrap confidence intervals are now complete. Next recommended step:
+Bootstrap confidence intervals and protected-span break metrics are now complete.
+Next recommended step:
 
 ```text
-Add protected-span break metrics to baseline/smoke reports.
+Add natural/demo corpus fertility reporting.
 ```

@@ -84,6 +84,11 @@
   including all-baseline visible evals.
 - Added `docs/v1_6_confidence_interval_findings.md` to document what the CI
   reports do and do not prove.
+- Added `scripts/report_protected_spans.py` and
+  `artifacts/v1_6_protected_span_report_stress.md` for protected-span break
+  rates across custom, toy BPE, SentencePiece, and HF tokenizer baselines.
+- Added `docs/v1_6_protected_span_findings.md` to make protected-span
+  interpretation and v1.6b guardrails explicit.
 - Added `docs/v1_5_baseline_findings.md` to summarize what the real-tokenizer
   comparisons do and do not prove.
 - Added the optional `baselines` dependency group for SentencePiece,

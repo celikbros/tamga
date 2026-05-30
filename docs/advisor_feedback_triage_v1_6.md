@@ -178,6 +178,8 @@ docs/v1_6_confidence_interval_findings.md
 
 ### A2: Add Protected Span Break Rate To Baseline Reports
 
+Status: implemented in `scripts/report_protected_spans.py`.
+
 Current smoke reports know protected spans, but real-baseline reports mostly
 compare boundary F1.
 
@@ -187,6 +189,13 @@ Add:
 protected_span_preserved
 protected_span_broken
 protected_span_break_rate
+```
+
+Initial report:
+
+```text
+artifacts/v1_6_protected_span_report_stress.md
+docs/v1_6_protected_span_findings.md
 ```
 
 ### A3: Add Natural Corpus Fertility Report

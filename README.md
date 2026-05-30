@@ -22,6 +22,9 @@ v1.6 danisman geri bildirimi triage:
 v1.6 confidence interval findings:
 [docs/v1_6_confidence_interval_findings.md](docs/v1_6_confidence_interval_findings.md)
 
+v1.6 protected span findings:
+[docs/v1_6_protected_span_findings.md](docs/v1_6_protected_span_findings.md)
+
 Multilingual/Turkic long-term strategy notes:
 [docs/multilingual_strategy.md](docs/multilingual_strategy.md) and
 [docs/multilingual_observations.md](docs/multilingual_observations.md)
@@ -234,6 +237,15 @@ icin mevcut stress raporu kullanilir:
 ```powershell
 python scripts/report_stress_public.py data/eval/tr_stress_public.tsv --markdown-out artifacts/stress_public_report.md
 ```
+
+Protected-span baseline report:
+
+```powershell
+python scripts/report_protected_spans.py data/eval/tr_stress_public.tsv --toy-bpe toy_bpe_1000=artifacts/bpe_1000.json --sentencepiece sp_bpe=artifacts/sp_bpe_1000.model --sentencepiece sp_unigram=artifacts/sp_unigram_1000.model --hf qwen=Qwen/Qwen2.5-0.5B --hf mistral=mistralai/Mistral-7B-v0.1 --hf llama=meta-llama/Llama-3.2-1B --markdown-out artifacts/v1_6_protected_span_report_stress.md
+```
+
+Findings summary:
+[docs/v1_6_protected_span_findings.md](docs/v1_6_protected_span_findings.md)
 
 ## Tasarim Prensipleri
 
