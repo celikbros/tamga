@@ -170,6 +170,9 @@ v1.7 claim-grade corpus prep config:
 v1.7 CELIK_AI local corpus/tokenizer audit:
 [docs/v1_7_celik_ai_corpus_tokenizer_audit.md](docs/v1_7_celik_ai_corpus_tokenizer_audit.md)
 
+v1.7 CELIK gold corpus quality audit:
+[artifacts/v1_7_celik_gold_corpus_quality_audit_100k.md](artifacts/v1_7_celik_gold_corpus_quality_audit_100k.md)
+
 v1.7 SentencePiece pilot findings:
 [docs/v1_7_sentencepiece_pilot_findings.md](docs/v1_7_sentencepiece_pilot_findings.md)
 
@@ -327,6 +330,15 @@ python scripts/run_sentencepiece_sweep.py configs/v1_7_sentencepiece_pilot_sweep
 
 Bu pilot claim-grade degildir. `artifacts/private/` altindaki model/vocab
 dosyalari git disi kalir; public repo'da yalnizca aggregate raporlar tutulur.
+
+Local JSONL corpus quality audit:
+
+```powershell
+python scripts/audit_jsonl_corpus_quality.py data/train/private/celik_ai/celik_gold_corpus.jsonl --max-lines 100000 --markdown-out artifacts/v1_7_celik_gold_corpus_quality_audit_100k.md
+```
+
+Bu rapor corpus metni yayinlamaz; yalnizca JSONL yapisi, duplicate, uzun satir,
+script/language hint ve bozulma sinyallerini aggregate olarak verir.
 
 ## Metric Confidence Intervals
 

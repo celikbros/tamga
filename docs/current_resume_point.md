@@ -19,9 +19,11 @@ tokenizer reference. Local CELIK_AI text sources have been copied into the
 repo's ignored private corpus area, and the corpus-preparation/leakage-check
 skeleton now produces aggregate reports. A 75,388-line local CELIK_AI pilot
 sample and 4k/8k SentencePiece BPE/Unigram pilot sweep are available, with
-private model/vocab files kept out of git. Next: either build a larger
-claim-grade-style sample with explicit source proportions, or begin the
-downstream-probe runner skeleton.
+private model/vocab files kept out of git. The user's primary
+`celik_gold_corpus.jsonl` source has also been copied into the ignored private
+area and audited on the first 100k lines. Next: either add explicit filtering
+for long/control/replacement-character lines and rebuild the pilot sample from
+the gold JSONL source, or begin the downstream-probe runner skeleton.
 ```
 
 Completed:
@@ -136,6 +138,30 @@ sp_bpe_4000_celik_pilot:      avg_tokens/word=3.0183, boundary_f1=0.6480
 sp_unigram_4000_celik_pilot:  avg_tokens/word=3.0131, boundary_f1=0.6961
 sp_bpe_8000_celik_pilot:      avg_tokens/word=2.5692, boundary_f1=0.6714
 sp_unigram_8000_celik_pilot:  avg_tokens/word=2.5666, boundary_f1=0.7405
+```
+
+After `celik_gold_corpus.jsonl` 100k quality audit:
+
+```text
+copied source:
+data/train/private/celik_ai/celik_gold_corpus.jsonl
+
+audit report:
+artifacts/v1_7_celik_gold_corpus_quality_audit_100k.md
+
+scanned lines: 100,000
+valid JSON: 100,000
+missing/empty text: 0
+exact duplicates in scan: 0
+normalized duplicates in scan: 0
+tr_like heuristic: 84.38%
+mixed_tr_en heuristic: 15.47%
+latin script heuristic: 99.998%
+chars > 4,192: 1.58%
+chars > 20,000: 0.46%
+mojibake suspects: 0.03%
+replacement-char texts: 0.003%
+control-char texts: 0.71%
 ```
 
 After Qwen tokenizer reference:
@@ -401,14 +427,17 @@ configs/v1_7_sentencepiece_pilot_sweep.toml
 docs/v1_7_sentencepiece_pilot_findings.md
 artifacts/v1_7_sentencepiece_pilot_sweep_expanded.md
 artifacts/v1_7_sentencepiece_pilot_sweep_challenge.md
+scripts/audit_jsonl_corpus_quality.py
+tests/test_audit_jsonl_corpus_quality.py
+artifacts/v1_7_celik_gold_corpus_quality_audit_100k.md
 ```
 
 Next recommended step:
 
 ```text
-Build a larger claim-grade-style sample with explicit source proportions and
-long-line filtering, or start the downstream-probe runner skeleton. Do not add
-new tokenizer morphology rules.
+Add filtering/source-proportion controls for the local gold JSONL corpus and
+rebuild the SentencePiece pilot sample, or start the downstream-probe runner
+skeleton. Do not add new tokenizer morphology rules.
 ```
 
 Guardrails after v1.6b:

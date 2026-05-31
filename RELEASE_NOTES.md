@@ -145,6 +145,8 @@
   BPE/Unigram trained on an ignored leakage-checked local sample.
 - Added `docs/v1_7_sentencepiece_pilot_findings.md` to frame the pilot as
   non-claim-grade evidence and keep private model/vocab files out of git.
+- Added `scripts/audit_jsonl_corpus_quality.py` plus an aggregate 100k-line
+  quality audit for the copied local `celik_gold_corpus.jsonl` source.
 - Added `docs/v1_5_baseline_findings.md` to summarize what the real-tokenizer
   comparisons do and do not prove.
 - Added the optional `baselines` dependency group for SentencePiece,

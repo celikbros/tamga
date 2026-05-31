@@ -41,6 +41,7 @@ Reason:
 Raw or semi-raw text candidates:
 
 ```text
+C:\CELIK_AI\celik_training\celik_gold_corpus.jsonl                 (~13.0 GB)
 C:\CELIK_AI\datasets\pretrain\tr_corpus.txt        (~458 MB)
 C:\CELIK_AI\datasets\pretrain\en_corpus.txt        (~519 MB)
 C:\CELIK_AI\celik_training\data_pipeline\wiki_oscar_corpus.jsonl (~12.8 GB)
@@ -58,6 +59,20 @@ The JSONL files use records shaped like:
 
 UTF-8 byte checks show that Turkish characters are stored correctly. The mojibake
 seen in some PowerShell output is a display issue, not corpus corruption.
+
+The main raw JSONL file reported by the user is:
+
+```text
+C:\CELIK_AI\celik_training\celik_gold_corpus.jsonl
+```
+
+It was copied into the repo's ignored private corpus area:
+
+```text
+data/train/private/celik_ai/celik_gold_corpus.jsonl
+```
+
+This private copy is not committed to git.
 
 ## Corpus Builder Findings
 
@@ -201,6 +216,7 @@ data/train/private/celik_ai/
 Copied sources:
 
 ```text
+celik_gold_corpus.jsonl
 tr_corpus.txt
 wiki_oscar_corpus.jsonl
 academic_corpus.jsonl
@@ -210,6 +226,53 @@ trt_news_corpus.jsonl
 ```
 
 No files in `C:\CELIK_AI` were modified or deleted.
+
+## Gold Corpus Quality Audit
+
+Aggregate-only audit script:
+
+```text
+scripts/audit_jsonl_corpus_quality.py
+```
+
+Initial report:
+
+```text
+artifacts/v1_7_celik_gold_corpus_quality_audit_100k.md
+```
+
+Command:
+
+```powershell
+python scripts/audit_jsonl_corpus_quality.py data/train/private/celik_ai/celik_gold_corpus.jsonl --max-lines 100000 --markdown-out artifacts/v1_7_celik_gold_corpus_quality_audit_100k.md
+```
+
+First 100,000-line findings:
+
+| Signal | Value |
+| --- | ---: |
+| valid JSON | 100,000 / 100,000 |
+| missing/empty text | 0 |
+| exact duplicates in scan | 0 |
+| normalized duplicates in scan | 0 |
+| Turkish-like heuristic | 84.38% |
+| mixed TR/EN heuristic | 15.47% |
+| Latin script heuristic | 99.998% |
+| chars > 4,192 | 1.58% |
+| chars > 20,000 | 0.46% |
+| mojibake suspects | 0.03% |
+| replacement-char texts | 0.003% |
+| control-char texts | 0.71% |
+
+Interpretation:
+
+- The file is structurally clean JSONL in the sampled prefix.
+- The text appears mostly Turkish/formal, with a meaningful mixed Turkish/English
+  slice.
+- The corpus is promising for local SentencePiece and downstream probe work.
+- Before claim-grade tokenizer training, long lines and control/replacement
+  character cases should be filtered or explicitly documented.
+- The 100k audit is not a full-file certification; it is a first quality signal.
 
 Implemented engineering step:
 
