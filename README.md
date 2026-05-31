@@ -161,6 +161,9 @@ v1.7 SentencePiece sweep config:
 v1.7 claim-grade corpus plan:
 [docs/v1_7_claim_grade_corpus_plan.md](docs/v1_7_claim_grade_corpus_plan.md)
 
+v1.7 CELIK_AI local corpus/tokenizer audit:
+[docs/v1_7_celik_ai_corpus_tokenizer_audit.md](docs/v1_7_celik_ai_corpus_tokenizer_audit.md)
+
 v1.7 downstream probe protocol:
 [docs/v1_7_downstream_probe_protocol.md](docs/v1_7_downstream_probe_protocol.md)
 
@@ -267,6 +270,16 @@ artifacts/v1_7_baseline_matrix_multilingual_smoke.md
 
 Config varsayilan olarak Hugging Face modellerini kapali tutar; yerel cache veya
 bilincli indirme izni olmadan external model indirmez.
+
+Local Hugging Face `tokenizers` JSON dosyalari da opsiyonel baseline olarak
+eklenebilir:
+
+```powershell
+python scripts/compare_real_tokenizers.py data/eval/tr_gold_expanded.tsv --tokenizers-json celik_64k_byte_bpe=C:\CELIK_AI\celik_core\celik_core\tokenizer.json --markdown-out artifacts/v1_7_celik_64k_tokenizer_report_expanded.md
+```
+
+Bu local path repo icin zorunlu degildir; sadece bu makinedeki eski CELIK
+ByteLevel BPE tokenizer'ini referans olarak olcer.
 
 v1.7 SentencePiece sweep scaffolding:
 

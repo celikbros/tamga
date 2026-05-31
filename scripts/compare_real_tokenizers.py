@@ -18,6 +18,7 @@ from tr_tokenizer.external_baselines import (  # noqa: E402
     BaselineEncoding,
     encode_huggingface,
     encode_sentencepiece,
+    encode_tokenizers_json,
     encode_unicode_chars,
     parse_named_spec,
 )
@@ -110,6 +111,8 @@ def _encoding_for_spec(
         )
     if spec.kind == "sentencepiece":
         return encode_sentencepiece(text, model_path=spec.value, name=spec.name)
+    if spec.kind == "tokenizers_json":
+        return encode_tokenizers_json(text, tokenizer_path=spec.value, name=spec.name)
     raise ValueError(f"unknown baseline kind: {spec.kind}")
 
 
@@ -123,7 +126,7 @@ def encode_with_spec(
 
 
 def _boundary_tokens(spec: RealBaselineSpec, tokens: list[str]) -> list[str]:
-    if spec.kind in {"hf", "sentencepiece"}:
+    if spec.kind in {"hf", "sentencepiece", "tokenizers_json"}:
         return canonicalize_external_tokens(tokens)
     return tokens
 
@@ -322,6 +325,10 @@ def build_specs(args: argparse.Namespace) -> list[RealBaselineSpec]:
         name, value = parse_named_spec(raw)
         specs.append(RealBaselineSpec(name=name, kind="sentencepiece", value=value))
 
+    for raw in args.tokenizers_json:
+        name, value = parse_named_spec(raw)
+        specs.append(RealBaselineSpec(name=name, kind="tokenizers_json", value=value))
+
     return specs
 
 
@@ -376,6 +383,13 @@ def main(argv: list[str] | None = None) -> int:
         default=[],
         metavar="NAME=MODEL_PATH",
         help="Add a SentencePiece model file.",
+    )
+    parser.add_argument(
+        "--tokenizers-json",
+        action="append",
+        default=[],
+        metavar="NAME=TOKENIZER_JSON",
+        help="Add a Hugging Face tokenizers JSON file.",
     )
     parser.add_argument(
         "--allow-download",

@@ -131,6 +131,10 @@
 - Added `docs/v1_7_claim_grade_corpus_plan.md` to record advisor consensus on
   FineWeb-2/CulturaX/OSCAR/Wikipedia corpus options, leakage checks, size
   targets, and 48k/64k sweep anchors.
+- Added a read-only `C:\CELIK_AI` corpus/tokenizer audit and support for local
+  Hugging Face `tokenizers` JSON files as optional baseline references.
+- Added visible eval reports for the local CELIK 64k ByteLevel BPE tokenizer
+  against expanded and challenge Turkish morphology-policy sets.
 - Added `docs/v1_5_baseline_findings.md` to summarize what the real-tokenizer
   comparisons do and do not prove.
 - Added the optional `baselines` dependency group for SentencePiece,

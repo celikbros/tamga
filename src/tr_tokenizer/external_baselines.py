@@ -71,6 +71,34 @@ def encode_huggingface(
     return BaselineEncoding(name=name, tokens=list(tokens))
 
 
+def encode_tokenizers_json(
+    text: str,
+    *,
+    tokenizer_path: str | Path,
+    name: str,
+) -> BaselineEncoding:
+    tokenizers = importlib.util.find_spec("tokenizers")
+    if tokenizers is None:
+        return BaselineEncoding(
+            name=name,
+            tokens=[],
+            status="skipped",
+            reason=_missing_package("tokenizers"),
+        )
+
+    try:
+        tokenizer = _load_tokenizers_json(str(tokenizer_path))
+    except Exception as exc:  # pragma: no cover - depends on local model file.
+        return BaselineEncoding(
+            name=name,
+            tokens=[],
+            status="skipped",
+            reason=f"could not load tokenizers JSON {tokenizer_path!r}: {exc}",
+        )
+
+    return BaselineEncoding(name=name, tokens=list(tokenizer.encode(text).tokens))
+
+
 @lru_cache(maxsize=16)
 def _load_huggingface_tokenizer(model_id: str, local_files_only: bool):
     from transformers import AutoTokenizer  # type: ignore[import-not-found]
@@ -80,6 +108,13 @@ def _load_huggingface_tokenizer(model_id: str, local_files_only: bool):
         local_files_only=local_files_only,
         trust_remote_code=False,
     )
+
+
+@lru_cache(maxsize=16)
+def _load_tokenizers_json(tokenizer_path: str):
+    from tokenizers import Tokenizer  # type: ignore[import-not-found]
+
+    return Tokenizer.from_file(tokenizer_path)
 
 
 def encode_sentencepiece(

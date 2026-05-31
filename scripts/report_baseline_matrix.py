@@ -151,7 +151,14 @@ def load_baseline_config(path: str | Path) -> BaselineMatrixConfig:
 
 def build_specs_from_config(config: BaselineMatrixConfig) -> list[RealBaselineSpec]:
     specs: list[RealBaselineSpec] = []
-    valid_kinds = {"custom", "unicode_char", "toy_bpe", "hf", "sentencepiece"}
+    valid_kinds = {
+        "custom",
+        "unicode_char",
+        "toy_bpe",
+        "hf",
+        "sentencepiece",
+        "tokenizers_json",
+    }
 
     for item in config.baselines:
         if item.get("enabled", True) is False:
@@ -163,7 +170,7 @@ def build_specs_from_config(config: BaselineMatrixConfig) -> list[RealBaselineSp
             raise ValueError(f"unknown baseline kind for {name}: {kind}")
 
         value = ""
-        if kind in {"toy_bpe", "sentencepiece"}:
+        if kind in {"toy_bpe", "sentencepiece", "tokenizers_json"}:
             value = _string_field(item, "path", context=f"baseline {name}")
         elif kind == "hf":
             value = _string_field(item, "model", context=f"baseline {name}")

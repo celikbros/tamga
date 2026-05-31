@@ -13,8 +13,10 @@ Current next step:
 v1.7 baseline matrix config and visible reports are now available.
 The Turkish-trained SentencePiece sweep scaffold is now available in demo-only
 mode. Advisor feedback on claim-grade corpus choice has been converted into a
-corpus plan. Next: create the corpus-preparation/leakage-check skeleton, or
-begin the downstream-probe runner skeleton.
+corpus plan. A read-only audit of the user's `C:\CELIK_AI` corpus/tokenizer
+artifacts found useful raw text candidates and a local 64k ByteLevel BPE
+tokenizer reference. Next: create the corpus-preparation/leakage-check skeleton,
+or begin the downstream-probe runner skeleton.
 ```
 
 Completed:
@@ -48,7 +50,7 @@ Current verified metrics:
 
 ```text
 python -m pytest
-119 passed
+120 passed
 
 tr_gold_expanded.tsv
 exact_match: 50/50
@@ -347,6 +349,7 @@ configs/v1_7_baselines.toml
 scripts/report_baseline_matrix.py
 configs/v1_7_sentencepiece_sweep.toml
 docs/v1_7_claim_grade_corpus_plan.md
+docs/v1_7_celik_ai_corpus_tokenizer_audit.md
 scripts/run_sentencepiece_sweep.py
 artifacts/v1_7_baseline_matrix_expanded.md
 artifacts/v1_7_baseline_matrix_challenge.md
@@ -359,6 +362,8 @@ artifacts/v1_7_sentencepiece_sweep/sp_unigram_1000_demo.model
 artifacts/v1_7_sentencepiece_sweep/sp_unigram_1000_demo.vocab
 artifacts/v1_7_sentencepiece_sweep_expanded.md
 artifacts/v1_7_sentencepiece_sweep_challenge.md
+artifacts/v1_7_celik_64k_tokenizer_report_expanded.md
+artifacts/v1_7_celik_64k_tokenizer_report_challenge.md
 ```
 
 Next recommended step:

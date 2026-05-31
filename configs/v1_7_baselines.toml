@@ -66,3 +66,9 @@ name = "llama"
 kind = "hf"
 model = "meta-llama/Llama-3.2-1B"
 enabled = false
+
+[[baselines]]
+name = "celik_64k_byte_bpe_local"
+kind = "tokenizers_json"
+path = "C:/CELIK_AI/celik_core/celik_core/tokenizer.json"
+enabled = false
