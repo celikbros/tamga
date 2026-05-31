@@ -83,3 +83,31 @@ model_type = "unigram"
 vocab_size = 32000
 model_prefix = "artifacts/v1_7_sentencepiece_sweep/sp_unigram_32000_claim_grade"
 enabled = false
+
+[[models]]
+name = "sp_bpe_48000_claim_grade"
+model_type = "bpe"
+vocab_size = 48000
+model_prefix = "artifacts/v1_7_sentencepiece_sweep/sp_bpe_48000_claim_grade"
+enabled = false
+
+[[models]]
+name = "sp_unigram_48000_claim_grade"
+model_type = "unigram"
+vocab_size = 48000
+model_prefix = "artifacts/v1_7_sentencepiece_sweep/sp_unigram_48000_claim_grade"
+enabled = false
+
+[[models]]
+name = "sp_bpe_64000_claim_grade"
+model_type = "bpe"
+vocab_size = 64000
+model_prefix = "artifacts/v1_7_sentencepiece_sweep/sp_bpe_64000_claim_grade"
+enabled = false
+
+[[models]]
+name = "sp_unigram_64000_claim_grade"
+model_type = "unigram"
+vocab_size = 64000
+model_prefix = "artifacts/v1_7_sentencepiece_sweep/sp_unigram_64000_claim_grade"
+enabled = false

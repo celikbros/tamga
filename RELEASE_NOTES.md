@@ -128,6 +128,9 @@
   SentencePiece sweep scaffolding, with claim-grade larger vocab variants kept
   disabled until a larger leakage-checked corpus exists.
 - Added v1.7 demo SentencePiece sweep reports for expanded and challenge evals.
+- Added `docs/v1_7_claim_grade_corpus_plan.md` to record advisor consensus on
+  FineWeb-2/CulturaX/OSCAR/Wikipedia corpus options, leakage checks, size
+  targets, and 48k/64k sweep anchors.
 - Added `docs/v1_5_baseline_findings.md` to summarize what the real-tokenizer
   comparisons do and do not prove.
 - Added the optional `baselines` dependency group for SentencePiece,

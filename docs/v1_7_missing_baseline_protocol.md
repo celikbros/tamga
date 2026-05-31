@@ -322,6 +322,10 @@ a larger public Turkish corpus is selected and leakage-checked. Running a 32k
 SentencePiece model on the current 310-line demo corpus would look scientific
 but would not be meaningful.
 
+After advisor feedback, the disabled claim-grade sweep also includes 48k and
+64k anchors. These test whether a large vocabulary erases the visible
+morphology-boundary advantage.
+
 Generated demo reports:
 
 ```text
@@ -335,6 +339,12 @@ Interpretation:
 - they reproduce the local demo BPE/Unigram baseline signal
 - they do not close the missing-baseline risk for a real Turkish-trained 32k
   tokenizer
+
+Corpus and licensing decision notes:
+
+```text
+docs/v1_7_claim_grade_corpus_plan.md
+```
 
 ## Implementation Plan
 

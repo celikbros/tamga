@@ -12,8 +12,9 @@ Current next step:
 ```text
 v1.7 baseline matrix config and visible reports are now available.
 The Turkish-trained SentencePiece sweep scaffold is now available in demo-only
-mode. Next: begin the downstream-probe runner skeleton, or select a larger
-public Turkish corpus for claim-grade baseline training.
+mode. Advisor feedback on claim-grade corpus choice has been converted into a
+corpus plan. Next: create the corpus-preparation/leakage-check skeleton, or
+begin the downstream-probe runner skeleton.
 ```
 
 Completed:
@@ -345,6 +346,7 @@ docs/v2_0_router_morphbpe_rfc.md
 configs/v1_7_baselines.toml
 scripts/report_baseline_matrix.py
 configs/v1_7_sentencepiece_sweep.toml
+docs/v1_7_claim_grade_corpus_plan.md
 scripts/run_sentencepiece_sweep.py
 artifacts/v1_7_baseline_matrix_expanded.md
 artifacts/v1_7_baseline_matrix_challenge.md

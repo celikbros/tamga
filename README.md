@@ -158,6 +158,9 @@ v1.7 baseline matrix config:
 v1.7 SentencePiece sweep config:
 [configs/v1_7_sentencepiece_sweep.toml](configs/v1_7_sentencepiece_sweep.toml)
 
+v1.7 claim-grade corpus plan:
+[docs/v1_7_claim_grade_corpus_plan.md](docs/v1_7_claim_grade_corpus_plan.md)
+
 v1.7 downstream probe protocol:
 [docs/v1_7_downstream_probe_protocol.md](docs/v1_7_downstream_probe_protocol.md)
 
@@ -272,8 +275,8 @@ python scripts/run_sentencepiece_sweep.py configs/v1_7_sentencepiece_sweep.toml
 ```
 
 Bu config su anda sadece demo corpus uzerinde 1k BPE ve 1k Unigram calistirir.
-4k/8k/16k/32k varyantlari config'te hazirdir ama claim-grade corpus ve leakage
-kontrolu olmadan kapali tutulur.
+4k/8k/16k/32k/48k/64k varyantlari config'te hazirdir ama claim-grade corpus ve
+leakage kontrolu olmadan kapali tutulur.
 
 ## Metric Confidence Intervals
 
