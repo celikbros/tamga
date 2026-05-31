@@ -147,6 +147,14 @@
   non-claim-grade evidence and keep private model/vocab files out of git.
 - Added `scripts/audit_jsonl_corpus_quality.py` plus an aggregate 100k-line
   quality audit for the copied local `celik_gold_corpus.jsonl` source.
+- Added quality filters, exact/normalized de-duplication, and UTF-8 byte-length
+  caps to `scripts/prepare_claim_grade_corpus.py`.
+- Added a filtered 100k-line local CELIK gold pilot sample config and aggregate
+  manifest/leakage reports without committing private corpus text.
+- Added a filtered CELIK gold SentencePiece pilot sweep for 4k/8k BPE and
+  Unigram baselines, with private model/vocab files kept out of git.
+- Added `docs/v1_7_celik_gold_filtered_pilot_findings.md` to interpret the
+  filtered pilot as baseline pressure, not hidden-eval or downstream evidence.
 - Added `docs/v1_5_baseline_findings.md` to summarize what the real-tokenizer
   comparisons do and do not prove.
 - Added the optional `baselines` dependency group for SentencePiece,

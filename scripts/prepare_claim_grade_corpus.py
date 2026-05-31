@@ -42,6 +42,14 @@ class ClaimGradeCorpusConfig:
     ngram_size: int
     normalize_lowercase: bool
     strip_punctuation: bool
+    min_chars: int
+    max_chars: int | None
+    max_utf8_bytes: int | None
+    drop_control_chars: bool
+    drop_replacement_char: bool
+    drop_mojibake_suspects: bool
+    dedupe_exact: bool
+    dedupe_normalized: bool
     sources: list[CorpusSource]
     eval_sets: list[EvalSet]
 
@@ -57,8 +65,19 @@ class SourceStats:
     exact_leaks: int
     normalized_leaks: int
     ngram_leaks: int
+    filtered_short: int
+    filtered_long: int
+    filtered_bytes: int
+    filtered_control: int
+    filtered_replacement: int
+    filtered_mojibake: int
+    duplicate_exact: int
+    duplicate_normalized: int
     written_lines: int
     truncated: bool
+
+
+MOJIBAKE_MARKERS = ("Ã", "Ä", "Å", "â€", "ðŸ", "\ufffd")
 
 
 def _string_field(item: dict[str, Any], field: str, *, context: str) -> str:
@@ -72,6 +91,21 @@ def _int_setting(settings: dict[str, Any], field: str, default: int) -> int:
     value = settings.get(field, default)
     if not isinstance(value, int):
         raise ValueError(f"[settings] field {field!r} must be an integer")
+    return value
+
+
+def _optional_int_setting(
+    settings: dict[str, Any],
+    field: str,
+    default: int | None,
+) -> int | None:
+    value = settings.get(field, default)
+    if value is None:
+        return None
+    if not isinstance(value, int):
+        raise ValueError(f"[settings] field {field!r} must be an integer")
+    if value <= 0:
+        return None
     return value
 
 
@@ -126,6 +160,14 @@ def load_claim_grade_corpus_config(path: str | Path) -> ClaimGradeCorpusConfig:
         ngram_size=_int_setting(settings, "ngram_size", 8),
         normalize_lowercase=bool(settings.get("normalize_lowercase", False)),
         strip_punctuation=bool(settings.get("strip_punctuation", True)),
+        min_chars=_int_setting(settings, "min_chars", 0),
+        max_chars=_optional_int_setting(settings, "max_chars", None),
+        max_utf8_bytes=_optional_int_setting(settings, "max_utf8_bytes", None),
+        drop_control_chars=bool(settings.get("drop_control_chars", False)),
+        drop_replacement_char=bool(settings.get("drop_replacement_char", False)),
+        drop_mojibake_suspects=bool(settings.get("drop_mojibake_suspects", False)),
+        dedupe_exact=bool(settings.get("dedupe_exact", False)),
+        dedupe_normalized=bool(settings.get("dedupe_normalized", False)),
         sources=sources,
         eval_sets=eval_sets,
     )
@@ -158,6 +200,17 @@ def word_ngrams(text: str, *, ngram_size: int) -> set[str]:
         " ".join(words[index : index + ngram_size])
         for index in range(0, len(words) - ngram_size + 1)
     }
+
+
+def has_control_chars(text: str) -> bool:
+    return any(
+        unicodedata.category(char) in {"Cc", "Cf"} and char not in "\t\n\r"
+        for char in text
+    )
+
+
+def has_mojibake_marker(text: str) -> bool:
+    return any(marker in text for marker in MOJIBAKE_MARKERS)
 
 
 def _iter_source_texts(source: CorpusSource) -> Iterator[str]:
@@ -214,6 +267,8 @@ def prepare_corpus(
     written_total = 0
     leakage_examples: list[str] = []
     stats: list[SourceStats] = []
+    exact_seen: set[str] = set()
+    normalized_seen: set[str] = set()
     output_handle = None
     if not manifest_only:
         config.output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -222,6 +277,8 @@ def prepare_corpus(
     try:
         for source in config.sources:
             scanned = usable = exact = normalized = ngram = written = 0
+            short = long = bytes_long = control = replacement = mojibake = 0
+            duplicate_exact = duplicate_normalized = 0
             truncated = False
             for text in _iter_source_texts(source):
                 scanned += 1
@@ -235,6 +292,39 @@ def prepare_corpus(
                     lowercase=config.normalize_lowercase,
                     strip_punctuation=config.strip_punctuation,
                 )
+
+                if len(text) < config.min_chars:
+                    short += 1
+                    continue
+                if config.max_chars is not None and len(text) > config.max_chars:
+                    long += 1
+                    continue
+                if (
+                    config.max_utf8_bytes is not None
+                    and len(text.encode("utf-8")) > config.max_utf8_bytes
+                ):
+                    bytes_long += 1
+                    continue
+                if config.drop_control_chars and has_control_chars(text):
+                    control += 1
+                    continue
+                if config.drop_replacement_char and "\ufffd" in text:
+                    replacement += 1
+                    continue
+                if config.drop_mojibake_suspects and has_mojibake_marker(text):
+                    mojibake += 1
+                    continue
+                if config.dedupe_exact and text in exact_seen:
+                    duplicate_exact += 1
+                    continue
+                if config.dedupe_exact:
+                    exact_seen.add(text)
+                if config.dedupe_normalized and normalized_text in normalized_seen:
+                    duplicate_normalized += 1
+                    continue
+                if config.dedupe_normalized:
+                    normalized_seen.add(normalized_text)
+
                 exact_hit = text in exact_eval
                 normalized_hit = normalized_text in normalized_eval
                 ngram_hit = bool(
@@ -273,6 +363,14 @@ def prepare_corpus(
                     exact_leaks=exact,
                     normalized_leaks=normalized,
                     ngram_leaks=ngram,
+                    filtered_short=short,
+                    filtered_long=long,
+                    filtered_bytes=bytes_long,
+                    filtered_control=control,
+                    filtered_replacement=replacement,
+                    filtered_mojibake=mojibake,
+                    duplicate_exact=duplicate_exact,
+                    duplicate_normalized=duplicate_normalized,
                     written_lines=written,
                     truncated=truncated,
                 )
@@ -304,19 +402,53 @@ def format_manifest(
         f"Config: `{config.path.as_posix()}`",
         f"Output path: `{config.output_path.as_posix()}`",
         f"Mode: `{'manifest-only' if manifest_only else 'prepare-sample'}`",
+        f"Min chars: `{config.min_chars}`",
+        f"Max chars: `{config.max_chars if config.max_chars is not None else 'none'}`",
+        f"Max UTF-8 bytes: `{config.max_utf8_bytes if config.max_utf8_bytes is not None else 'none'}`",
+        f"Drop control chars: `{config.drop_control_chars}`",
+        f"Drop replacement char: `{config.drop_replacement_char}`",
+        f"Drop mojibake suspects: `{config.drop_mojibake_suspects}`",
+        f"Dedupe exact: `{config.dedupe_exact}`",
+        f"Dedupe normalized: `{config.dedupe_normalized}`",
         "",
         "Large corpus text is private/local and must not be committed to git.",
         "",
         "## Sources",
         "",
-        "| Source | Format | Bytes | Scanned | Usable | Written | Truncated |",
-        "| --- | --- | ---: | ---: | ---: | ---: | --- |",
+        "| Source | Format | Bytes | Scanned | Usable | Filtered | Duplicates | Written | Truncated |",
+        "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |",
     ]
     for row in stats:
+        filtered = (
+            row.filtered_short
+            + row.filtered_long
+            + row.filtered_bytes
+            + row.filtered_control
+            + row.filtered_replacement
+            + row.filtered_mojibake
+        )
+        duplicates = row.duplicate_exact + row.duplicate_normalized
         lines.append(
             f"| {row.name} | {row.format} | {_format_bytes(row.bytes)} | "
-            f"{row.scanned_lines} | {row.usable_texts} | {row.written_lines} | "
-            f"{row.truncated} |"
+            f"{row.scanned_lines} | {row.usable_texts} | {filtered} | "
+            f"{duplicates} | {row.written_lines} | {row.truncated} |"
+        )
+    lines.extend(
+        [
+            "",
+            "## Filter Details",
+            "",
+            "| Source | Short | Long chars | Long bytes | Control | Replacement | Mojibake | Exact dup | Normalized dup |",
+            "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+        ]
+    )
+    for row in stats:
+        lines.append(
+            f"| {row.name} | {row.filtered_short} | "
+            f"{row.filtered_long} | {row.filtered_bytes} | "
+            f"{row.filtered_control} | {row.filtered_replacement} | "
+            f"{row.filtered_mojibake} | {row.duplicate_exact} | "
+            f"{row.duplicate_normalized} |"
         )
     return "\n".join(lines) + "\n"
 

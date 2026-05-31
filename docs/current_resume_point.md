@@ -21,9 +21,10 @@ skeleton now produces aggregate reports. A 75,388-line local CELIK_AI pilot
 sample and 4k/8k SentencePiece BPE/Unigram pilot sweep are available, with
 private model/vocab files kept out of git. The user's primary
 `celik_gold_corpus.jsonl` source has also been copied into the ignored private
-area and audited on the first 100k lines. Next: either add explicit filtering
-for long/control/replacement-character lines and rebuild the pilot sample from
-the gold JSONL source, or begin the downstream-probe runner skeleton.
+area, audited on the first 100k lines, filtered into a cleaner 100k-line pilot
+sample, and used for a 4k/8k SentencePiece BPE/Unigram sweep. Next: begin the
+downstream-probe runner skeleton, or scale SentencePiece only after defining
+source proportions and claim-grade corpus policy.
 ```
 
 Completed:
@@ -162,6 +163,55 @@ chars > 20,000: 0.46%
 mojibake suspects: 0.03%
 replacement-char texts: 0.003%
 control-char texts: 0.71%
+```
+
+After filtered `celik_gold_corpus.jsonl` pilot sample:
+
+```text
+config:
+configs/v1_7_celik_gold_filtered_sample.toml
+
+output:
+data/train/claim_grade/celik_gold_filtered_pilot.txt
+
+scanned rows: 120001
+usable text rows: 120000
+filtered rows: 7779
+duplicate rows: 11
+written rows: 100000
+visible leakage hits: 0 exact, 0 normalized, 0 8-gram
+
+filter details:
+short: 4329
+long chars: 2466
+long UTF-8 bytes: 217
+control chars: 744
+replacement chars: 2
+mojibake suspects: 21
+normalized duplicates: 11
+```
+
+After filtered CELIK gold SentencePiece pilot baselines:
+
+```text
+config:
+configs/v1_7_celik_gold_sentencepiece_pilot_sweep.toml
+
+SentencePiece loaded all 100000 filtered sentences.
+
+expanded visible eval
+custom_tr_morph:                   avg_tokens/word=2.7438, boundary_f1=1.0000
+sp_bpe_4000_celik_gold_pilot:      avg_tokens/word=3.3058, boundary_f1=0.6424
+sp_unigram_4000_celik_gold_pilot:  avg_tokens/word=3.3719, boundary_f1=0.7125
+sp_bpe_8000_celik_gold_pilot:      avg_tokens/word=2.9669, boundary_f1=0.6633
+sp_unigram_8000_celik_gold_pilot:  avg_tokens/word=2.9669, boundary_f1=0.7445
+
+challenge visible eval
+custom_tr_morph:                   avg_tokens/word=2.1749, boundary_f1=0.9220
+sp_bpe_4000_celik_gold_pilot:      avg_tokens/word=2.9347, boundary_f1=0.6506
+sp_unigram_4000_celik_gold_pilot:  avg_tokens/word=3.0052, boundary_f1=0.7101
+sp_bpe_8000_celik_gold_pilot:      avg_tokens/word=2.5770, boundary_f1=0.6690
+sp_unigram_8000_celik_gold_pilot:  avg_tokens/word=2.5979, boundary_f1=0.7388
 ```
 
 After Qwen tokenizer reference:
@@ -435,9 +485,9 @@ artifacts/v1_7_celik_gold_corpus_quality_audit_100k.md
 Next recommended step:
 
 ```text
-Add filtering/source-proportion controls for the local gold JSONL corpus and
-rebuild the SentencePiece pilot sample, or start the downstream-probe runner
-skeleton. Do not add new tokenizer morphology rules.
+Start the downstream-probe runner skeleton. Do not add new tokenizer morphology
+rules. If SentencePiece is scaled further, first define source proportions and
+claim-grade corpus policy.
 ```
 
 Guardrails after v1.6b:

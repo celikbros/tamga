@@ -173,6 +173,9 @@ v1.7 CELIK_AI local corpus/tokenizer audit:
 v1.7 CELIK gold corpus quality audit:
 [artifacts/v1_7_celik_gold_corpus_quality_audit_100k.md](artifacts/v1_7_celik_gold_corpus_quality_audit_100k.md)
 
+v1.7 CELIK gold filtered pilot findings:
+[docs/v1_7_celik_gold_filtered_pilot_findings.md](docs/v1_7_celik_gold_filtered_pilot_findings.md)
+
 v1.7 SentencePiece pilot findings:
 [docs/v1_7_sentencepiece_pilot_findings.md](docs/v1_7_sentencepiece_pilot_findings.md)
 
@@ -339,6 +342,24 @@ python scripts/audit_jsonl_corpus_quality.py data/train/private/celik_ai/celik_g
 
 Bu rapor corpus metni yayinlamaz; yalnizca JSONL yapisi, duplicate, uzun satir,
 script/language hint ve bozulma sinyallerini aggregate olarak verir.
+
+Filtered local CELIK gold corpus pilot:
+
+```powershell
+python scripts/prepare_claim_grade_corpus.py configs/v1_7_celik_gold_filtered_sample.toml --max-scan-lines 120000
+python scripts/run_sentencepiece_sweep.py configs/v1_7_celik_gold_sentencepiece_pilot_sweep.toml --force
+```
+
+Bu pilot da claim-grade degildir. Filtrelenmis local sample ve SentencePiece
+model/vocab dosyalari git disinda kalir; public repo'da yalnizca aggregate
+manifest, leakage ve visible eval raporlari tutulur:
+
+```text
+artifacts/v1_7_celik_gold_filtered_sample_manifest.md
+artifacts/v1_7_celik_gold_filtered_sample_leakage_report.md
+artifacts/v1_7_celik_gold_sentencepiece_pilot_sweep_expanded.md
+artifacts/v1_7_celik_gold_sentencepiece_pilot_sweep_challenge.md
+```
 
 ## Metric Confidence Intervals
 

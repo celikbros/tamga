@@ -1,0 +1,31 @@
+[settings]
+output_path = "data/train/claim_grade/celik_gold_filtered_pilot.txt"
+manifest_out = "artifacts/v1_7_celik_gold_filtered_sample_manifest.md"
+leakage_out = "artifacts/v1_7_celik_gold_filtered_sample_leakage_report.md"
+max_output_lines = 100000
+ngram_size = 8
+normalize_lowercase = false
+strip_punctuation = true
+min_chars = 80
+max_chars = 4192
+max_utf8_bytes = 4192
+drop_control_chars = true
+drop_replacement_char = true
+drop_mojibake_suspects = true
+dedupe_exact = true
+dedupe_normalized = true
+
+[[eval_sets]]
+name = "expanded"
+path = "data/eval/tr_gold_expanded.tsv"
+
+[[eval_sets]]
+name = "challenge"
+path = "data/eval/tr_challenge.tsv"
+
+[[sources]]
+name = "celik_gold_corpus_jsonl"
+format = "jsonl"
+path = "data/train/private/celik_ai/celik_gold_corpus.jsonl"
+text_field = "text"
+enabled = true
