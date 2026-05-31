@@ -5,8 +5,12 @@ Date: 2026-05-31
 Update:
 
 ```text
-The cleaner filtered pilot from `celik_gold_corpus.jsonl` is documented in:
+The historical raw-source filtered pilot from `celik_gold_corpus.jsonl` is
+documented in:
 docs/v1_7_celik_gold_filtered_pilot_findings.md
+
+The active clean-source sweep is documented in:
+docs/v1_7_celik_gold_clean_sweep_findings.md
 ```
 
 ## Purpose

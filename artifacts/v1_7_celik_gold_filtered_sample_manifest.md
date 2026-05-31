@@ -3,6 +3,9 @@
 Config: `configs/v1_7_celik_gold_filtered_sample.toml`
 Output path: `data/train/claim_grade/celik_gold_filtered_pilot.txt`
 Mode: `prepare-sample`
+
+Note: this is a historical raw-source pilot. Active v1.7 work uses the clean
+source in `configs/v1_7_celik_gold_clean_sample.toml`.
 Min chars: `80`
 Max chars: `4192`
 Max UTF-8 bytes: `4192`
@@ -18,10 +21,10 @@ Large corpus text is private/local and must not be committed to git.
 
 | Source | Format | Bytes | Scanned | Usable | Filtered | Duplicates | Written | Truncated |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| celik_gold_corpus_jsonl | jsonl | 12.11 GiB | 120001 | 120000 | 7779 | 11 | 100000 | True |
+| celik_gold_corpus_raw_deprecated_jsonl | jsonl | 12.11 GiB | 120001 | 120000 | 7779 | 11 | 100000 | True |
 
 ## Filter Details
 
 | Source | Short | Long chars | Long bytes | Control | Replacement | Mojibake | Exact dup | Normalized dup |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| celik_gold_corpus_jsonl | 4329 | 2466 | 217 | 744 | 2 | 21 | 0 | 11 |
+| celik_gold_corpus_raw_deprecated_jsonl | 4329 | 2466 | 217 | 744 | 2 | 21 | 0 | 11 |

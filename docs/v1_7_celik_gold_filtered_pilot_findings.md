@@ -4,8 +4,20 @@ Date: 2026-05-31
 
 ## Purpose
 
-This is a cleaner local SentencePiece pilot trained from the copied
+This is a historical local SentencePiece pilot trained from the copied raw
 `celik_gold_corpus.jsonl` source.
+
+Status:
+
+```text
+deprecated
+```
+
+Active v1.7 work should use:
+
+```text
+docs/v1_7_celik_gold_clean_sweep_findings.md
+```
 
 It is still not hidden-eval evidence and not downstream LLM-quality evidence.
 The purpose is narrower:
@@ -17,13 +29,14 @@ stronger Turkish SentencePiece baselines without long-line skip noise?
 
 ## Source
 
-Copied private source:
+Archived private raw source:
 
 ```text
-data/train/private/celik_ai/celik_gold_corpus.jsonl
+data/train/private/celik_ai/archive/deprecated/celik_gold_corpus.raw.deprecated.jsonl
 ```
 
-The source text is ignored by git. Only aggregate reports are committed.
+The source text is ignored by git. Only aggregate reports are committed. This
+raw source is kept only for historical reproducibility.
 
 ## Filtered Sample
 

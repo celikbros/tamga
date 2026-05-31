@@ -340,25 +340,27 @@ python scripts/run_sentencepiece_sweep.py configs/v1_7_sentencepiece_pilot_sweep
 Bu pilot claim-grade degildir. `artifacts/private/` altindaki model/vocab
 dosyalari git disi kalir; public repo'da yalnizca aggregate raporlar tutulur.
 
-Local JSONL corpus quality audit:
+Deprecated raw JSONL corpus quality audit:
 
 ```powershell
-python scripts/audit_jsonl_corpus_quality.py data/train/private/celik_ai/celik_gold_corpus.jsonl --max-lines 100000 --markdown-out artifacts/v1_7_celik_gold_corpus_quality_audit_100k.md
+python scripts/audit_jsonl_corpus_quality.py data/train/private/celik_ai/archive/deprecated/celik_gold_corpus.raw.deprecated.jsonl --max-lines 100000 --markdown-out artifacts/v1_7_celik_gold_corpus_quality_audit_100k.md
 ```
 
-Bu rapor corpus metni yayinlamaz; yalnizca JSONL yapisi, duplicate, uzun satir,
+Bu rapor tarihsel raw kopya icindir. Aktif v1.7 calismasi clean kopyayi kullanir.
+Rapor corpus metni yayinlamaz; yalnizca JSONL yapisi, duplicate, uzun satir,
 script/language hint ve bozulma sinyallerini aggregate olarak verir.
 
-Filtered local CELIK gold corpus pilot:
+Deprecated raw filtered local CELIK gold corpus pilot:
 
 ```powershell
 python scripts/prepare_claim_grade_corpus.py configs/v1_7_celik_gold_filtered_sample.toml --max-scan-lines 120000
 python scripts/run_sentencepiece_sweep.py configs/v1_7_celik_gold_sentencepiece_pilot_sweep.toml --force
 ```
 
-Bu pilot da claim-grade degildir. Filtrelenmis local sample ve SentencePiece
-model/vocab dosyalari git disinda kalir; public repo'da yalnizca aggregate
-manifest, leakage ve visible eval raporlari tutulur:
+Bu pilot tarihsel raw kaynak icindir ve artik aktif hat degildir. Aktif hat
+asagidaki clean local CELIK gold corpus sweep'tir. Filtrelenmis local sample ve
+SentencePiece model/vocab dosyalari git disinda kalir; public repo'da yalnizca
+aggregate manifest, leakage ve visible eval raporlari tutulur:
 
 ```text
 artifacts/v1_7_celik_gold_filtered_sample_manifest.md

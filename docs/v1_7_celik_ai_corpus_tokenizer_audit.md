@@ -2,6 +2,18 @@
 
 Date: 2026-05-31
 
+Update on 2026-06-01:
+
+```text
+The older raw private copy has been moved locally to:
+data/train/private/celik_ai/archive/deprecated/celik_gold_corpus.raw.deprecated.jsonl
+
+Active v1.7 baseline work now uses:
+data/train/private/celik_ai/celik_gold_corpus.clean.jsonl
+```
+
+The original `C:\CELIK_AI` files were not modified.
+
 Source path:
 
 ```text
@@ -66,13 +78,20 @@ The main raw JSONL file reported by the user is:
 C:\CELIK_AI\celik_training\celik_gold_corpus.jsonl
 ```
 
-It was copied into the repo's ignored private corpus area:
+It was originally copied into the repo's ignored private corpus area and later
+archived as a deprecated raw copy:
 
 ```text
-data/train/private/celik_ai/celik_gold_corpus.jsonl
+data/train/private/celik_ai/archive/deprecated/celik_gold_corpus.raw.deprecated.jsonl
 ```
 
-This private copy is not committed to git.
+The active copied source is now the cleaned corpus:
+
+```text
+data/train/private/celik_ai/celik_gold_corpus.clean.jsonl
+```
+
+Private corpus copies are not committed to git.
 
 ## Corpus Builder Findings
 
@@ -216,7 +235,8 @@ data/train/private/celik_ai/
 Copied sources:
 
 ```text
-celik_gold_corpus.jsonl
+archive/deprecated/celik_gold_corpus.raw.deprecated.jsonl
+celik_gold_corpus.clean.jsonl
 tr_corpus.txt
 wiki_oscar_corpus.jsonl
 academic_corpus.jsonl
@@ -244,7 +264,7 @@ artifacts/v1_7_celik_gold_corpus_quality_audit_100k.md
 Command:
 
 ```powershell
-python scripts/audit_jsonl_corpus_quality.py data/train/private/celik_ai/celik_gold_corpus.jsonl --max-lines 100000 --markdown-out artifacts/v1_7_celik_gold_corpus_quality_audit_100k.md
+python scripts/audit_jsonl_corpus_quality.py data/train/private/celik_ai/archive/deprecated/celik_gold_corpus.raw.deprecated.jsonl --max-lines 100000 --markdown-out artifacts/v1_7_celik_gold_corpus_quality_audit_100k.md
 ```
 
 First 100,000-line findings:

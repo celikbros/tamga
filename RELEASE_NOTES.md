@@ -166,6 +166,10 @@
   `celik_gold_corpus.clean.jsonl` source.
 - Added `docs/v1_7_celik_gold_clean_sweep_findings.md` to mark corpus polishing
   as stopped for v1.7 and move focus back to baseline/downstream evidence.
+- Moved the older private raw copy to
+  `data/train/private/celik_ai/archive/deprecated/celik_gold_corpus.raw.deprecated.jsonl`
+  locally and marked the raw-source pilot config as deprecated so it does not
+  get confused with the active clean corpus path.
 - Added `docs/v1_5_baseline_findings.md` to summarize what the real-tokenizer
   comparisons do and do not prove.
 - Added the optional `baselines` dependency group for SentencePiece,

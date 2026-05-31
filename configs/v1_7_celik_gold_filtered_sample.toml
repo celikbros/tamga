@@ -24,8 +24,10 @@ name = "challenge"
 path = "data/eval/tr_challenge.tsv"
 
 [[sources]]
-name = "celik_gold_corpus_jsonl"
+# Deprecated historical raw-source pilot. Active v1.7 work should use
+# configs/v1_7_celik_gold_clean_sample.toml instead.
+name = "celik_gold_corpus_raw_deprecated_jsonl"
 format = "jsonl"
-path = "data/train/private/celik_ai/celik_gold_corpus.jsonl"
+path = "data/train/private/celik_ai/archive/deprecated/celik_gold_corpus.raw.deprecated.jsonl"
 text_field = "text"
 enabled = true

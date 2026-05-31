@@ -1,6 +1,9 @@
 # JSONL Corpus Quality Audit
 
-Path: `data\train\private\celik_ai\celik_gold_corpus.jsonl`
+Path: `data\train\private\celik_ai\archive\deprecated\celik_gold_corpus.raw.deprecated.jsonl`
+
+Note: this is a historical raw-source audit. The active v1.7 source is
+`data\train\private\celik_ai\celik_gold_corpus.clean.jsonl`.
 Text field: `text`
 Scan limit: `100000`
 

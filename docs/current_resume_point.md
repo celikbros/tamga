@@ -20,9 +20,11 @@ repo's ignored private corpus area, and the corpus-preparation/leakage-check
 skeleton now produces aggregate reports. A 75,388-line local CELIK_AI pilot
 sample and 4k/8k SentencePiece BPE/Unigram pilot sweep are available, with
 private model/vocab files kept out of git. The user's primary
-`celik_gold_corpus.jsonl` source has also been copied into the ignored private
-area, audited on the first 100k lines, filtered into a cleaner 100k-line pilot
-sample, and used for a 4k/8k SentencePiece BPE/Unigram sweep. Next: begin the
+raw `celik_gold_corpus.jsonl` source was copied into the ignored private area,
+audited on the first 100k lines, filtered into a cleaner 100k-line pilot sample,
+and used for a 4k/8k SentencePiece BPE/Unigram sweep. That raw copy is now
+archived locally as `archive/deprecated/celik_gold_corpus.raw.deprecated.jsonl`
+so it does not get confused with the active clean source. Next: begin the
 downstream-probe runner skeleton, or scale SentencePiece only after defining
 source proportions and claim-grade corpus policy. The downstream-probe prep
 skeleton is now available and has produced demo plus 20k CELIK gold pilot
@@ -145,11 +147,11 @@ sp_bpe_8000_celik_pilot:      avg_tokens/word=2.5692, boundary_f1=0.6714
 sp_unigram_8000_celik_pilot:  avg_tokens/word=2.5666, boundary_f1=0.7405
 ```
 
-After `celik_gold_corpus.jsonl` 100k quality audit:
+After deprecated raw `celik_gold_corpus.jsonl` 100k quality audit:
 
 ```text
 copied source:
-data/train/private/celik_ai/celik_gold_corpus.jsonl
+data/train/private/celik_ai/archive/deprecated/celik_gold_corpus.raw.deprecated.jsonl
 
 audit report:
 artifacts/v1_7_celik_gold_corpus_quality_audit_100k.md
@@ -169,7 +171,7 @@ replacement-char texts: 0.003%
 control-char texts: 0.71%
 ```
 
-After filtered `celik_gold_corpus.jsonl` pilot sample:
+After deprecated raw `celik_gold_corpus.jsonl` pilot sample:
 
 ```text
 config:
