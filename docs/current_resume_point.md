@@ -24,7 +24,9 @@ private model/vocab files kept out of git. The user's primary
 area, audited on the first 100k lines, filtered into a cleaner 100k-line pilot
 sample, and used for a 4k/8k SentencePiece BPE/Unigram sweep. Next: begin the
 downstream-probe runner skeleton, or scale SentencePiece only after defining
-source proportions and claim-grade corpus policy.
+source proportions and claim-grade corpus policy. The downstream-probe prep
+skeleton is now available and has produced demo plus 20k CELIK gold pilot
+aggregate reports.
 ```
 
 Completed:
@@ -212,6 +214,41 @@ sp_bpe_4000_celik_gold_pilot:      avg_tokens/word=2.9347, boundary_f1=0.6506
 sp_unigram_4000_celik_gold_pilot:  avg_tokens/word=3.0052, boundary_f1=0.7101
 sp_bpe_8000_celik_gold_pilot:      avg_tokens/word=2.5770, boundary_f1=0.6690
 sp_unigram_8000_celik_gold_pilot:  avg_tokens/word=2.5979, boundary_f1=0.7388
+```
+
+After downstream probe prep skeleton:
+
+```text
+script:
+scripts/prepare_downstream_probe.py
+
+demo config/report:
+configs/v1_7_downstream_probe_demo.toml
+artifacts/v1_7_downstream_probe_prep_demo.md
+
+CELIK gold pilot config/report:
+configs/v1_7_downstream_probe_celik_gold_pilot.toml
+artifacts/v1_7_downstream_probe_prep_celik_gold_pilot.md
+
+private token JSONL output:
+artifacts/private/v1_7_downstream_probe/
+
+CELIK gold pilot split:
+train: 16000 lines, 21.68 MiB, 2592338 words
+valid: 2000 lines, 2.73 MiB, 325698 words
+test:  2000 lines, 2.71 MiB, 324637 words
+
+valid avg tokens/word:
+custom_tr_morph:                  1.4922
+sp_bpe_8000_celik_gold_pilot:     1.9342
+sp_unigram_8000_celik_gold_pilot: 1.8876
+unicode_char:                     7.0537
+
+test avg tokens/word:
+custom_tr_morph:                  1.4935
+sp_bpe_8000_celik_gold_pilot:     1.9292
+sp_unigram_8000_celik_gold_pilot: 1.8824
+unicode_char:                     7.0491
 ```
 
 After Qwen tokenizer reference:
@@ -485,8 +522,9 @@ artifacts/v1_7_celik_gold_corpus_quality_audit_100k.md
 Next recommended step:
 
 ```text
-Start the downstream-probe runner skeleton. Do not add new tokenizer morphology
-rules. If SentencePiece is scaled further, first define source proportions and
+Hand the prepared private token JSONL splits to the LLM training side for a
+small byte-normalized LM loss probe. Do not add new tokenizer morphology rules.
+If SentencePiece is scaled further, first define source proportions and
 claim-grade corpus policy.
 ```
 

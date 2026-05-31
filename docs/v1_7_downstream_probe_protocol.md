@@ -2,6 +2,19 @@
 
 Date: 2026-05-31
 
+Implementation status:
+
+```text
+scripts/prepare_downstream_probe.py now prepares deterministic corpus splits,
+private token JSONL files, and public aggregate prep reports.
+```
+
+Current prep findings:
+
+```text
+docs/v1_7_downstream_probe_prep_findings.md
+```
+
 ## Purpose
 
 This protocol defines a small, practical downstream probe for the tokenizer.
@@ -277,13 +290,20 @@ throughput measurements
 
 ## Immediate Next Step
 
-After this protocol:
+After this protocol, the original RFC step is complete:
 
 ```text
-Create docs/v2_0_router_morphbpe_rfc.md
+docs/v2_0_router_morphbpe_rfc.md
 ```
 
-The RFC should connect:
+The current immediate next step is now:
+
+```text
+Run the same prepared splits through a small LM training harness and report
+byte-normalized validation/test loss.
+```
+
+The RFC connects:
 
 - v1.6b R3 Azerbaijani deferral
 - protected span layer

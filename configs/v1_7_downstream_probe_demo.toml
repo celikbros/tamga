@@ -1,0 +1,28 @@
+[settings]
+corpus_path = "data/train/tr_bpe_train.txt"
+output_dir = "artifacts/private/v1_7_downstream_probe/demo"
+report_out = "artifacts/v1_7_downstream_probe_prep_demo.md"
+seed = 20260531
+train_parts = 8
+valid_parts = 1
+test_parts = 1
+write_tokenized = true
+allow_download = false
+
+[[tokenizers]]
+name = "custom_tr_morph"
+kind = "custom"
+
+[[tokenizers]]
+name = "unicode_char"
+kind = "unicode_char"
+
+[[tokenizers]]
+name = "sp_bpe_1000_demo"
+kind = "sentencepiece"
+path = "artifacts/v1_7_sentencepiece_sweep/sp_bpe_1000_demo.model"
+
+[[tokenizers]]
+name = "sp_unigram_1000_demo"
+kind = "sentencepiece"
+path = "artifacts/v1_7_sentencepiece_sweep/sp_unigram_1000_demo.model"

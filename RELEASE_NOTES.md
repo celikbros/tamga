@@ -155,6 +155,12 @@
   Unigram baselines, with private model/vocab files kept out of git.
 - Added `docs/v1_7_celik_gold_filtered_pilot_findings.md` to interpret the
   filtered pilot as baseline pressure, not hidden-eval or downstream evidence.
+- Added `scripts/prepare_downstream_probe.py` plus demo and CELIK gold pilot
+  configs for deterministic train/valid/test splits and private tokenizer JSONL
+  handoff files.
+- Added downstream probe prep aggregate reports and
+  `docs/v1_7_downstream_probe_prep_findings.md` to separate tokenizer prep from
+  actual small-LM bits-per-byte evidence.
 - Added `docs/v1_5_baseline_findings.md` to summarize what the real-tokenizer
   comparisons do and do not prove.
 - Added the optional `baselines` dependency group for SentencePiece,

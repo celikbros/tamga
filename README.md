@@ -182,6 +182,9 @@ v1.7 SentencePiece pilot findings:
 v1.7 downstream probe protocol:
 [docs/v1_7_downstream_probe_protocol.md](docs/v1_7_downstream_probe_protocol.md)
 
+v1.7 downstream probe prep findings:
+[docs/v1_7_downstream_probe_prep_findings.md](docs/v1_7_downstream_probe_prep_findings.md)
+
 v2.0 router/MorphBPE RFC:
 [docs/v2_0_router_morphbpe_rfc.md](docs/v2_0_router_morphbpe_rfc.md)
 
@@ -360,6 +363,23 @@ artifacts/v1_7_celik_gold_filtered_sample_leakage_report.md
 artifacts/v1_7_celik_gold_sentencepiece_pilot_sweep_expanded.md
 artifacts/v1_7_celik_gold_sentencepiece_pilot_sweep_challenge.md
 ```
+
+Downstream probe prep:
+
+```powershell
+python scripts/prepare_downstream_probe.py configs/v1_7_downstream_probe_demo.toml
+python scripts/prepare_downstream_probe.py configs/v1_7_downstream_probe_celik_gold_pilot.toml
+```
+
+Bu komutlar LLM egitmez. Ayni raw split uzerinde tokenizer bazli private JSONL
+token ciktilari ve public aggregate hazirlik raporlari uretir:
+
+```text
+artifacts/v1_7_downstream_probe_prep_demo.md
+artifacts/v1_7_downstream_probe_prep_celik_gold_pilot.md
+```
+
+Private token JSONL dosyalari `artifacts/private/` altinda git disi kalir.
 
 ## Metric Confidence Intervals
 
