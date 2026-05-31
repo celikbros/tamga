@@ -161,6 +161,11 @@
 - Added downstream probe prep aggregate reports and
   `docs/v1_7_downstream_probe_prep_findings.md` to separate tokenizer prep from
   actual small-LM bits-per-byte evidence.
+- Added clean local CELIK gold corpus sample/leakage configs and 8k/16k
+  SentencePiece sweep reports, using a private copied
+  `celik_gold_corpus.clean.jsonl` source.
+- Added `docs/v1_7_celik_gold_clean_sweep_findings.md` to mark corpus polishing
+  as stopped for v1.7 and move focus back to baseline/downstream evidence.
 - Added `docs/v1_5_baseline_findings.md` to summarize what the real-tokenizer
   comparisons do and do not prove.
 - Added the optional `baselines` dependency group for SentencePiece,

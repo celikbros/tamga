@@ -176,6 +176,9 @@ v1.7 CELIK gold corpus quality audit:
 v1.7 CELIK gold filtered pilot findings:
 [docs/v1_7_celik_gold_filtered_pilot_findings.md](docs/v1_7_celik_gold_filtered_pilot_findings.md)
 
+v1.7 CELIK gold clean sweep findings:
+[docs/v1_7_celik_gold_clean_sweep_findings.md](docs/v1_7_celik_gold_clean_sweep_findings.md)
+
 v1.7 SentencePiece pilot findings:
 [docs/v1_7_sentencepiece_pilot_findings.md](docs/v1_7_sentencepiece_pilot_findings.md)
 
@@ -362,6 +365,24 @@ artifacts/v1_7_celik_gold_filtered_sample_manifest.md
 artifacts/v1_7_celik_gold_filtered_sample_leakage_report.md
 artifacts/v1_7_celik_gold_sentencepiece_pilot_sweep_expanded.md
 artifacts/v1_7_celik_gold_sentencepiece_pilot_sweep_challenge.md
+```
+
+Clean local CELIK gold corpus sweep:
+
+```powershell
+python scripts/prepare_claim_grade_corpus.py configs/v1_7_celik_gold_clean_sample.toml --max-scan-lines 120000
+python scripts/run_sentencepiece_sweep.py configs/v1_7_celik_gold_clean_sentencepiece_sweep.toml --force
+```
+
+Bu hat `data/train/private/celik_ai/celik_gold_corpus.clean.jsonl` private
+kopyasini kullanir. Public repo'da yalnizca aggregate leakage/manifest ve
+visible baseline raporlari tutulur:
+
+```text
+artifacts/v1_7_celik_gold_clean_sample_manifest.md
+artifacts/v1_7_celik_gold_clean_sample_leakage_report.md
+artifacts/v1_7_celik_gold_clean_sentencepiece_sweep_expanded.md
+artifacts/v1_7_celik_gold_clean_sentencepiece_sweep_challenge.md
 ```
 
 Downstream probe prep:

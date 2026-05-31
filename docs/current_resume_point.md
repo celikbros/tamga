@@ -26,7 +26,9 @@ sample, and used for a 4k/8k SentencePiece BPE/Unigram sweep. Next: begin the
 downstream-probe runner skeleton, or scale SentencePiece only after defining
 source proportions and claim-grade corpus policy. The downstream-probe prep
 skeleton is now available and has produced demo plus 20k CELIK gold pilot
-aggregate reports.
+aggregate reports. The cleaned `celik_gold_corpus.clean.jsonl` source has now
+been copied into the ignored private area and used for a visible leakage-checked
+8k/16k SentencePiece sweep. Corpus polishing is stopped for v1.7.
 ```
 
 Completed:
@@ -214,6 +216,41 @@ sp_bpe_4000_celik_gold_pilot:      avg_tokens/word=2.9347, boundary_f1=0.6506
 sp_unigram_4000_celik_gold_pilot:  avg_tokens/word=3.0052, boundary_f1=0.7101
 sp_bpe_8000_celik_gold_pilot:      avg_tokens/word=2.5770, boundary_f1=0.6690
 sp_unigram_8000_celik_gold_pilot:  avg_tokens/word=2.5979, boundary_f1=0.7388
+```
+
+After clean CELIK gold corpus copy and SentencePiece sweep:
+
+```text
+private copied source:
+data/train/private/celik_ai/celik_gold_corpus.clean.jsonl
+
+config:
+configs/v1_7_celik_gold_clean_sample.toml
+configs/v1_7_celik_gold_clean_sentencepiece_sweep.toml
+
+sample:
+scanned rows: 120001
+usable text rows: 120000
+filtered rows: 7737
+duplicates: 11
+written rows: 100000
+visible leakage hits: 0 exact, 0 normalized, 0 8-gram
+
+SentencePiece loaded all 100000 filtered sentences.
+
+expanded visible eval
+custom_tr_morph:                    avg_tokens/word=2.7438, boundary_f1=1.0000
+sp_bpe_8000_celik_gold_clean:       avg_tokens/word=2.9669, boundary_f1=0.6633
+sp_unigram_8000_celik_gold_clean:   avg_tokens/word=2.9669, boundary_f1=0.7377
+sp_bpe_16000_celik_gold_clean:      avg_tokens/word=2.6694, boundary_f1=0.6919
+sp_unigram_16000_celik_gold_clean:  avg_tokens/word=2.7355, boundary_f1=0.7425
+
+challenge visible eval
+custom_tr_morph:                    avg_tokens/word=2.1749, boundary_f1=0.9220
+sp_bpe_8000_celik_gold_clean:       avg_tokens/word=2.5770, boundary_f1=0.6690
+sp_unigram_8000_celik_gold_clean:   avg_tokens/word=2.5953, boundary_f1=0.7369
+sp_bpe_16000_celik_gold_clean:      avg_tokens/word=2.3446, boundary_f1=0.6837
+sp_unigram_16000_celik_gold_clean:  avg_tokens/word=2.3995, boundary_f1=0.7340
 ```
 
 After downstream probe prep skeleton:
@@ -523,9 +560,9 @@ Next recommended step:
 
 ```text
 Hand the prepared private token JSONL splits to the LLM training side for a
-small byte-normalized LM loss probe. Do not add new tokenizer morphology rules.
-If SentencePiece is scaled further, first define source proportions and
-claim-grade corpus policy.
+small byte-normalized LM loss probe, or run a larger 32k/48k/64k clean SP sweep
+only if a baseline-scaling decision is needed. Do not add new tokenizer
+morphology rules.
 ```
 
 Guardrails after v1.6b:
