@@ -168,24 +168,29 @@ Disabled until a larger leakage-checked corpus exists:
 This is intentional. Running 32k or 64k on the current tiny demo corpus would be
 misleading.
 
-## Next Engineering Step
+## Implemented Engineering Step
 
-Create a corpus-preparation skeleton, not a tokenizer rule:
+The corpus-preparation skeleton now exists:
 
 ```text
 scripts/prepare_claim_grade_corpus.py
 configs/v1_7_claim_grade_corpus.toml
 ```
 
-The first version should support local text files and document the intended
-FineWeb-2/CulturaX/OSCAR/Wikipedia inputs without downloading data by default.
+The first version supports local TXT and JSONL sources without downloading data
+by default. On this machine, local CELIK_AI text sources were copied into:
 
-Required outputs:
+```text
+data/train/private/celik_ai/
+```
+
+That directory is ignored by git.
+
+Current aggregate-only outputs:
 
 ```text
 artifacts/v1_7_claim_grade_corpus_manifest.md
 artifacts/v1_7_claim_grade_leakage_report.md
-data/train/claim_grade_tr_sample.txt   (local/private or gitignored if large)
 ```
 
 Guardrail:
@@ -194,3 +199,14 @@ Guardrail:
 Do not commit large corpus text to the repo.
 Commit only config, scripts, manifests, and aggregate reports.
 ```
+
+Smoke command:
+
+```powershell
+python scripts/prepare_claim_grade_corpus.py configs/v1_7_claim_grade_corpus.toml --manifest-only --max-scan-lines 1000
+```
+
+The initial 1000-line-per-source smoke report found no exact, normalized, or
+8-gram leakage hits against the visible expanded/challenge eval sets. This is
+not a full corpus certification yet; it only proves that the pipeline and
+reporting path work before larger scans.

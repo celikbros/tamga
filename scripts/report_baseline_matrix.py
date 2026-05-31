@@ -67,7 +67,7 @@ def _parse_simple_value(raw: str) -> Any:
 
 
 def _parse_simple_toml(text: str) -> dict[str, Any]:
-    data: dict[str, Any] = {"settings": {}, "datasets": [], "baselines": []}
+    data: dict[str, Any] = {}
     current: dict[str, Any] | None = None
 
     for line_no, raw_line in enumerate(text.splitlines(), start=1):
@@ -75,16 +75,18 @@ def _parse_simple_toml(text: str) -> dict[str, Any]:
         if not line:
             continue
 
-        if line == "[settings]":
-            current = data["settings"]
-            continue
-        if line == "[[datasets]]":
+        if line.startswith("[[") and line.endswith("]]"):
+            section = line[2:-2].strip()
+            if not section:
+                raise ValueError(f"unsupported TOML line {line_no}: {raw_line}")
             current = {}
-            data["datasets"].append(current)
+            data.setdefault(section, []).append(current)
             continue
-        if line == "[[baselines]]":
-            current = {}
-            data["baselines"].append(current)
+        if line.startswith("[") and line.endswith("]"):
+            section = line[1:-1].strip()
+            if not section:
+                raise ValueError(f"unsupported TOML line {line_no}: {raw_line}")
+            current = data.setdefault(section, {})
             continue
 
         if current is None or "=" not in line:

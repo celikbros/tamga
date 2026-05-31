@@ -1,0 +1,57 @@
+[settings]
+output_path = "data/train/claim_grade/celik_ai_claim_sample.txt"
+manifest_out = "artifacts/v1_7_claim_grade_corpus_manifest.md"
+leakage_out = "artifacts/v1_7_claim_grade_leakage_report.md"
+max_output_lines = 100000
+ngram_size = 8
+normalize_lowercase = false
+strip_punctuation = true
+
+[[eval_sets]]
+name = "expanded"
+path = "data/eval/tr_gold_expanded.tsv"
+
+[[eval_sets]]
+name = "challenge"
+path = "data/eval/tr_challenge.tsv"
+
+[[sources]]
+name = "celik_tr_corpus_txt"
+format = "text"
+path = "data/train/private/celik_ai/tr_corpus.txt"
+enabled = true
+
+[[sources]]
+name = "celik_wiki_oscar_jsonl"
+format = "jsonl"
+path = "data/train/private/celik_ai/wiki_oscar_corpus.jsonl"
+text_field = "text"
+enabled = true
+
+[[sources]]
+name = "celik_academic_jsonl"
+format = "jsonl"
+path = "data/train/private/celik_ai/academic_corpus.jsonl"
+text_field = "text"
+enabled = true
+
+[[sources]]
+name = "celik_tdk_jsonl"
+format = "jsonl"
+path = "data/train/private/celik_ai/tdk_corpus.jsonl"
+text_field = "text"
+enabled = true
+
+[[sources]]
+name = "celik_ttk_jsonl"
+format = "jsonl"
+path = "data/train/private/celik_ai/ttk_corpus.jsonl"
+text_field = "text"
+enabled = true
+
+[[sources]]
+name = "celik_trt_news_jsonl"
+format = "jsonl"
+path = "data/train/private/celik_ai/trt_news_corpus.jsonl"
+text_field = "text"
+enabled = true

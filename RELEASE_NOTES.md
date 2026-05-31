@@ -135,6 +135,12 @@
   Hugging Face `tokenizers` JSON files as optional baseline references.
 - Added visible eval reports for the local CELIK 64k ByteLevel BPE tokenizer
   against expanded and challenge Turkish morphology-policy sets.
+- Added local/private corpus copy guardrails plus
+  `configs/v1_7_claim_grade_corpus.toml` and
+  `scripts/prepare_claim_grade_corpus.py` for claim-grade corpus
+  manifest/leakage reporting without committing large text.
+- Added first v1.7 claim-grade corpus manifest and leakage smoke reports from
+  the local CELIK_AI corpus copies.
 - Added `docs/v1_5_baseline_findings.md` to summarize what the real-tokenizer
   comparisons do and do not prove.
 - Added the optional `baselines` dependency group for SentencePiece,

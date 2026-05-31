@@ -15,8 +15,10 @@ The Turkish-trained SentencePiece sweep scaffold is now available in demo-only
 mode. Advisor feedback on claim-grade corpus choice has been converted into a
 corpus plan. A read-only audit of the user's `C:\CELIK_AI` corpus/tokenizer
 artifacts found useful raw text candidates and a local 64k ByteLevel BPE
-tokenizer reference. Next: create the corpus-preparation/leakage-check skeleton,
-or begin the downstream-probe runner skeleton.
+tokenizer reference. Local CELIK_AI text sources have been copied into the
+repo's ignored private corpus area, and the corpus-preparation/leakage-check
+skeleton now produces manifest-only aggregate reports. Next: run a larger
+leakage-checked sample build, or begin the downstream-probe runner skeleton.
 ```
 
 Completed:
@@ -50,7 +52,7 @@ Current verified metrics:
 
 ```text
 python -m pytest
-120 passed
+122 passed
 
 tr_gold_expanded.tsv
 exact_match: 50/50
@@ -351,6 +353,9 @@ configs/v1_7_sentencepiece_sweep.toml
 docs/v1_7_claim_grade_corpus_plan.md
 docs/v1_7_celik_ai_corpus_tokenizer_audit.md
 scripts/run_sentencepiece_sweep.py
+configs/v1_7_claim_grade_corpus.toml
+scripts/prepare_claim_grade_corpus.py
+tests/test_prepare_claim_grade_corpus.py
 artifacts/v1_7_baseline_matrix_expanded.md
 artifacts/v1_7_baseline_matrix_challenge.md
 artifacts/v1_7_baseline_matrix_english_smoke.md
@@ -364,14 +369,16 @@ artifacts/v1_7_sentencepiece_sweep_expanded.md
 artifacts/v1_7_sentencepiece_sweep_challenge.md
 artifacts/v1_7_celik_64k_tokenizer_report_expanded.md
 artifacts/v1_7_celik_64k_tokenizer_report_challenge.md
+artifacts/v1_7_claim_grade_corpus_manifest.md
+artifacts/v1_7_claim_grade_leakage_report.md
 ```
 
 Next recommended step:
 
 ```text
-Start the downstream-probe runner skeleton, or pick a larger public Turkish
-corpus and run leakage checks before enabling 4k/8k/16k/32k SentencePiece
-variants. Do not add new tokenizer morphology rules.
+Run a larger leakage-checked local sample from `data/train/private/celik_ai`,
+or start the downstream-probe runner skeleton. Do not add new tokenizer
+morphology rules.
 ```
 
 Guardrails after v1.6b:

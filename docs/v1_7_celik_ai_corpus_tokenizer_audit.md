@@ -189,10 +189,36 @@ Use `C:\CELIK_AI` as a local source pool for v1.7 claim-grade corpus prep:
 4. keep all large corpus text outside git
 5. commit only scripts, configs, manifests, and aggregate reports
 
-Next engineering step:
+## Local Copy Status
+
+The usable local text candidates were copied into the repo workspace under an
+ignored private directory:
 
 ```text
-Create a corpus-preparation/leakage-check script that can read local TXT and
-JSONL sources, produce a private training text sample, and publish only manifest
-and leakage statistics.
+data/train/private/celik_ai/
 ```
+
+Copied sources:
+
+```text
+tr_corpus.txt
+wiki_oscar_corpus.jsonl
+academic_corpus.jsonl
+tdk_corpus.jsonl
+ttk_corpus.jsonl
+trt_news_corpus.jsonl
+```
+
+No files in `C:\CELIK_AI` were modified or deleted.
+
+Implemented engineering step:
+
+```text
+scripts/prepare_claim_grade_corpus.py
+configs/v1_7_claim_grade_corpus.toml
+artifacts/v1_7_claim_grade_corpus_manifest.md
+artifacts/v1_7_claim_grade_leakage_report.md
+```
+
+The first smoke run used `--manifest-only --max-scan-lines 1000`; it publishes
+aggregate source/leakage statistics only and does not commit corpus text.

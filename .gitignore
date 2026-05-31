@@ -5,6 +5,8 @@ pytest-cache-files-*/
 tests/fixtures/tmp*/
 data/eval/private/
 data/eval/*hidden*.tsv
+data/train/private/
+data/train/claim_grade/
 .venv/
 venv/
 build/

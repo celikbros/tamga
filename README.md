@@ -161,6 +161,9 @@ v1.7 SentencePiece sweep config:
 v1.7 claim-grade corpus plan:
 [docs/v1_7_claim_grade_corpus_plan.md](docs/v1_7_claim_grade_corpus_plan.md)
 
+v1.7 claim-grade corpus prep config:
+[configs/v1_7_claim_grade_corpus.toml](configs/v1_7_claim_grade_corpus.toml)
+
 v1.7 CELIK_AI local corpus/tokenizer audit:
 [docs/v1_7_celik_ai_corpus_tokenizer_audit.md](docs/v1_7_celik_ai_corpus_tokenizer_audit.md)
 
@@ -290,6 +293,24 @@ python scripts/run_sentencepiece_sweep.py configs/v1_7_sentencepiece_sweep.toml
 Bu config su anda sadece demo corpus uzerinde 1k BPE ve 1k Unigram calistirir.
 4k/8k/16k/32k/48k/64k varyantlari config'te hazirdir ama claim-grade corpus ve
 leakage kontrolu olmadan kapali tutulur.
+
+v1.7 claim-grade corpus prep/leakage skeleton:
+
+```powershell
+python scripts/prepare_claim_grade_corpus.py configs/v1_7_claim_grade_corpus.toml --manifest-only --max-scan-lines 1000
+```
+
+Bu komut local/private corpus kaynaklarini okur, eval leakage icin exact,
+normalized ve n-gram kontrollerini raporlar, ve yalnizca aggregate manifest
+dosyalarini public repo'ya koyar:
+
+```text
+artifacts/v1_7_claim_grade_corpus_manifest.md
+artifacts/v1_7_claim_grade_leakage_report.md
+```
+
+Buyuk corpus metinleri `data/train/private/` ve uretilen claim-grade text
+ornekleri `data/train/claim_grade/` altinda git disi tutulur.
 
 ## Metric Confidence Intervals
 
