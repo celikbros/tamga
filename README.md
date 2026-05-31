@@ -155,6 +155,9 @@ v1.7 missing baseline protocol:
 v1.7 baseline matrix config:
 [configs/v1_7_baselines.toml](configs/v1_7_baselines.toml)
 
+v1.7 SentencePiece sweep config:
+[configs/v1_7_sentencepiece_sweep.toml](configs/v1_7_sentencepiece_sweep.toml)
+
 v1.7 downstream probe protocol:
 [docs/v1_7_downstream_probe_protocol.md](docs/v1_7_downstream_probe_protocol.md)
 
@@ -262,6 +265,16 @@ artifacts/v1_7_baseline_matrix_multilingual_smoke.md
 Config varsayilan olarak Hugging Face modellerini kapali tutar; yerel cache veya
 bilincli indirme izni olmadan external model indirmez.
 
+v1.7 SentencePiece sweep scaffolding:
+
+```powershell
+python scripts/run_sentencepiece_sweep.py configs/v1_7_sentencepiece_sweep.toml
+```
+
+Bu config su anda sadece demo corpus uzerinde 1k BPE ve 1k Unigram calistirir.
+4k/8k/16k/32k varyantlari config'te hazirdir ama claim-grade corpus ve leakage
+kontrolu olmadan kapali tutulur.
+
 ## Metric Confidence Intervals
 
 v1.6a adds bootstrap confidence interval reporting for visible eval metrics. This
@@ -366,8 +379,8 @@ Daha ayrintili gerekceler icin [docs/design.md](docs/design.md) dosyasina bakin.
   router/MorphBPE planina ertelendi.
 - v1.7: independent heldout eval plani, missing baseline plani
   (Morfessor, Turkish-trained BPE/Unigram, BERTurk/XLM-R/mT5), downstream probe
-  protokolu, visible baseline matrix config'i ve v2.0 router/MorphBPE RFC
-  iskeleti.
+  protokolu, visible baseline matrix config'i, SentencePiece sweep scaffolding
+  ve v2.0 router/MorphBPE RFC iskeleti.
 - v2.0: MorphBPE/hybrid prototype; full Turkic/multilingual morphology iddiasi
   yok, once routing/fallback mimarisi.
 - Uzun vadede: Turkce/Turk dilleri subword fallback, Ingilizce/kod cluster,

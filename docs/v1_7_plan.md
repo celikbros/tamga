@@ -75,6 +75,8 @@ Required output:
 docs/v1_7_missing_baseline_protocol.md
 configs/v1_7_baselines.toml
 scripts/report_baseline_matrix.py
+configs/v1_7_sentencepiece_sweep.toml
+scripts/run_sentencepiece_sweep.py
 ```
 
 This protocol should separate:
@@ -90,6 +92,8 @@ Implementation prep:
 - keep Hugging Face references disabled by default unless local cache or
   explicit download permission is available
 - generate one Markdown matrix report per visible eval set
+- scaffold the Turkish-trained SentencePiece sweep without pretending that the
+  current tiny demo corpus is claim-grade
 
 ## Workstream 3: Small Downstream Probe Protocol
 

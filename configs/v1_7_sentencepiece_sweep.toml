@@ -1,0 +1,85 @@
+[settings]
+corpus = "data/train/tr_bpe_train.txt"
+corpus_label = "demo_corpus_not_claim_grade"
+claim_grade = false
+allow_train = true
+
+[[eval_sets]]
+name = "expanded"
+path = "data/eval/tr_gold_expanded.tsv"
+markdown_out = "artifacts/v1_7_sentencepiece_sweep_expanded.md"
+
+[[eval_sets]]
+name = "challenge"
+path = "data/eval/tr_challenge.tsv"
+markdown_out = "artifacts/v1_7_sentencepiece_sweep_challenge.md"
+
+[[models]]
+name = "sp_bpe_1000_demo"
+model_type = "bpe"
+vocab_size = 1000
+model_prefix = "artifacts/v1_7_sentencepiece_sweep/sp_bpe_1000_demo"
+enabled = true
+
+[[models]]
+name = "sp_unigram_1000_demo"
+model_type = "unigram"
+vocab_size = 1000
+model_prefix = "artifacts/v1_7_sentencepiece_sweep/sp_unigram_1000_demo"
+enabled = true
+
+[[models]]
+name = "sp_bpe_4000_claim_grade"
+model_type = "bpe"
+vocab_size = 4000
+model_prefix = "artifacts/v1_7_sentencepiece_sweep/sp_bpe_4000_claim_grade"
+enabled = false
+
+[[models]]
+name = "sp_unigram_4000_claim_grade"
+model_type = "unigram"
+vocab_size = 4000
+model_prefix = "artifacts/v1_7_sentencepiece_sweep/sp_unigram_4000_claim_grade"
+enabled = false
+
+[[models]]
+name = "sp_bpe_8000_claim_grade"
+model_type = "bpe"
+vocab_size = 8000
+model_prefix = "artifacts/v1_7_sentencepiece_sweep/sp_bpe_8000_claim_grade"
+enabled = false
+
+[[models]]
+name = "sp_unigram_8000_claim_grade"
+model_type = "unigram"
+vocab_size = 8000
+model_prefix = "artifacts/v1_7_sentencepiece_sweep/sp_unigram_8000_claim_grade"
+enabled = false
+
+[[models]]
+name = "sp_bpe_16000_claim_grade"
+model_type = "bpe"
+vocab_size = 16000
+model_prefix = "artifacts/v1_7_sentencepiece_sweep/sp_bpe_16000_claim_grade"
+enabled = false
+
+[[models]]
+name = "sp_unigram_16000_claim_grade"
+model_type = "unigram"
+vocab_size = 16000
+model_prefix = "artifacts/v1_7_sentencepiece_sweep/sp_unigram_16000_claim_grade"
+enabled = false
+
+[[models]]
+name = "sp_bpe_32000_claim_grade"
+model_type = "bpe"
+vocab_size = 32000
+model_prefix = "artifacts/v1_7_sentencepiece_sweep/sp_bpe_32000_claim_grade"
+enabled = false
+
+[[models]]
+name = "sp_unigram_32000_claim_grade"
+model_type = "unigram"
+vocab_size = 32000
+model_prefix = "artifacts/v1_7_sentencepiece_sweep/sp_unigram_32000_claim_grade"
+enabled = false

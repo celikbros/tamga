@@ -293,6 +293,49 @@ artifacts/v1_7_baseline_matrix_multilingual_smoke.md
 These reports are still visible-set diagnostics. They are not hidden eval
 evidence and do not prove downstream LLM quality.
 
+## SentencePiece Sweep Scaffolding
+
+The Turkish-trained SentencePiece sweep is prepared by:
+
+```text
+configs/v1_7_sentencepiece_sweep.toml
+scripts/run_sentencepiece_sweep.py
+```
+
+Command:
+
+```powershell
+python scripts/run_sentencepiece_sweep.py configs/v1_7_sentencepiece_sweep.toml
+```
+
+Current status:
+
+```text
+corpus: data/train/tr_bpe_train.txt
+corpus_label: demo_corpus_not_claim_grade
+claim_grade: false
+enabled models: 1k BPE and 1k Unigram only
+```
+
+The 4k, 8k, 16k, and 32k variants are present in the config but disabled until
+a larger public Turkish corpus is selected and leakage-checked. Running a 32k
+SentencePiece model on the current 310-line demo corpus would look scientific
+but would not be meaningful.
+
+Generated demo reports:
+
+```text
+artifacts/v1_7_sentencepiece_sweep_expanded.md
+artifacts/v1_7_sentencepiece_sweep_challenge.md
+```
+
+Interpretation:
+
+- these reports prove the sweep runner and config wiring
+- they reproduce the local demo BPE/Unigram baseline signal
+- they do not close the missing-baseline risk for a real Turkish-trained 32k
+  tokenizer
+
 ## Implementation Plan
 
 ### Step 1: Protocol-Only Commit

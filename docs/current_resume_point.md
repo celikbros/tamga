@@ -11,8 +11,9 @@ Current next step:
 
 ```text
 v1.7 baseline matrix config and visible reports are now available.
-Next: add the Turkish-trained SentencePiece sweep plan/config or begin the
-downstream-probe runner skeleton.
+The Turkish-trained SentencePiece sweep scaffold is now available in demo-only
+mode. Next: begin the downstream-probe runner skeleton, or select a larger
+public Turkish corpus for claim-grade baseline training.
 ```
 
 Completed:
@@ -46,7 +47,7 @@ Current verified metrics:
 
 ```text
 python -m pytest
-118 passed
+119 passed
 
 tr_gold_expanded.tsv
 exact_match: 50/50
@@ -343,18 +344,27 @@ docs/v1_7_downstream_probe_protocol.md
 docs/v2_0_router_morphbpe_rfc.md
 configs/v1_7_baselines.toml
 scripts/report_baseline_matrix.py
+configs/v1_7_sentencepiece_sweep.toml
+scripts/run_sentencepiece_sweep.py
 artifacts/v1_7_baseline_matrix_expanded.md
 artifacts/v1_7_baseline_matrix_challenge.md
 artifacts/v1_7_baseline_matrix_english_smoke.md
 artifacts/v1_7_baseline_matrix_multilingual_smoke.md
 artifacts/v1_7_public_stress_report.md
+artifacts/v1_7_sentencepiece_sweep/sp_bpe_1000_demo.model
+artifacts/v1_7_sentencepiece_sweep/sp_bpe_1000_demo.vocab
+artifacts/v1_7_sentencepiece_sweep/sp_unigram_1000_demo.model
+artifacts/v1_7_sentencepiece_sweep/sp_unigram_1000_demo.vocab
+artifacts/v1_7_sentencepiece_sweep_expanded.md
+artifacts/v1_7_sentencepiece_sweep_challenge.md
 ```
 
 Next recommended step:
 
 ```text
-Add Turkish-trained SentencePiece sweep scaffolding, or start the
-downstream-probe runner skeleton. Do not add new tokenizer morphology rules.
+Start the downstream-probe runner skeleton, or pick a larger public Turkish
+corpus and run leakage checks before enabling 4k/8k/16k/32k SentencePiece
+variants. Do not add new tokenizer morphology rules.
 ```
 
 Guardrails after v1.6b:
