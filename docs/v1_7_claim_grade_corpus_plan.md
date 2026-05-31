@@ -210,3 +210,17 @@ The initial 1000-line-per-source smoke report found no exact, normalized, or
 8-gram leakage hits against the visible expanded/challenge eval sets. This is
 not a full corpus certification yet; it only proves that the pipeline and
 reporting path work before larger scans.
+
+Pilot sample command:
+
+```powershell
+python scripts/prepare_claim_grade_corpus.py configs/v1_7_claim_grade_corpus.toml --max-scan-lines 15000
+```
+
+The current pilot sample writes 75,388 local/private lines, includes all enabled
+local CELIK_AI sources, and still reports zero exact, normalized, or 8-gram hits
+against the visible expanded/challenge eval sets.
+
+This pilot sample is useful for local SentencePiece wiring. It is not yet the
+final claim-grade corpus because source proportions, long-line filtering, and
+larger vocab sweep policy still need to be made explicit.

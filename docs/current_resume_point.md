@@ -17,8 +17,11 @@ corpus plan. A read-only audit of the user's `C:\CELIK_AI` corpus/tokenizer
 artifacts found useful raw text candidates and a local 64k ByteLevel BPE
 tokenizer reference. Local CELIK_AI text sources have been copied into the
 repo's ignored private corpus area, and the corpus-preparation/leakage-check
-skeleton now produces manifest-only aggregate reports. Next: run a larger
-leakage-checked sample build, or begin the downstream-probe runner skeleton.
+skeleton now produces aggregate reports. A 75,388-line local CELIK_AI pilot
+sample and 4k/8k SentencePiece BPE/Unigram pilot sweep are available, with
+private model/vocab files kept out of git. Next: either build a larger
+claim-grade-style sample with explicit source proportions, or begin the
+downstream-probe runner skeleton.
 ```
 
 Completed:
@@ -110,6 +113,29 @@ challenge real-baseline report
 custom_tr_morph: avg_tokens/word=2.1749, boundary_f1=0.9220
 sp_bpe:          avg_tokens/word=2.7807, boundary_f1=0.6497
 sp_unigram:      avg_tokens/word=2.9321, boundary_f1=0.6225
+```
+
+After local CELIK_AI SentencePiece pilot baselines:
+
+```text
+pilot corpus
+lines written: 75,388
+size: ~132 MB
+visible leakage hits: 0 exact, 0 normalized, 0 8-gram
+
+expanded visible eval
+custom_tr_morph:              avg_tokens/word=2.7438, boundary_f1=1.0000
+sp_bpe_4000_celik_pilot:      avg_tokens/word=3.3058, boundary_f1=0.6614
+sp_unigram_4000_celik_pilot:  avg_tokens/word=3.2810, boundary_f1=0.7091
+sp_bpe_8000_celik_pilot:      avg_tokens/word=2.9008, boundary_f1=0.6792
+sp_unigram_8000_celik_pilot:  avg_tokens/word=2.9917, boundary_f1=0.7441
+
+challenge visible eval
+custom_tr_morph:              avg_tokens/word=2.1749, boundary_f1=0.9220
+sp_bpe_4000_celik_pilot:      avg_tokens/word=3.0183, boundary_f1=0.6480
+sp_unigram_4000_celik_pilot:  avg_tokens/word=3.0131, boundary_f1=0.6961
+sp_bpe_8000_celik_pilot:      avg_tokens/word=2.5692, boundary_f1=0.6714
+sp_unigram_8000_celik_pilot:  avg_tokens/word=2.5666, boundary_f1=0.7405
 ```
 
 After Qwen tokenizer reference:
@@ -371,14 +397,18 @@ artifacts/v1_7_celik_64k_tokenizer_report_expanded.md
 artifacts/v1_7_celik_64k_tokenizer_report_challenge.md
 artifacts/v1_7_claim_grade_corpus_manifest.md
 artifacts/v1_7_claim_grade_leakage_report.md
+configs/v1_7_sentencepiece_pilot_sweep.toml
+docs/v1_7_sentencepiece_pilot_findings.md
+artifacts/v1_7_sentencepiece_pilot_sweep_expanded.md
+artifacts/v1_7_sentencepiece_pilot_sweep_challenge.md
 ```
 
 Next recommended step:
 
 ```text
-Run a larger leakage-checked local sample from `data/train/private/celik_ai`,
-or start the downstream-probe runner skeleton. Do not add new tokenizer
-morphology rules.
+Build a larger claim-grade-style sample with explicit source proportions and
+long-line filtering, or start the downstream-probe runner skeleton. Do not add
+new tokenizer morphology rules.
 ```
 
 Guardrails after v1.6b:

@@ -7,6 +7,7 @@ data/eval/private/
 data/eval/*hidden*.tsv
 data/train/private/
 data/train/claim_grade/
+artifacts/private/
 .venv/
 venv/
 build/

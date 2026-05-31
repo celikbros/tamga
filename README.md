@@ -158,6 +158,9 @@ v1.7 baseline matrix config:
 v1.7 SentencePiece sweep config:
 [configs/v1_7_sentencepiece_sweep.toml](configs/v1_7_sentencepiece_sweep.toml)
 
+v1.7 local SentencePiece pilot sweep config:
+[configs/v1_7_sentencepiece_pilot_sweep.toml](configs/v1_7_sentencepiece_pilot_sweep.toml)
+
 v1.7 claim-grade corpus plan:
 [docs/v1_7_claim_grade_corpus_plan.md](docs/v1_7_claim_grade_corpus_plan.md)
 
@@ -166,6 +169,9 @@ v1.7 claim-grade corpus prep config:
 
 v1.7 CELIK_AI local corpus/tokenizer audit:
 [docs/v1_7_celik_ai_corpus_tokenizer_audit.md](docs/v1_7_celik_ai_corpus_tokenizer_audit.md)
+
+v1.7 SentencePiece pilot findings:
+[docs/v1_7_sentencepiece_pilot_findings.md](docs/v1_7_sentencepiece_pilot_findings.md)
 
 v1.7 downstream probe protocol:
 [docs/v1_7_downstream_probe_protocol.md](docs/v1_7_downstream_probe_protocol.md)
@@ -311,6 +317,16 @@ artifacts/v1_7_claim_grade_leakage_report.md
 
 Buyuk corpus metinleri `data/train/private/` ve uretilen claim-grade text
 ornekleri `data/train/claim_grade/` altinda git disi tutulur.
+
+Local CELIK_AI SentencePiece pilot sweep:
+
+```powershell
+python scripts/prepare_claim_grade_corpus.py configs/v1_7_claim_grade_corpus.toml --max-scan-lines 15000
+python scripts/run_sentencepiece_sweep.py configs/v1_7_sentencepiece_pilot_sweep.toml
+```
+
+Bu pilot claim-grade degildir. `artifacts/private/` altindaki model/vocab
+dosyalari git disi kalir; public repo'da yalnizca aggregate raporlar tutulur.
 
 ## Metric Confidence Intervals
 

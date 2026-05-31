@@ -1,0 +1,43 @@
+[settings]
+corpus = "data/train/claim_grade/celik_ai_claim_sample.txt"
+corpus_label = "local_celik_ai_75k_line_pilot_not_claim_grade"
+claim_grade = false
+allow_train = true
+
+[[eval_sets]]
+name = "expanded"
+path = "data/eval/tr_gold_expanded.tsv"
+markdown_out = "artifacts/v1_7_sentencepiece_pilot_sweep_expanded.md"
+
+[[eval_sets]]
+name = "challenge"
+path = "data/eval/tr_challenge.tsv"
+markdown_out = "artifacts/v1_7_sentencepiece_pilot_sweep_challenge.md"
+
+[[models]]
+name = "sp_bpe_4000_celik_pilot"
+model_type = "bpe"
+vocab_size = 4000
+model_prefix = "artifacts/private/v1_7_sentencepiece_pilot/sp_bpe_4000_celik_pilot"
+enabled = true
+
+[[models]]
+name = "sp_unigram_4000_celik_pilot"
+model_type = "unigram"
+vocab_size = 4000
+model_prefix = "artifacts/private/v1_7_sentencepiece_pilot/sp_unigram_4000_celik_pilot"
+enabled = true
+
+[[models]]
+name = "sp_bpe_8000_celik_pilot"
+model_type = "bpe"
+vocab_size = 8000
+model_prefix = "artifacts/private/v1_7_sentencepiece_pilot/sp_bpe_8000_celik_pilot"
+enabled = true
+
+[[models]]
+name = "sp_unigram_8000_celik_pilot"
+model_type = "unigram"
+vocab_size = 8000
+model_prefix = "artifacts/private/v1_7_sentencepiece_pilot/sp_unigram_8000_celik_pilot"
+enabled = true

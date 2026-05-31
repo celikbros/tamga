@@ -141,6 +141,10 @@
   manifest/leakage reporting without committing large text.
 - Added first v1.7 claim-grade corpus manifest and leakage smoke reports from
   the local CELIK_AI corpus copies.
+- Added a local CELIK_AI SentencePiece pilot sweep config and reports for 4k/8k
+  BPE/Unigram trained on an ignored leakage-checked local sample.
+- Added `docs/v1_7_sentencepiece_pilot_findings.md` to frame the pilot as
+  non-claim-grade evidence and keep private model/vocab files out of git.
 - Added `docs/v1_5_baseline_findings.md` to summarize what the real-tokenizer
   comparisons do and do not prove.
 - Added the optional `baselines` dependency group for SentencePiece,
