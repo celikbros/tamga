@@ -1,0 +1,59 @@
+[settings]
+corpus_path = "data/train/claim_grade/celik_gold_clean_pilot.txt"
+output_dir = "artifacts/private/v1_7_downstream_probe/celik_gold_clean_pilot_20k"
+report_out = "artifacts/v1_7_downstream_probe_prep_celik_gold_clean_pilot.md"
+max_lines = 20000
+seed = 20260601
+train_parts = 8
+valid_parts = 1
+test_parts = 1
+write_tokenized = true
+allow_download = false
+
+[[tokenizers]]
+name = "custom_tr_morph"
+kind = "custom"
+
+[[tokenizers]]
+name = "unicode_char"
+kind = "unicode_char"
+
+[[tokenizers]]
+name = "sp_bpe_8000_celik_gold_clean"
+kind = "sentencepiece"
+path = "artifacts/private/v1_7_celik_gold_clean_sentencepiece/sp_bpe_8000_celik_gold_clean.model"
+
+[[tokenizers]]
+name = "sp_unigram_8000_celik_gold_clean"
+kind = "sentencepiece"
+path = "artifacts/private/v1_7_celik_gold_clean_sentencepiece/sp_unigram_8000_celik_gold_clean.model"
+
+[[tokenizers]]
+name = "sp_bpe_16000_celik_gold_clean"
+kind = "sentencepiece"
+path = "artifacts/private/v1_7_celik_gold_clean_sentencepiece/sp_bpe_16000_celik_gold_clean.model"
+
+[[tokenizers]]
+name = "sp_unigram_16000_celik_gold_clean"
+kind = "sentencepiece"
+path = "artifacts/private/v1_7_celik_gold_clean_sentencepiece/sp_unigram_16000_celik_gold_clean.model"
+
+[[tokenizers]]
+name = "sp_bpe_32000_celik_gold_clean"
+kind = "sentencepiece"
+path = "artifacts/private/v1_7_celik_gold_clean_sentencepiece/sp_bpe_32000_celik_gold_clean.model"
+
+[[tokenizers]]
+name = "sp_unigram_32000_celik_gold_clean"
+kind = "sentencepiece"
+path = "artifacts/private/v1_7_celik_gold_clean_sentencepiece/sp_unigram_32000_celik_gold_clean.model"
+
+[[tokenizers]]
+name = "sp_bpe_64000_celik_gold_clean"
+kind = "sentencepiece"
+path = "artifacts/private/v1_7_celik_gold_clean_sentencepiece/sp_bpe_64000_celik_gold_clean.model"
+
+[[tokenizers]]
+name = "sp_unigram_64000_celik_gold_clean"
+kind = "sentencepiece"
+path = "artifacts/private/v1_7_celik_gold_clean_sentencepiece/sp_unigram_64000_celik_gold_clean.model"

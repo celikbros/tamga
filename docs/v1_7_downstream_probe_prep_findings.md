@@ -148,3 +148,74 @@ tokens/sec
 ```
 
 Do not add new Turkish morphology rules based on this prep result.
+
+## CELIK Gold Clean Pilot Config
+
+The active LLM handoff prep now uses the clean corpus pilot, not the older
+filtered raw-source pilot.
+
+Config:
+
+```text
+configs/v1_7_downstream_probe_celik_gold_clean_pilot.toml
+```
+
+Command:
+
+```powershell
+python scripts/prepare_downstream_probe.py configs/v1_7_downstream_probe_celik_gold_clean_pilot.toml
+```
+
+Report:
+
+```text
+artifacts/v1_7_downstream_probe_prep_celik_gold_clean_pilot.md
+```
+
+Private token outputs:
+
+```text
+artifacts/private/v1_7_downstream_probe/celik_gold_clean_pilot_20k/
+```
+
+Prepared split:
+
+| Split | Lines | Bytes | Words |
+| --- | ---: | ---: | ---: |
+| train | 16000 | 21.76 MiB | 2603245 |
+| valid | 2000 | 2.72 MiB | 324562 |
+| test | 2000 | 2.65 MiB | 316529 |
+
+Validation prep metrics:
+
+| Tokenizer | Avg tokens/word | Tokens/byte | Bytes/token |
+| --- | ---: | ---: | ---: |
+| custom_tr_morph | 1.4931 | 0.170166 | 5.8766 |
+| unicode_char | 7.0540 | 0.803931 | 1.2439 |
+| sp_bpe_8000_celik_gold_clean | 1.9272 | 0.219642 | 4.5529 |
+| sp_unigram_8000_celik_gold_clean | 1.8791 | 0.214160 | 4.6694 |
+| sp_bpe_16000_celik_gold_clean | 1.6775 | 0.191180 | 5.2307 |
+| sp_unigram_16000_celik_gold_clean | 1.6464 | 0.187635 | 5.3295 |
+
+Handoff docs:
+
+```text
+docs/llm_handoff_packet.md
+docs/v1_7_downstream_probe_handoff.md
+```
+
+After the clean SentencePiece sweep, the downstream probe config was expanded
+to include 32k and 64k SP baselines. The clean downstream prep was re-run with:
+
+```powershell
+python scripts/prepare_downstream_probe.py configs/v1_7_downstream_probe_celik_gold_clean_pilot.toml
+```
+
+The public aggregate report is:
+
+```text
+artifacts/v1_7_downstream_probe_prep_celik_gold_clean_pilot.md
+```
+
+The clean handoff is ready for a controlled small-LM probe, but it is not a
+production tokenizer handoff.
