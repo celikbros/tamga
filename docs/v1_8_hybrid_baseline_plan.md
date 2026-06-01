@@ -97,5 +97,6 @@ comparison against raw train-only SP and pure custom lossless mode
 ## Current Decision
 
 ```text
-P3 is prepared but not complete until the hybrid SP sweep is run and reported.
+P3 is completed for v1.8 intrinsic screening.
+See docs/v1_8_hybrid_sentencepiece_findings.md.
 ```

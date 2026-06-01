@@ -120,9 +120,9 @@ If the hybrid baseline is not implemented, v1.8 should be treated as incomplete.
 Status:
 
 ```text
-prepared; see docs/v1_8_hybrid_baseline_plan.md
+completed for intrinsic screening; see docs/v1_8_hybrid_sentencepiece_findings.md
 hybrid pretokenized train corpus is materialized
-hybrid SP sweep still needs to be run
+hybrid SP sweep was run with max_sentence_length = 20000
 ```
 
 ### P4. Lossless Roundtrip Checks
@@ -314,7 +314,7 @@ a custom win on clean pilot proves multilingual robustness
 
 1. Completed: write train/valid/test split materialization for the 20k pilot.
 2. Completed: train train-only SP baselines from the 16k train split.
-3. In progress: implement or define a hybrid morphology-aware SP baseline.
+3. Completed: implement and report a hybrid morphology-aware SP baseline.
 4. Completed: add roundtrip and split-overlap reports.
 5. Add canary text and diagnostics.
 6. Only then implement/run the tiny LM probe.
