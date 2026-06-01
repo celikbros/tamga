@@ -36,15 +36,17 @@ artifacts/private/v1_8_local_lm_probe/celik_tr_primary_multilingual_mix_lm_probe
 
 ## Important Caveat
 
-`custom_tr_morph_lossless` currently uses a temporary train-only vocabulary:
+`custom_tr_morph_lossless` currently uses a temporary train-only vocabulary plus
+UTF-8 byte fallback:
 
 ```text
 train custom tokens -> temporary vocab
-valid/test unseen custom tokens -> <unk>
+unseen custom source tokens -> UTF-8 byte fallback ids
 ```
 
-This is not a final tokenizer vocabulary design. The report includes OOV counts
-so the temporary custom-vocab penalty is visible.
+This is not a final tokenizer vocabulary design. The report includes fallback
+source-token counts so the temporary custom-vocab penalty is visible without
+destroying byte-level information.
 
 ## Commands
 

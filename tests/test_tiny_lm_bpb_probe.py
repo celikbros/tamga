@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from scripts.run_tiny_lm_bpb_probe import (
+    UNK_ID,
     TokenizerConfig,
     encode_tokenizer,
     format_report,
@@ -39,13 +40,14 @@ def test_custom_encoding_reports_oov_on_eval_split(tmp_path: Path):
     splits = load_split_texts(split_dir)
 
     encoded = encode_tokenizer(
-        TokenizerConfig("custom_tr_morph_lossless", "custom", max_vocab_size=64),
+        TokenizerConfig("custom_tr_morph_lossless", "custom", max_vocab_size=300),
         splits,
     )
 
     assert encoded.status == "ok"
     assert encoded.splits["train"].oov_tokens == 0
     assert encoded.splits["valid"].oov_tokens > 0
+    assert UNK_ID not in encoded.splits["valid"].ids
 
 
 def test_config_and_dry_report(tmp_path: Path):

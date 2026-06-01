@@ -20,6 +20,8 @@ from tr_tokenizer import TurkishTokenizer  # noqa: E402
 PAD_ID = 0
 UNK_ID = 1
 EOS_ID = 2
+BYTE_OFFSET = 3
+BYTE_VOCAB_SIZE = 256
 
 
 @dataclass(frozen=True)
@@ -206,8 +208,18 @@ def build_custom_vocab(lines: list[str], *, max_vocab_size: int | None) -> dict[
     for line in lines:
         counts.update(tokenizer.encode(line))
 
-    limit = max_vocab_size - 3 if max_vocab_size is not None else None
     vocab = {"<pad>": PAD_ID, "<unk>": UNK_ID, "<eos>": EOS_ID}
+    for byte in range(BYTE_VOCAB_SIZE):
+        vocab[f"<byte_{byte:02x}>"] = BYTE_OFFSET + byte
+
+    reserved = len(vocab)
+    if max_vocab_size is not None and max_vocab_size < reserved:
+        raise ValueError(
+            f"custom max_vocab_size={max_vocab_size} is too small; "
+            f"needs at least {reserved} for specials plus byte fallback"
+        )
+
+    limit = max_vocab_size - reserved if max_vocab_size is not None else None
     for token, _count in counts.most_common(limit):
         if token not in vocab:
             vocab[token] = len(vocab)
@@ -217,14 +229,23 @@ def build_custom_vocab(lines: list[str], *, max_vocab_size: int | None) -> dict[
 def encode_custom_split(lines: list[str], vocab: dict[str, int], byte_count: int, split: str) -> EncodedSplit:
     tokenizer = TurkishTokenizer(preserve_whitespace=True)
     ids: list[int] = []
-    oov_tokens = 0
+    fallback_source_tokens = 0
     for line in lines:
         for token in tokenizer.encode(line):
-            token_id = vocab.get(token, UNK_ID)
-            oov_tokens += int(token_id == UNK_ID)
-            ids.append(token_id)
+            token_id = vocab.get(token)
+            if token_id is None:
+                fallback_source_tokens += 1
+                ids.extend(BYTE_OFFSET + byte for byte in token.encode("utf-8"))
+            else:
+                ids.append(token_id)
         ids.append(EOS_ID)
-    return EncodedSplit(split, ids, byte_count, len(lines), oov_tokens=oov_tokens)
+    return EncodedSplit(
+        split,
+        ids,
+        byte_count,
+        len(lines),
+        oov_tokens=fallback_source_tokens,
+    )
 
 
 def encode_utf8_byte_split(lines: list[str], byte_count: int, split: str) -> EncodedSplit:
@@ -296,8 +317,9 @@ def encode_all(config: ProbeConfig) -> list[EncodedTokenizer]:
             print(
                 f"Encoded tokenizer={tokenizer.name} vocab={result.vocab_size} "
                 f"train_tokens={train.tokens} valid_tokens={valid.tokens} "
-                f"test_tokens={test.tokens} valid_oov={valid.oov_tokens} "
-                f"test_oov={test.oov_tokens}",
+                f"test_tokens={test.tokens} "
+                f"valid_fallback_source_tokens={valid.oov_tokens} "
+                f"test_fallback_source_tokens={test.oov_tokens}",
                 flush=True,
             )
         else:
@@ -531,7 +553,7 @@ def format_report(
         "",
         "## Encoding Summary",
         "",
-        "| Tokenizer | Status | Vocab | Split | Lines | Bytes | Tokens | Tokens/byte | OOV tokens | OOV rate | Notes |",
+        "| Tokenizer | Status | Vocab | Split | Lines | Bytes | Tokens | Tokens/byte | Fallback source tokens | Fallback source rate | Notes |",
         "| --- | --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |",
     ]
     for encoded in encoded_tokenizers:
@@ -576,7 +598,7 @@ def format_report(
             "## Interpretation Guardrails",
             "",
             "- Compare only byte-normalized validation/test loss, not token perplexity.",
-            "- Custom uses a temporary train-only vocabulary with explicit OOV reporting.",
+            "- Custom uses a temporary train-only vocabulary plus UTF-8 byte fallback for unseen source tokens.",
             "- This script does not make the tokenizer LLM-ready.",
             "- A negative result should be read with the v1.8 protocol caveats.",
         ]
