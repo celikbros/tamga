@@ -188,6 +188,12 @@ v1.7 downstream probe protocol:
 v1.7 downstream probe prep findings:
 [docs/v1_7_downstream_probe_prep_findings.md](docs/v1_7_downstream_probe_prep_findings.md)
 
+LLM handoff packet:
+[docs/llm_handoff_packet.md](docs/llm_handoff_packet.md)
+
+v1.7 downstream probe handoff:
+[docs/v1_7_downstream_probe_handoff.md](docs/v1_7_downstream_probe_handoff.md)
+
 v2.0 router/MorphBPE RFC:
 [docs/v2_0_router_morphbpe_rfc.md](docs/v2_0_router_morphbpe_rfc.md)
 
@@ -403,6 +409,7 @@ Downstream probe prep:
 ```powershell
 python scripts/prepare_downstream_probe.py configs/v1_7_downstream_probe_demo.toml
 python scripts/prepare_downstream_probe.py configs/v1_7_downstream_probe_celik_gold_pilot.toml
+python scripts/prepare_downstream_probe.py configs/v1_7_downstream_probe_celik_gold_clean_pilot.toml
 ```
 
 Bu komutlar LLM egitmez. Ayni raw split uzerinde tokenizer bazli private JSONL
@@ -411,6 +418,7 @@ token ciktilari ve public aggregate hazirlik raporlari uretir:
 ```text
 artifacts/v1_7_downstream_probe_prep_demo.md
 artifacts/v1_7_downstream_probe_prep_celik_gold_pilot.md
+artifacts/v1_7_downstream_probe_prep_celik_gold_clean_pilot.md
 ```
 
 Private token JSONL dosyalari `artifacts/private/` altinda git disi kalir.
