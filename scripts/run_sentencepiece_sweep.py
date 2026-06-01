@@ -47,6 +47,7 @@ class SentencePieceSweepConfig:
     corpus_label: str
     claim_grade: bool
     allow_train: bool
+    max_sentence_length: int | None
     models: list[SentencePieceSweepModel]
     eval_sets: list[SentencePieceEvalSet]
 
@@ -65,6 +66,15 @@ def _int_field(item: dict[str, Any], field: str, *, context: str) -> int:
     return value
 
 
+def _optional_positive_int_setting(settings: dict[str, Any], field: str) -> int | None:
+    value = settings.get(field)
+    if value is None:
+        return None
+    if not isinstance(value, int) or value <= 0:
+        raise ValueError(f"[settings] field {field!r} must be a positive integer")
+    return value
+
+
 def load_sentencepiece_sweep_config(path: str | Path) -> SentencePieceSweepConfig:
     config_path = Path(path)
     raw = _load_toml(config_path)
@@ -76,6 +86,7 @@ def load_sentencepiece_sweep_config(path: str | Path) -> SentencePieceSweepConfi
     corpus_label = str(settings.get("corpus_label", corpus.as_posix()))
     claim_grade = bool(settings.get("claim_grade", False))
     allow_train = bool(settings.get("allow_train", True))
+    max_sentence_length = _optional_positive_int_setting(settings, "max_sentence_length")
 
     models: list[SentencePieceSweepModel] = []
     for item in raw.get("models", []):
@@ -120,6 +131,7 @@ def load_sentencepiece_sweep_config(path: str | Path) -> SentencePieceSweepConfi
         corpus_label=corpus_label,
         claim_grade=claim_grade,
         allow_train=allow_train,
+        max_sentence_length=max_sentence_length,
         models=models,
         eval_sets=eval_sets,
     )
@@ -153,6 +165,7 @@ def train_enabled_models(
             model.model_prefix,
             vocab_size=model.vocab_size,
             model_type=model.model_type,
+            max_sentence_length=config.max_sentence_length,
         )
         print(f"wrote_model: {model_path}")
         print(f"wrote_vocab: {vocab_path}")
@@ -177,6 +190,7 @@ def _sweep_markdown(
         f"Corpus: `{config.corpus.as_posix()}`",
         f"Corpus label: `{config.corpus_label}`",
         f"Status: `{claim_status}`",
+        f"Max sentence length: `{config.max_sentence_length or 'sentencepiece_default'}`",
         "",
         "This report is a reproducibility and wiring check unless the corpus is",
         "explicitly marked claim-grade. It must not be used as hidden-eval or",

@@ -12,6 +12,7 @@ def train_sentencepiece(
     *,
     vocab_size: int,
     model_type: str,
+    max_sentence_length: int | None = None,
 ) -> tuple[Path, Path]:
     if importlib.util.find_spec("sentencepiece") is None:
         raise RuntimeError(
@@ -23,18 +24,22 @@ def train_sentencepiece(
     prefix = Path(output_prefix)
     prefix.parent.mkdir(parents=True, exist_ok=True)
 
-    spm.SentencePieceTrainer.train(
-        input=str(input_path),
-        model_prefix=str(prefix),
-        vocab_size=vocab_size,
-        model_type=model_type,
-        character_coverage=1.0,
-        hard_vocab_limit=False,
-        normalization_rule_name="identity",
-        remove_extra_whitespaces=False,
-        split_by_whitespace=True,
-        train_extremely_large_corpus=False,
-    )
+    train_kwargs = {
+        "input": str(input_path),
+        "model_prefix": str(prefix),
+        "vocab_size": vocab_size,
+        "model_type": model_type,
+        "character_coverage": 1.0,
+        "hard_vocab_limit": False,
+        "normalization_rule_name": "identity",
+        "remove_extra_whitespaces": False,
+        "split_by_whitespace": True,
+        "train_extremely_large_corpus": False,
+    }
+    if max_sentence_length is not None:
+        train_kwargs["max_sentence_length"] = max_sentence_length
+
+    spm.SentencePieceTrainer.train(**train_kwargs)
 
     return prefix.with_suffix(".model"), prefix.with_suffix(".vocab")
 

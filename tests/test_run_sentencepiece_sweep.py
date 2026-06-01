@@ -53,6 +53,7 @@ def test_run_sentencepiece_sweep_trains_and_reports(tmp_path: Path) -> None:
                 'corpus_label = "unit_test_demo"',
                 "claim_grade = false",
                 "allow_train = true",
+                "max_sentence_length = 1000",
                 "",
                 "[[eval_sets]]",
                 'name = "tiny"',
@@ -79,3 +80,4 @@ def test_run_sentencepiece_sweep_trains_and_reports(tmp_path: Path) -> None:
     assert "# v1.7 SentencePiece Sweep: tiny" in report
     assert "sp_bpe_demo" in report
     assert "demo-only" in report
+    assert "Max sentence length: `1000`" in report

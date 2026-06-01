@@ -3,6 +3,7 @@ corpus = "artifacts/private/v1_8_hybrid_morph_pretok/train.morph_pretok.txt"
 corpus_label = "v1_8_hybrid_morph_pretok_train_only_not_claim_grade"
 claim_grade = false
 allow_train = true
+max_sentence_length = 20000
 
 [[eval_sets]]
 name = "expanded"

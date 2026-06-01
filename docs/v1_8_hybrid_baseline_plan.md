@@ -65,8 +65,19 @@ hybrid_morph_pretok_unigram_64000_train_only
 Command:
 
 ```powershell
-python scripts/run_sentencepiece_sweep.py configs\v1_8_hybrid_sentencepiece_sweep.toml
+python scripts/run_sentencepiece_sweep.py configs\v1_8_hybrid_sentencepiece_sweep.toml --force
 ```
+
+The `--force` flag is required when rerunning after an earlier hybrid sweep,
+because existing private SentencePiece model files would otherwise be reused.
+
+The config sets:
+
+```text
+max_sentence_length = 20000
+```
+
+This avoids SentencePiece skipping long morph-pretokenized training lines.
 
 ## Caveat
 
