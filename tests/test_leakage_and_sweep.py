@@ -6,6 +6,7 @@ import pytest
 
 from scripts.check_eval_leakage import (
     build_indexes,
+    build_byte_prefilter,
     find_exact_leakage,
     load_eval_set,
     make_leakage_case,
@@ -75,6 +76,38 @@ def test_load_eval_set_rejects_category_column_text_col(tmp_path: Path):
 
     with pytest.raises(ValueError, match="category column"):
         load_eval_set(path, set_name="gold", ngram_size=8, text_col=0)
+
+
+def test_load_eval_set_can_skip_short_items(tmp_path: Path):
+    path = tmp_path / "eval.tsv"
+    path.write_text(
+        "\n".join(
+            [
+                'verb_past\tGeldim.\t["▁Gel","+di","+m","."]',
+                'verb_past\tDün eve geldim.\t["▁Dün","▁ev","+e","▁gel","+di","+m","."]',
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    cases = load_eval_set(path, set_name="gold", ngram_size=8, min_case_words=3)
+
+    assert [case.text for case in cases] == ["Dün eve geldim."]
+
+
+def test_build_byte_prefilter_matches_utf8_markers():
+    case = make_leakage_case(
+        set_name="gold",
+        row=1,
+        text="Türkiye'den geldim.",
+        category="proper_name",
+        ngram_size=8,
+    )
+    assert case is not None
+
+    prefilter = build_byte_prefilter([case], min_word_length=6)
+
+    assert any(marker in "Bugün Türkiye'den haber geldi.".encode("utf-8") for marker in prefilter)
 
 
 def test_compare_bpe_sweep_with_two_models_outputs_summary():

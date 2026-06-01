@@ -134,6 +134,7 @@ def load_eval_set(
     *,
     set_name: str,
     ngram_size: int,
+    min_case_words: int = 1,
     text_col: int | None = None,
     has_header: bool = False,
 ) -> list[LeakageCase]:
@@ -151,7 +152,8 @@ def load_eval_set(
                 ngram_size=ngram_size,
             )
             if leakage_case is not None:
-                cases.append(leakage_case)
+                if len(leakage_case.words) >= min_case_words:
+                    cases.append(leakage_case)
         return cases
 
     with source.open("r", encoding="utf-8") as handle:
@@ -188,7 +190,8 @@ def load_eval_set(
                 ngram_size=ngram_size,
             )
             if leakage_case is not None:
-                cases.append(leakage_case)
+                if len(leakage_case.words) >= min_case_words:
+                    cases.append(leakage_case)
     return cases
 
 
@@ -279,6 +282,25 @@ def build_indexes(
     return raw_prefix_index, full_first_index, shingle_first_index, prefilter_re
 
 
+def build_byte_prefilter(
+    cases: list[LeakageCase],
+    *,
+    min_word_length: int,
+) -> tuple[bytes, ...]:
+    markers: set[bytes] = set()
+    for case in cases:
+        words = [word for word in case.words if len(word) >= min_word_length]
+        if not words:
+            longest = max(case.words, key=len)
+            words = [longest]
+        for word in words:
+            for variant in {word, turkish_upper(word), word.capitalize()}:
+                encoded = variant.encode("utf-8", errors="ignore")
+                if encoded:
+                    markers.add(encoded)
+    return tuple(sorted(markers, key=lambda item: (-len(item), item)))
+
+
 def scan_corpus_text(
     text: str,
     *,
@@ -330,9 +352,14 @@ def scan_corpus(
     parse_jsonl: bool,
     progress: int,
     max_docs: int | None = None,
+    byte_prefilter_min_word_length: int = 6,
 ) -> int:
     raw_prefix_index, full_first_index, shingle_first_index, prefilter_re = build_indexes(
         cases
+    )
+    byte_prefilter_markers = build_byte_prefilter(
+        cases,
+        min_word_length=byte_prefilter_min_word_length,
     )
     scanned = 0
     if progress > 0:
@@ -341,24 +368,55 @@ def scan_corpus(
             file=sys.stderr,
             flush=True,
         )
-    for text in iter_corpus_texts(
-        corpus_path,
-        corpus_format=corpus_format,
-        text_field=text_field,
-        parse_jsonl=parse_jsonl,
-    ):
-        scanned += 1
-        scan_corpus_text(
-            text,
-            raw_prefix_index=raw_prefix_index,
-            full_first_index=full_first_index,
-            shingle_first_index=shingle_first_index,
-            prefilter_re=prefilter_re,
-        )
-        if progress > 0 and scanned % progress == 0:
-            print(f"  scanned {scanned:,} corpus records...", file=sys.stderr, flush=True)
-        if max_docs is not None and scanned >= max_docs:
-            break
+    if corpus_format == "jsonl" and not parse_jsonl:
+        with Path(corpus_path).open("rb") as handle:
+            for raw_line in handle:
+                line = raw_line.strip()
+                if not line:
+                    continue
+                scanned += 1
+                if not byte_prefilter_markers or any(
+                    marker in line for marker in byte_prefilter_markers
+                ):
+                    text = line.decode("utf-8", errors="replace")
+                    scan_corpus_text(
+                        text,
+                        raw_prefix_index=raw_prefix_index,
+                        full_first_index=full_first_index,
+                        shingle_first_index=shingle_first_index,
+                        prefilter_re=None,
+                    )
+                if progress > 0 and scanned % progress == 0:
+                    print(
+                        f"  scanned {scanned:,} corpus records...",
+                        file=sys.stderr,
+                        flush=True,
+                    )
+                if max_docs is not None and scanned >= max_docs:
+                    break
+    else:
+        for text in iter_corpus_texts(
+            corpus_path,
+            corpus_format=corpus_format,
+            text_field=text_field,
+            parse_jsonl=parse_jsonl,
+        ):
+            scanned += 1
+            scan_corpus_text(
+                text,
+                raw_prefix_index=raw_prefix_index,
+                full_first_index=full_first_index,
+                shingle_first_index=shingle_first_index,
+                prefilter_re=prefilter_re,
+            )
+            if progress > 0 and scanned % progress == 0:
+                print(
+                    f"  scanned {scanned:,} corpus records...",
+                    file=sys.stderr,
+                    flush=True,
+                )
+            if max_docs is not None and scanned >= max_docs:
+                break
     if progress > 0:
         print(f"Finished scanning {scanned:,} corpus records.", file=sys.stderr, flush=True)
     return scanned
@@ -529,8 +587,20 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--text-col", type=int)
     parser.add_argument("--has-header", action="store_true")
     parser.add_argument("--ngram", type=int, default=8)
+    parser.add_argument(
+        "--min-case-words",
+        type=int,
+        default=1,
+        help="Skip eval items shorter than this many normalized words.",
+    )
     parser.add_argument("--min-full-words", type=int, default=3)
     parser.add_argument("--progress", type=int, default=10000)
+    parser.add_argument(
+        "--byte-prefilter-min-word-length",
+        type=int,
+        default=8,
+        help="Minimum eval word length used by the fast raw-byte JSONL prefilter.",
+    )
     parser.add_argument("--max-docs", type=int)
     parser.add_argument("--report-out")
     parser.add_argument("--max-examples", type=int, default=25)
@@ -561,6 +631,7 @@ def main(argv: list[str] | None = None) -> int:
                 args.gold,
                 set_name="gold",
                 ngram_size=args.ngram,
+                min_case_words=args.min_case_words,
                 text_col=args.text_col,
                 has_header=args.has_header,
             )
@@ -571,6 +642,7 @@ def main(argv: list[str] | None = None) -> int:
                 args.challenge,
                 set_name="challenge",
                 ngram_size=args.ngram,
+                min_case_words=args.min_case_words,
                 text_col=args.text_col,
                 has_header=args.has_header,
             )
@@ -595,6 +667,7 @@ def main(argv: list[str] | None = None) -> int:
         parse_jsonl=args.parse_jsonl,
         progress=args.progress,
         max_docs=args.max_docs,
+        byte_prefilter_min_word_length=args.byte_prefilter_min_word_length,
     )
     report = format_report(
         corpus_path=corpus_path,
