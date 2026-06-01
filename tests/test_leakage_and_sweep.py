@@ -1,8 +1,13 @@
 from __future__ import annotations
 
+from pathlib import Path
+
+import pytest
+
 from scripts.check_eval_leakage import (
     build_indexes,
     find_exact_leakage,
+    load_eval_set,
     make_leakage_case,
     normalize_for_leakage,
     scan_corpus_text,
@@ -59,6 +64,17 @@ def test_scan_corpus_text_detects_normalized_full_hit():
     assert summary["gold"]["raw_exact"] == 0
     assert summary["gold"]["normalized_full"] == 1
     assert summary["gold"]["clean"] == 0
+
+
+def test_load_eval_set_rejects_category_column_text_col(tmp_path: Path):
+    path = tmp_path / "eval.tsv"
+    path.write_text(
+        'suffix_chain\tGeldim.\t["▁Gel","+di","+m","."]\n',
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="category column"):
+        load_eval_set(path, set_name="gold", ngram_size=8, text_col=0)
 
 
 def test_compare_bpe_sweep_with_two_models_outputs_summary():

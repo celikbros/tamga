@@ -18,6 +18,21 @@ from scripts.evaluate_tokenizer import EvalCase, load_cases  # noqa: E402
 
 
 WORD_RE = re.compile(r"\w+", re.UNICODE)
+KNOWN_EVAL_CATEGORIES = {
+    "ambiguity",
+    "code_mixed",
+    "default",
+    "informal",
+    "negative_word",
+    "numbers_dates",
+    "proper_name",
+    "punctuation",
+    "question",
+    "softening",
+    "suffix_chain",
+    "verb_future",
+    "verb_past",
+}
 
 
 @dataclass
@@ -149,6 +164,22 @@ def load_eval_set(
             fields = line.split("\t")
             if text_col >= len(fields):
                 raise ValueError(f"{source}:{row}: text_col {text_col} is out of range")
+            if (
+                text_col == 0
+                and len(fields) == 3
+                and fields[0] in KNOWN_EVAL_CATEGORIES
+                and fields[2].lstrip().startswith("[")
+            ):
+                raise ValueError(
+                    f"{source}:{row}: --text-col 0 selects the category column "
+                    f"({fields[0]!r}), not the eval text. Omit --text-col for "
+                    "repo eval TSV files, or use --text-col 1 for raw TSV mode."
+                )
+            if text_col == len(fields) - 1 and fields[text_col].lstrip().startswith("["):
+                raise ValueError(
+                    f"{source}:{row}: --text-col {text_col} appears to select "
+                    "the expected-token JSON column, not the eval text."
+                )
             leakage_case = make_leakage_case(
                 set_name=set_name,
                 row=row,

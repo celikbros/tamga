@@ -13,3 +13,9 @@ venv/
 build/
 dist/
 *.egg-info/
+
+# Local advisor scratch scripts copied into the repo root.
+/corpus_audit.py
+/corpus_clean.py
+/corpus_junk_scan.py
+/corpus_sample.py
