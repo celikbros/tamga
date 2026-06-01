@@ -819,3 +819,27 @@ def test_decode_v16b_preserves_arabic_punctuation_spacing():
     )
 
     assert decode(encode(text)) == text
+
+
+def test_lossless_mode_preserves_whitespace_exactly():
+    text = "Turkiye'den   geldim.\tREADME.md'yi actim."
+    tokenizer = TurkishTokenizer(preserve_whitespace=True)
+    tokens = tokenizer.encode(text)
+
+    assert "   " in tokens
+    assert "\t" in tokens
+    assert tokenizer.decode(tokens) == text
+
+
+def test_default_encode_stays_non_lossless_for_regression_shape():
+    text = "Turkiye'den   geldim."
+
+    assert encode(text) == [
+        f"{WORD_START}Turkiye",
+        "'",
+        "+den",
+        f"{WORD_START}gel",
+        "+di",
+        "+m",
+        ".",
+    ]

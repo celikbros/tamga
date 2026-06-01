@@ -172,3 +172,24 @@ def pre_tokenize(text: str, *, lowercase: bool = False) -> list[str]:
             tokens.extend(split_apostrophe_token(token))
 
     return tokens
+
+
+def pre_tokenize_lossless(text: str) -> list[str]:
+    """Split text while preserving whitespace spans exactly."""
+    tokens: list[str] = []
+    position = 0
+
+    for match in _TOKEN_RE.finditer(text):
+        if match.start() > position:
+            tokens.append(text[position : match.start()])
+        token = match.group(0)
+        if is_url_like_token(token):
+            tokens.extend(split_url_token(token))
+        else:
+            tokens.extend(split_apostrophe_token(token))
+        position = match.end()
+
+    if position < len(text):
+        tokens.append(text[position:])
+
+    return tokens

@@ -130,6 +130,14 @@ on train, valid, test, and canary text.
 Roundtrip failure count must be reported. Any failure disqualifies a tokenizer
 from generation-oriented LLM use.
 
+Status:
+
+```text
+completed; see docs/v1_8_roundtrip_findings.md
+custom_tr_morph passes only with preserve_whitespace=True lossless mode
+all checked train-only SP baselines pass
+```
+
 ### P5. Split Overlap Check
 
 Run n-gram or MinHash-style near-duplicate checks between:
@@ -299,6 +307,6 @@ a custom win on clean pilot proves multilingual robustness
 1. Completed: write train/valid/test split materialization for the 20k pilot.
 2. Completed: train train-only SP baselines from the 16k train split.
 3. Implement or define a hybrid morphology-aware SP baseline.
-4. In progress: add roundtrip report; split-overlap report is completed.
+4. Completed: add roundtrip and split-overlap reports.
 5. Add canary text and diagnostics.
 6. Only then implement/run the tiny LM probe.

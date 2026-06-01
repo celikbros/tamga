@@ -208,7 +208,10 @@ def split_past_tense(word: str, *, min_stem_length: int = 2) -> list[str] | None
         if len(stem) < min_stem_length:
             continue
 
-        return [stem, f"+{past}", f"+{person}"]
+        ending_surface = word[-len(ending) :]
+        past_surface = ending_surface[: len(past)]
+        person_surface = ending_surface[len(past) :]
+        return [stem, f"+{past_surface}", f"+{person_surface}"]
 
     return None
 

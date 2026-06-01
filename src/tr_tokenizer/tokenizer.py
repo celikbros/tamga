@@ -18,6 +18,7 @@ from .pretok import (
     is_uzbek_apostrophe_word,
     is_url_like_token,
     pre_tokenize,
+    pre_tokenize_lossless,
 )
 
 WORD_START = "▁"
@@ -31,7 +32,11 @@ def _is_word(token: str) -> bool:
 
 
 def _should_attach_left(token: str) -> bool:
-    return token.startswith("+") or token == "'" or token in _NO_SPACE_BEFORE
+    return (
+        (token.startswith("+") and len(token) > 1)
+        or token == "'"
+        or token in _NO_SPACE_BEFORE
+    )
 
 
 def _mark_word_start(pieces: list[str]) -> list[str]:
@@ -62,15 +67,22 @@ class TurkishTokenizer:
 
     lowercase: bool = False
     split_suffixes: bool = True
+    preserve_whitespace: bool = False
 
     def encode(self, text: str) -> list[str]:
-        tokens = pre_tokenize(text, lowercase=self.lowercase)
+        tokens = (
+            pre_tokenize_lossless(text)
+            if self.preserve_whitespace
+            else pre_tokenize(text, lowercase=self.lowercase)
+        )
         encoded: list[str] = []
 
         for index, token in enumerate(tokens):
             next_token = tokens[index + 1] if index + 1 < len(tokens) else None
 
-            if token.startswith("+"):
+            if token.isspace():
+                encoded.append(token)
+            elif token.startswith("+") and len(token) > 1:
                 encoded.extend(split_apostrophe_suffix(token[1:]))
             elif token == "'":
                 encoded.append(token)
@@ -103,14 +115,24 @@ class TurkishTokenizer:
         return decode(tokens)
 
 
-def encode(text: str, *, lowercase: bool = False, split_suffixes: bool = True) -> list[str]:
+def encode(
+    text: str,
+    *,
+    lowercase: bool = False,
+    split_suffixes: bool = True,
+    preserve_whitespace: bool = False,
+) -> list[str]:
     return TurkishTokenizer(
         lowercase=lowercase,
         split_suffixes=split_suffixes,
+        preserve_whitespace=preserve_whitespace,
     ).encode(text)
 
 
 def decode(tokens: list[str] | tuple[str, ...]) -> str:
+    if any(token.isspace() for token in tokens):
+        return _decode_lossless(tokens)
+
     text = ""
     previous_token: str | None = None
 
@@ -118,13 +140,20 @@ def decode(tokens: list[str] | tuple[str, ...]) -> str:
         if not token:
             continue
 
-        if token.startswith(WORD_START):
+        if token.isspace():
+            text += token
+        elif token.startswith(WORD_START):
             word = token[len(WORD_START) :]
-            if not text or text.endswith((" ", "'")) or text[-1] in _NO_SPACE_AFTER:
+            if (
+                not text
+                or text[-1].isspace()
+                or text.endswith("'")
+                or text[-1] in _NO_SPACE_AFTER
+            ):
                 text += word
             else:
                 text += f" {word}"
-        elif token.startswith("+"):
+        elif token.startswith("+") and len(token) > 1:
             text = text.rstrip() + token[1:]
         elif token == "'":
             text = text.rstrip() + "'"
@@ -132,11 +161,32 @@ def decode(tokens: list[str] | tuple[str, ...]) -> str:
             text = text.rstrip() + token
         elif _should_attach_left(token):
             text = text.rstrip() + token
-        elif not text or text.endswith((" ", "'")) or text[-1] in _NO_SPACE_AFTER:
+        elif (
+            not text
+            or text[-1].isspace()
+            or text.endswith("'")
+            or text[-1] in _NO_SPACE_AFTER
+        ):
             text += token
         else:
             text += f" {token}"
 
         previous_token = token
 
+    return text
+
+
+def _decode_lossless(tokens: list[str] | tuple[str, ...]) -> str:
+    text = ""
+    for token in tokens:
+        if not token:
+            continue
+        if token.isspace():
+            text += token
+        elif token.startswith(WORD_START):
+            text += token[len(WORD_START) :]
+        elif token.startswith("+") and len(token) > 1:
+            text += token[1:]
+        else:
+            text += token
     return text
