@@ -1,0 +1,59 @@
+[settings]
+split_dir = "artifacts/private/v1_8_local_lm_probe/celik_tr_primary_multilingual_mix_lm_probe_pilot_20k/filtered_split"
+output_dir = "artifacts/private/v1_8_tiny_lm_bpb_probe"
+report_out = "artifacts/v1_8_tiny_lm_bpb_probe.md"
+seed = 20260602
+
+[model]
+seq_len = 128
+batch_size = 4
+max_steps = 500
+eval_interval = 100
+learning_rate = 0.0003
+d_model = 256
+n_layers = 4
+n_heads = 4
+ff_mult = 4
+dropout = 0.1
+device = "auto"
+
+[[tokenizers]]
+name = "custom_tr_morph_lossless"
+kind = "custom"
+max_vocab_size = 64000
+enabled = true
+
+[[tokenizers]]
+name = "sp_bpe_32000_train_only"
+kind = "sentencepiece"
+path = "artifacts/private/v1_8_train_only_sentencepiece/sp_bpe_32000_train_only.model"
+enabled = true
+
+[[tokenizers]]
+name = "sp_unigram_32000_train_only"
+kind = "sentencepiece"
+path = "artifacts/private/v1_8_train_only_sentencepiece/sp_unigram_32000_train_only.model"
+enabled = true
+
+[[tokenizers]]
+name = "sp_bpe_64000_train_only"
+kind = "sentencepiece"
+path = "artifacts/private/v1_8_train_only_sentencepiece/sp_bpe_64000_train_only.model"
+enabled = true
+
+[[tokenizers]]
+name = "sp_unigram_64000_train_only"
+kind = "sentencepiece"
+path = "artifacts/private/v1_8_train_only_sentencepiece/sp_unigram_64000_train_only.model"
+enabled = true
+
+[[tokenizers]]
+name = "hybrid_morph_pretok_unigram_64000_train_only"
+kind = "sentencepiece"
+path = "artifacts/private/v1_8_hybrid_sentencepiece/hybrid_morph_pretok_unigram_64000_train_only.model"
+enabled = true
+
+[[tokenizers]]
+name = "utf8_byte"
+kind = "utf8_byte"
+enabled = true

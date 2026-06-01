@@ -325,4 +325,5 @@ a custom win on clean pilot proves multilingual robustness
 3. Completed: implement and report a hybrid morphology-aware SP baseline.
 4. Completed: add roundtrip and split-overlap reports.
 5. Completed: add canary text and diagnostics.
-6. Next: implement the tiny LM bits-per-byte probe, but keep it as screening only.
+6. Prepared: tiny LM bits-per-byte runner; see docs/v1_8_tiny_lm_bpb_probe_runner.md.
+7. Next: run full encoding dry-run manually, then run one-tokenizer training smoke.
