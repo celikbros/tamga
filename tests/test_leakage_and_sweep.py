@@ -17,6 +17,8 @@ from scripts.check_eval_leakage import (
 )
 from scripts.compare_bpe_sweep import format_sweep_markdown, format_sweep_report, run_sweep
 from scripts.evaluate_tokenizer import EvalCase
+from scripts.materialize_probe_split import materialize_probe_split
+from scripts.prepare_downstream_probe import load_probe_config
 from tr_tokenizer.baseline_bpe import train_bpe
 
 
@@ -108,6 +110,46 @@ def test_build_byte_prefilter_matches_utf8_markers():
     prefilter = build_byte_prefilter([case], min_word_length=6)
 
     assert any(marker in "Bugün Türkiye'den haber geldi.".encode("utf-8") for marker in prefilter)
+
+
+def test_materialize_probe_split_writes_text_and_manifest(tmp_path: Path):
+    corpus = tmp_path / "pilot.txt"
+    corpus.write_text(
+        "\n".join(f"satir {index}" for index in range(1, 11)) + "\n",
+        encoding="utf-8",
+    )
+    config_path = tmp_path / "split.toml"
+    output_dir = tmp_path / "raw_split"
+    report_out = tmp_path / "split_report.md"
+    config_path.write_text(
+        "\n".join(
+            [
+                "[settings]",
+                f'corpus_path = "{corpus.as_posix()}"',
+                f'output_dir = "{output_dir.as_posix()}"',
+                f'report_out = "{report_out.as_posix()}"',
+                "max_lines = 10",
+                "seed = 123",
+                "train_parts = 8",
+                "valid_parts = 1",
+                "test_parts = 1",
+                "write_tokenized = false",
+                "allow_download = false",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    config = load_probe_config(config_path)
+    splits, written = materialize_probe_split(config)
+
+    assert [split.name for split in splits] == ["train", "valid", "test"]
+    assert [split.line_count for split in splits] == [8, 1, 1]
+    assert written["train"].read_text(encoding="utf-8").count("\n") == 8
+    assert written["valid"].read_text(encoding="utf-8").count("\n") == 1
+    assert written["test"].read_text(encoding="utf-8").count("\n") == 1
+    assert written["manifest"].exists()
+    assert written["train_manifest"].exists()
 
 
 def test_compare_bpe_sweep_with_two_models_outputs_summary():

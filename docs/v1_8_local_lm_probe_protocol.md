@@ -40,6 +40,24 @@ The split source is currently:
 data/train/claim_grade/celik_gold_clean_pilot.txt
 ```
 
+Materialization config:
+
+```text
+configs/v1_8_local_lm_probe_split.toml
+```
+
+Command:
+
+```powershell
+python scripts/materialize_probe_split.py configs/v1_8_local_lm_probe_split.toml
+```
+
+Private output directory:
+
+```text
+artifacts/private/v1_8_local_lm_probe/celik_tr_primary_multilingual_mix_lm_probe_pilot_20k/raw_split/
+```
+
 ### P2. Train-Only SP Vocabularies
 
 For LM-loss comparison, do not reuse SP vocabularies trained on the full 100k
@@ -54,6 +72,18 @@ sp_bpe_32000_train_only
 sp_unigram_32000_train_only
 sp_bpe_64000_train_only
 sp_unigram_64000_train_only
+```
+
+Train-only SP config:
+
+```text
+configs/v1_8_train_only_sentencepiece_sweep.toml
+```
+
+Command, after the raw split has been materialized:
+
+```powershell
+python scripts/run_sentencepiece_sweep.py configs/v1_8_train_only_sentencepiece_sweep.toml
 ```
 
 ### P3. Hybrid Baseline

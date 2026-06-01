@@ -1,0 +1,11 @@
+[settings]
+corpus_path = "data/train/claim_grade/celik_gold_clean_pilot.txt"
+output_dir = "artifacts/private/v1_8_local_lm_probe/celik_tr_primary_multilingual_mix_lm_probe_pilot_20k/raw_split"
+report_out = "artifacts/v1_8_local_lm_probe_split_materialization.md"
+max_lines = 20000
+seed = 20260601
+train_parts = 8
+valid_parts = 1
+test_parts = 1
+write_tokenized = false
+allow_download = false
