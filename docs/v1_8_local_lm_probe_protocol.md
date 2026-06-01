@@ -142,6 +142,15 @@ valid <-> test
 
 Report exact and near-duplicate overlap before using valid/test losses.
 
+Status:
+
+```text
+checked; see docs/v1_8_split_overlap_findings.md
+no exact duplicates found
+8 train-to-eval near-overlap candidates must be excluded or the split must be
+regenerated before LM-loss reporting
+```
+
 ### P6. Canary Diagnostics
 
 Primary scores remain Turkish-primary, but include a small diagnostic canary:
@@ -290,6 +299,6 @@ a custom win on clean pilot proves multilingual robustness
 1. Completed: write train/valid/test split materialization for the 20k pilot.
 2. Completed: train train-only SP baselines from the 16k train split.
 3. Implement or define a hybrid morphology-aware SP baseline.
-4. Add roundtrip and split-overlap reports.
+4. In progress: add roundtrip and split-overlap reports.
 5. Add canary text and diagnostics.
 6. Only then implement/run the tiny LM probe.
