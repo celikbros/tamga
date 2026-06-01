@@ -237,6 +237,13 @@ filtered rows: 7737
 duplicates: 11
 written rows: 100000
 visible leakage hits: 0 exact, 0 normalized, 0 8-gram
+direct eval leakage on SP training pilot:
+  raw exact: 0 gold, 0 challenge
+  strict normalized full (>=3 words): 0 gold, 0 challenge
+  partial 8-gram: 0 gold, 0 challenge
+  short_full: 9 gold one-word examples, 0 challenge
+  report: artifacts/v1_7_celik_gold_clean_pilot_eval_leakage_report.md
+  scope: actual 100k SP training pilot, not the full 13 GB source JSONL
 
 SentencePiece loaded all 100000 filtered sentences.
 

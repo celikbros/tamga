@@ -1,6 +1,14 @@
 from __future__ import annotations
 
-from scripts.check_eval_leakage import find_exact_leakage
+from scripts.check_eval_leakage import (
+    build_indexes,
+    find_exact_leakage,
+    make_leakage_case,
+    normalize_for_leakage,
+    scan_corpus_text,
+    summarize_cases,
+    word_shingles,
+)
 from scripts.compare_bpe_sweep import format_sweep_markdown, format_sweep_report, run_sweep
 from scripts.evaluate_tokenizer import EvalCase
 from tr_tokenizer.baseline_bpe import train_bpe
@@ -17,6 +25,40 @@ def test_find_exact_leakage_detects_matching_eval_text():
 
 def test_find_exact_leakage_reports_empty_when_clean():
     assert find_exact_leakage(["Dün geldim."], ["Geldim."]) == []
+
+
+def test_normalize_for_leakage_uses_turkish_aware_lowercase():
+    assert normalize_for_leakage("İSTANBUL IĞDIR'da!") == "istanbul ığdır da"
+
+
+def test_word_shingles_uses_short_sentence_fallback():
+    assert word_shingles(("geldim", "bugün"), ngram_size=8) == {
+        ("geldim", "bugün")
+    }
+
+
+def test_scan_corpus_text_detects_normalized_full_hit():
+    case = make_leakage_case(
+        set_name="gold",
+        row=1,
+        text="İstanbul'a geldim.",
+        category="proper_name",
+        ngram_size=8,
+    )
+    assert case is not None
+    indexes = build_indexes([case])
+
+    scan_corpus_text(
+        "Dün istanbul'a geldim ve döndüm.",
+        raw_prefix_index=indexes[0],
+        full_first_index=indexes[1],
+        shingle_first_index=indexes[2],
+    )
+
+    summary = summarize_cases([case])
+    assert summary["gold"]["raw_exact"] == 0
+    assert summary["gold"]["normalized_full"] == 1
+    assert summary["gold"]["clean"] == 0
 
 
 def test_compare_bpe_sweep_with_two_models_outputs_summary():

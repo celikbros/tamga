@@ -166,6 +166,9 @@
   `celik_gold_corpus.clean.jsonl` source.
 - Added `docs/v1_7_celik_gold_clean_sweep_findings.md` to mark corpus polishing
   as stopped for v1.7 and move focus back to baseline/downstream evidence.
+- Upgraded `scripts/check_eval_leakage.py` with Turkish-aware normalization,
+  word-level shingle overlap, short-example reporting, JSONL/text corpus modes,
+  and public snippet omission; added the direct clean-pilot eval leakage report.
 - Moved the older private raw copy to
   `data/train/private/celik_ai/archive/deprecated/celik_gold_corpus.raw.deprecated.jsonl`
   locally and marked the raw-source pilot config as deprecated so it does not

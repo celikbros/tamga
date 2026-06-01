@@ -61,6 +61,7 @@ Aggregate reports:
 ```text
 artifacts/v1_7_celik_gold_clean_sample_manifest.md
 artifacts/v1_7_celik_gold_clean_sample_leakage_report.md
+artifacts/v1_7_celik_gold_clean_pilot_eval_leakage_report.md
 ```
 
 Sample summary:
@@ -75,6 +76,29 @@ Sample summary:
 | exact leakage hits | 0 |
 | normalized leakage hits | 0 |
 | 8-gram leakage hits | 0 |
+
+The direct eval-leakage report was also run on the actual 100k text file used by
+the clean SentencePiece sweep:
+
+```powershell
+python scripts/check_eval_leakage.py --corpus data/train/claim_grade/celik_gold_clean_pilot.txt --corpus-format text --gold data/eval/tr_gold_expanded.tsv --challenge data/eval/tr_challenge.tsv --report-out artifacts/v1_7_celik_gold_clean_pilot_eval_leakage_report.md
+```
+
+Direct report summary:
+
+| Eval set | Raw exact | Strict normalized full | Short full | Partial 8-gram |
+| --- | ---: | ---: | ---: | ---: |
+| gold | 0 | 0 | 9 | 0 |
+| challenge | 0 | 0 | 0 | 0 |
+
+The 9 gold `short_full` hits are one-word visible eval items such as `Geldim.`
+and `Alacaklar.` appearing as ordinary words inside longer corpus sentences. They
+are reported for transparency but are not treated as sentence leakage because the
+strict normalized-full threshold is 3 words.
+
+This direct report is scoped to the actual 100k text file used to train the
+clean SentencePiece baselines. A full 13 GB source JSONL scan is not required for
+this pilot claim unless a future run trains directly from the full source.
 
 Filter details:
 

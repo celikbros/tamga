@@ -383,9 +383,20 @@ visible baseline raporlari tutulur:
 ```text
 artifacts/v1_7_celik_gold_clean_sample_manifest.md
 artifacts/v1_7_celik_gold_clean_sample_leakage_report.md
+artifacts/v1_7_celik_gold_clean_pilot_eval_leakage_report.md
 artifacts/v1_7_celik_gold_clean_sentencepiece_sweep_expanded.md
 artifacts/v1_7_celik_gold_clean_sentencepiece_sweep_challenge.md
 ```
+
+Direct eval-leakage check on the actual clean SP training pilot:
+
+```powershell
+python scripts/check_eval_leakage.py --corpus data/train/claim_grade/celik_gold_clean_pilot.txt --corpus-format text --gold data/eval/tr_gold_expanded.tsv --challenge data/eval/tr_challenge.tsv --report-out artifacts/v1_7_celik_gold_clean_pilot_eval_leakage_report.md
+```
+
+The direct report uses Turkish-aware normalization, word-level 8-gram overlap,
+and a separate `short_full` category for one-word eval examples. Corpus snippets
+are omitted from public reports unless `--include-snippets` is explicitly used.
 
 Downstream probe prep:
 
