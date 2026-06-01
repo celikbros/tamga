@@ -15,6 +15,34 @@ path = "data/eval/tr_challenge.tsv"
 markdown_out = "artifacts/v1_7_celik_gold_clean_sentencepiece_sweep_challenge.md"
 
 [[models]]
+name = "sp_bpe_1000_celik_gold_clean"
+model_type = "bpe"
+vocab_size = 1000
+model_prefix = "artifacts/private/v1_7_celik_gold_clean_sentencepiece/sp_bpe_1000_celik_gold_clean"
+enabled = true
+
+[[models]]
+name = "sp_unigram_1000_celik_gold_clean"
+model_type = "unigram"
+vocab_size = 1000
+model_prefix = "artifacts/private/v1_7_celik_gold_clean_sentencepiece/sp_unigram_1000_celik_gold_clean"
+enabled = true
+
+[[models]]
+name = "sp_bpe_4000_celik_gold_clean"
+model_type = "bpe"
+vocab_size = 4000
+model_prefix = "artifacts/private/v1_7_celik_gold_clean_sentencepiece/sp_bpe_4000_celik_gold_clean"
+enabled = true
+
+[[models]]
+name = "sp_unigram_4000_celik_gold_clean"
+model_type = "unigram"
+vocab_size = 4000
+model_prefix = "artifacts/private/v1_7_celik_gold_clean_sentencepiece/sp_unigram_4000_celik_gold_clean"
+enabled = true
+
+[[models]]
 name = "sp_bpe_8000_celik_gold_clean"
 model_type = "bpe"
 vocab_size = 8000
@@ -40,4 +68,32 @@ name = "sp_unigram_16000_celik_gold_clean"
 model_type = "unigram"
 vocab_size = 16000
 model_prefix = "artifacts/private/v1_7_celik_gold_clean_sentencepiece/sp_unigram_16000_celik_gold_clean"
+enabled = true
+
+[[models]]
+name = "sp_bpe_32000_celik_gold_clean"
+model_type = "bpe"
+vocab_size = 32000
+model_prefix = "artifacts/private/v1_7_celik_gold_clean_sentencepiece/sp_bpe_32000_celik_gold_clean"
+enabled = true
+
+[[models]]
+name = "sp_unigram_32000_celik_gold_clean"
+model_type = "unigram"
+vocab_size = 32000
+model_prefix = "artifacts/private/v1_7_celik_gold_clean_sentencepiece/sp_unigram_32000_celik_gold_clean"
+enabled = true
+
+[[models]]
+name = "sp_bpe_64000_celik_gold_clean"
+model_type = "bpe"
+vocab_size = 64000
+model_prefix = "artifacts/private/v1_7_celik_gold_clean_sentencepiece/sp_bpe_64000_celik_gold_clean"
+enabled = true
+
+[[models]]
+name = "sp_unigram_64000_celik_gold_clean"
+model_type = "unigram"
+vocab_size = 64000
+model_prefix = "artifacts/private/v1_7_celik_gold_clean_sentencepiece/sp_unigram_64000_celik_gold_clean"
 enabled = true
