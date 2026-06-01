@@ -1,0 +1,23 @@
+turkish_clean	Türkiye'de 2026'da yeni bir tokenizer denemesi yaptık.
+turkish_clean	Kitaplarımdan birkaçını İstanbul'a götürdüm.
+turkish_noisy	gelicem ama trafik cok kotu ya
+turkish_noisy	yarin Istanbula gidiyom, haber ederim
+ascii_folded	Turkiye'de Istanbul isigi farkli gorunuyor.
+ascii_folded	cok guzel ama yagmur basladi.
+code_mixed	OpenAI'den gelen JSON config_v2.json dosyasını okudum.
+code_mixed	README.md'yi push ettikten sonra tests passed dedi.
+technical	transformers>=4.40 ve torch==2.3.1 ile denedik.
+technical	https://example.com/a/b?x=1#test adresine bak.
+english	Don't split John's file_v2.0.txt incorrectly.
+english	We're testing the tokenizer on normal English.
+azerbaijani	Mənim adım Əli, Bakıda yaşayıram.
+azerbaijani	Xəbər: qız məktəbə gedir, dağ yolu uzundur.
+uzbek_latin	Oʻzbekistonning poytaxti Toshkent.
+uzbek_latin	Oʻzbekcha: gʻisht, sanʼat, maʼno.
+kazakh_cyrillic	Қазақстанда тұрамын, Алматы қаласы әдемі.
+kyrgyz_cyrillic	Кыргызча: тоо, суу, өң, үн, жаңы күн.
+tatar_cyrillic	Татарча: әни, җил, күңел, өч, үрдәк, һава.
+arabic	مرحبا بالعالم.
+russian	Москва — большой город.
+greek	Αθήνα είναι όμορφη πόλη.
+emoji_symbol	Merhaba 👩‍💻 test ediyoruz.

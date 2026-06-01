@@ -188,6 +188,14 @@ catastrophic fragmentation examples
 optional bits-per-byte if included in the LM probe
 ```
 
+Status:
+
+```text
+completed; see docs/v1_8_canary_diagnostics_findings.md
+custom_tr_morph_lossless has 0 roundtrip failures on the public/synthetic canary
+custom_tr_morph_lossless preserved 7/7 auto-detected protected spans
+```
+
 ## Tokenizer Matrix
 
 Minimum matrix:
@@ -316,5 +324,5 @@ a custom win on clean pilot proves multilingual robustness
 2. Completed: train train-only SP baselines from the 16k train split.
 3. Completed: implement and report a hybrid morphology-aware SP baseline.
 4. Completed: add roundtrip and split-overlap reports.
-5. Add canary text and diagnostics.
-6. Only then implement/run the tiny LM probe.
+5. Completed: add canary text and diagnostics.
+6. Next: implement the tiny LM bits-per-byte probe, but keep it as screening only.
