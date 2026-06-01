@@ -335,6 +335,12 @@ def scan_corpus(
         cases
     )
     scanned = 0
+    if progress > 0:
+        print(
+            f"Scanning corpus records (progress every {progress:,})...",
+            file=sys.stderr,
+            flush=True,
+        )
     for text in iter_corpus_texts(
         corpus_path,
         corpus_format=corpus_format,
@@ -350,9 +356,11 @@ def scan_corpus(
             prefilter_re=prefilter_re,
         )
         if progress > 0 and scanned % progress == 0:
-            print(f"scanned {scanned:,} corpus records...", file=sys.stderr)
+            print(f"  scanned {scanned:,} corpus records...", file=sys.stderr, flush=True)
         if max_docs is not None and scanned >= max_docs:
             break
+    if progress > 0:
+        print(f"Finished scanning {scanned:,} corpus records.", file=sys.stderr, flush=True)
     return scanned
 
 
@@ -522,7 +530,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--has-header", action="store_true")
     parser.add_argument("--ngram", type=int, default=8)
     parser.add_argument("--min-full-words", type=int, default=3)
-    parser.add_argument("--progress", type=int, default=100000)
+    parser.add_argument("--progress", type=int, default=10000)
     parser.add_argument("--max-docs", type=int)
     parser.add_argument("--report-out")
     parser.add_argument("--max-examples", type=int, default=25)
@@ -572,6 +580,13 @@ def main(argv: list[str] | None = None) -> int:
 
     corpus_path = Path(args.corpus)
     corpus_format = args.corpus_format or infer_corpus_format(corpus_path)
+    print(
+        "Starting eval leakage check: "
+        f"corpus={corpus_path} format={corpus_format} "
+        f"eval_cases={len(cases)} ngram={args.ngram}",
+        file=sys.stderr,
+        flush=True,
+    )
     scanned_records = scan_corpus(
         corpus_path,
         cases=cases,
@@ -597,6 +612,12 @@ def main(argv: list[str] | None = None) -> int:
         print(f"wrote_report: {report_path}")
     print(report)
     summary = summarize_cases(cases, min_full_words=args.min_full_words)
+    print(
+        "Eval leakage check complete. "
+        f"Scanned {scanned_records:,} corpus records.",
+        file=sys.stderr,
+        flush=True,
+    )
     gold = summary.get("gold")
     if gold and (gold["raw_exact"] or gold["normalized_full"] or gold["partial"]):
         return 1
