@@ -58,6 +58,12 @@ Private output directory:
 artifacts/private/v1_8_local_lm_probe/celik_tr_primary_multilingual_mix_lm_probe_pilot_20k/raw_split/
 ```
 
+Status:
+
+```text
+completed; see artifacts/v1_8_local_lm_probe_split_materialization.md
+```
+
 ### P2. Train-Only SP Vocabularies
 
 For LM-loss comparison, do not reuse SP vocabularies trained on the full 100k
@@ -84,6 +90,12 @@ Command, after the raw split has been materialized:
 
 ```powershell
 python scripts/run_sentencepiece_sweep.py configs/v1_8_train_only_sentencepiece_sweep.toml
+```
+
+Status:
+
+```text
+completed; see docs/v1_8_train_only_sentencepiece_findings.md
 ```
 
 ### P3. Hybrid Baseline
@@ -275,8 +287,8 @@ a custom win on clean pilot proves multilingual robustness
 
 ## Next Implementation Steps
 
-1. Write train/valid/test split materialization for the 20k pilot.
-2. Train train-only SP baselines from the 16k train split.
+1. Completed: write train/valid/test split materialization for the 20k pilot.
+2. Completed: train train-only SP baselines from the 16k train split.
 3. Implement or define a hybrid morphology-aware SP baseline.
 4. Add roundtrip and split-overlap reports.
 5. Add canary text and diagnostics.
