@@ -43,3 +43,13 @@ Rows and source line indexes are reported instead of text snippets.
 ### valid<->test
 
 No exact or near-duplicate overlap found.
+
+## Filtered Split
+
+Filtered split dir: `artifacts/private/v1_8_local_lm_probe/celik_tr_primary_multilingual_mix_lm_probe_pilot_20k/filtered_split`
+
+| Split | Kept lines | Removed lines |
+| --- | ---: | ---: |
+| train | 16000 | 0 |
+| valid | 1994 | 6 |
+| test | 1998 | 2 |

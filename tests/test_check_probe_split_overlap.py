@@ -6,6 +6,8 @@ from scripts.check_probe_split_overlap import (
     check_split_overlap,
     format_overlap_report,
     load_split_records,
+    rows_to_exclude_for_eval,
+    write_filtered_split,
 )
 
 
@@ -95,3 +97,38 @@ def test_load_split_records_reads_manifest_source_indexes(tmp_path: Path):
     )
 
     assert records[0].source_line_index == 42
+
+
+def test_write_filtered_split_removes_train_to_eval_overlap_rows(tmp_path: Path):
+    split_dir = tmp_path / "raw_split"
+    split_dir.mkdir()
+    (split_dir / "train.txt").write_text(
+        "Bugün Ankara yolunda uzun ve temiz bir deneme cümlesi yazdım çünkü "
+        "bu satır tekrar kontrolü içindir.\n",
+        encoding="utf-8",
+    )
+    (split_dir / "valid.txt").write_text(
+        "Dün Ankara yolunda uzun ve temiz bir deneme cümlesi yazdım çünkü "
+        "bu satır tekrar kontrolü içindir.\n"
+        "Bu satır temiz kalmalı.\n",
+        encoding="utf-8",
+    )
+    (split_dir / "test.txt").write_text("Alakasız kısa satır.\n", encoding="utf-8")
+
+    reports = check_split_overlap(
+        split_dir,
+        ngram_size=8,
+        min_near_words=8,
+        near_threshold=0.8,
+    )
+    assert rows_to_exclude_for_eval(reports) == {"valid": {1}}
+
+    filtered_dir = tmp_path / "filtered_split"
+    stats = write_filtered_split(split_dir, filtered_dir, reports)
+
+    assert stats["train"] == {"kept": 1, "removed": 0}
+    assert stats["valid"] == {"kept": 1, "removed": 1}
+    assert stats["test"] == {"kept": 1, "removed": 0}
+    assert filtered_dir.joinpath("valid.txt").read_text(encoding="utf-8") == (
+        "Bu satır temiz kalmalı.\n"
+    )

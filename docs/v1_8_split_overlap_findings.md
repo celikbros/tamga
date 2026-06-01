@@ -8,7 +8,7 @@ Date: 2026-06-01
 split-overlap check completed
 no exact train/valid/test duplicates found
 near-duplicate candidates found
-do not use raw valid/test loss until candidates are handled
+filtered split created and rechecked clean
 ```
 
 ## Scope
@@ -31,6 +31,7 @@ Public report:
 
 ```text
 artifacts/v1_8_local_lm_probe_split_overlap.md
+artifacts/v1_8_local_lm_probe_filtered_split_overlap.md
 ```
 
 The public report does not include private corpus text snippets.
@@ -57,23 +58,34 @@ However, there are 8 high-overlap train-to-eval candidates:
 These are not enough to invalidate the split, but they are enough to avoid
 using raw valid/test bits-per-byte as a clean signal without handling them.
 
-## Required Action Before LM Loss
+## Filtered Split
 
-Use one of these two approaches before running the tiny LM probe:
+The cheap v1.8 fix was applied: keep train unchanged and remove only the
+overlap-risk rows from valid/test.
 
 ```text
-preferred: write filtered valid/test files that exclude the 8 near-overlap rows
-alternative: regenerate the split with document/group-aware deduplication
+artifacts/private/v1_8_local_lm_probe/celik_tr_primary_multilingual_mix_lm_probe_pilot_20k/filtered_split/
 ```
 
-The first option is cheaper and sufficient for v1.8 screening because the
-training split can remain unchanged and all tokenizers can be evaluated on the
-same filtered valid/test text.
+Filtered split line counts:
+
+| Split | Kept lines | Removed lines |
+| --- | ---: | ---: |
+| train | 16000 | 0 |
+| valid | 1994 | 6 |
+| test | 1998 | 2 |
+
+The filtered split was rechecked with the same settings:
+
+| Pair | Raw exact pairs | Normalized exact pairs | Near pairs |
+| --- | ---: | ---: | ---: |
+| train<->valid | 0 | 0 | 0 |
+| train<->test | 0 | 0 | 0 |
+| valid<->test | 0 | 0 | 0 |
 
 ## Current Decision
 
 ```text
-P5 is completed as a check.
-P5 is not fully cleared for LM loss until the 8 near-overlap eval rows are
-excluded or the split is regenerated.
+P5 is cleared for v1.8 screening if LM validation/test loss uses the filtered
+split, not the raw valid/test files.
 ```

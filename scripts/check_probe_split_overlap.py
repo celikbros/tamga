@@ -26,6 +26,16 @@ class SplitRecord:
 
 
 @dataclass(frozen=True)
+class ExactPair:
+    left_split: str
+    left_row: int
+    left_source_line_index: int | None
+    right_split: str
+    right_row: int
+    right_source_line_index: int | None
+
+
+@dataclass(frozen=True)
 class NearPair:
     left_split: str
     left_row: int
@@ -44,9 +54,17 @@ class PairOverlapReport:
     right_split: str
     left_lines: int
     right_lines: int
-    raw_exact_pairs: int = 0
-    normalized_exact_pairs: int = 0
+    raw_exact: list[ExactPair] = field(default_factory=list)
+    normalized_exact: list[ExactPair] = field(default_factory=list)
     near_pairs: list[NearPair] = field(default_factory=list)
+
+    @property
+    def raw_exact_pairs(self) -> int:
+        return len(self.raw_exact)
+
+    @property
+    def normalized_exact_pairs(self) -> int:
+        return len(self.normalized_exact)
 
     @property
     def max_containment(self) -> float:
@@ -168,9 +186,29 @@ def compare_split_pair(
             shingle_index[shingle].append(index)
 
     for record in right:
-        report.raw_exact_pairs += len(raw_index.get(record.raw, []))
+        for raw_match in raw_index.get(record.raw, []):
+            report.raw_exact.append(
+                ExactPair(
+                    left_split=raw_match.split,
+                    left_row=raw_match.row,
+                    left_source_line_index=raw_match.source_line_index,
+                    right_split=record.split,
+                    right_row=record.row,
+                    right_source_line_index=record.source_line_index,
+                )
+            )
         normalized_matches = norm_index.get(record.norm, [])
-        report.normalized_exact_pairs += len(normalized_matches)
+        for norm_match in normalized_matches:
+            report.normalized_exact.append(
+                ExactPair(
+                    left_split=norm_match.split,
+                    left_row=norm_match.row,
+                    left_source_line_index=norm_match.source_line_index,
+                    right_split=record.split,
+                    right_row=record.row,
+                    right_source_line_index=record.source_line_index,
+                )
+            )
         if normalized_matches or not record.shingles:
             continue
 
@@ -236,6 +274,87 @@ def check_split_overlap(
     ]
 
 
+def rows_to_exclude_for_eval(reports: list[PairOverlapReport]) -> dict[str, set[int]]:
+    exclude: dict[str, set[int]] = defaultdict(set)
+    for report in reports:
+        for pair in [*report.raw_exact, *report.normalized_exact, *report.near_pairs]:
+            if pair.left_split == "train" and pair.right_split in {"valid", "test"}:
+                exclude[pair.right_split].add(pair.right_row)
+            elif pair.right_split == "train" and pair.left_split in {"valid", "test"}:
+                exclude[pair.left_split].add(pair.left_row)
+            elif pair.left_split == "valid" and pair.right_split == "test":
+                exclude["test"].add(pair.right_row)
+            elif pair.left_split == "test" and pair.right_split == "valid":
+                exclude["valid"].add(pair.right_row)
+    return exclude
+
+
+def _copy_filtered_file(
+    source: Path,
+    target: Path,
+    *,
+    exclude_rows: set[int],
+) -> tuple[int, int]:
+    kept = 0
+    removed = 0
+    with (
+        source.open("r", encoding="utf-8") as src,
+        target.open("w", encoding="utf-8", newline="\n") as dst,
+    ):
+        for row, line in enumerate(src, start=1):
+            if row in exclude_rows:
+                removed += 1
+                continue
+            kept += 1
+            dst.write(line if line.endswith("\n") else line + "\n")
+    return kept, removed
+
+
+def write_filtered_split(
+    split_dir: str | Path,
+    filtered_dir: str | Path,
+    reports: list[PairOverlapReport],
+) -> dict[str, dict[str, int]]:
+    source_root = Path(split_dir)
+    target_root = Path(filtered_dir)
+    target_root.mkdir(parents=True, exist_ok=True)
+    excludes = rows_to_exclude_for_eval(reports)
+    stats: dict[str, dict[str, int]] = {}
+
+    for split in ("train", "valid", "test"):
+        exclude_rows = excludes.get(split, set())
+        kept, removed = _copy_filtered_file(
+            source_root / f"{split}.txt",
+            target_root / f"{split}.txt",
+            exclude_rows=exclude_rows,
+        )
+        stats[split] = {"kept": kept, "removed": removed}
+
+        manifest_source = source_root / f"{split}.manifest.jsonl"
+        if manifest_source.exists():
+            _copy_filtered_file(
+                manifest_source,
+                target_root / f"{split}.manifest.jsonl",
+                exclude_rows=exclude_rows,
+            )
+
+    manifest = {
+        "source_split_dir": source_root.as_posix(),
+        "filtered_split_dir": target_root.as_posix(),
+        "exclusions": {
+            split: sorted(rows)
+            for split, rows in excludes.items()
+            if rows
+        },
+        "stats": stats,
+    }
+    (target_root / "filtered_split_manifest.json").write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return stats
+
+
 def format_overlap_report(
     reports: list[PairOverlapReport],
     *,
@@ -244,6 +363,8 @@ def format_overlap_report(
     min_near_words: int,
     near_threshold: float,
     max_details: int,
+    filtered_dir: str | Path | None = None,
+    filtered_stats: dict[str, dict[str, int]] | None = None,
 ) -> str:
     lines = [
         "# v1.8 Local LM Probe Split Overlap",
@@ -322,6 +443,22 @@ def format_overlap_report(
             lines.append("")
             lines.append(f"Additional near pairs omitted: {len(report.near_pairs) - max_details}.")
 
+    if filtered_dir is not None and filtered_stats is not None:
+        lines.extend(
+            [
+                "",
+                "## Filtered Split",
+                "",
+                f"Filtered split dir: `{Path(filtered_dir).as_posix()}`",
+                "",
+                "| Split | Kept lines | Removed lines |",
+                "| --- | ---: | ---: |",
+            ]
+        )
+        for split in ("train", "valid", "test"):
+            stats = filtered_stats.get(split, {"kept": 0, "removed": 0})
+            lines.append(f"| {split} | {stats['kept']} | {stats['removed']} |")
+
     return "\n".join(lines) + "\n"
 
 
@@ -338,6 +475,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--min-near-words", type=int, default=8)
     parser.add_argument("--near-threshold", type=float, default=0.8)
     parser.add_argument("--max-details", type=int, default=20)
+    parser.add_argument(
+        "--write-filtered-dir",
+        help="Optional output directory for train/valid/test with eval overlap rows removed.",
+    )
     args = parser.parse_args(argv)
 
     reports = check_split_overlap(
@@ -346,6 +487,13 @@ def main(argv: list[str] | None = None) -> int:
         min_near_words=args.min_near_words,
         near_threshold=args.near_threshold,
     )
+    filtered_stats = None
+    if args.write_filtered_dir:
+        filtered_stats = write_filtered_split(
+            args.split_dir,
+            args.write_filtered_dir,
+            reports,
+        )
     report_text = format_overlap_report(
         reports,
         split_dir=args.split_dir,
@@ -353,12 +501,16 @@ def main(argv: list[str] | None = None) -> int:
         min_near_words=args.min_near_words,
         near_threshold=args.near_threshold,
         max_details=args.max_details,
+        filtered_dir=args.write_filtered_dir,
+        filtered_stats=filtered_stats,
     )
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(report_text, encoding="utf-8")
     print(report_text)
     print(f"wrote_report: {out_path}")
+    if args.write_filtered_dir:
+        print(f"wrote_filtered_split_dir: {args.write_filtered_dir}")
     return 0
 
 
