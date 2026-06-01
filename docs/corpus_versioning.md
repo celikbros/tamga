@@ -31,7 +31,7 @@ Recommended fields:
 | Field | Example | Meaning |
 | --- | --- | --- |
 | `project` | `celik` | Corpus family or source project |
-| `langmix` | `tr_en` | Main language mix |
+| `langmix` | `tr_primary_multilingual_mix` | Main language mix; Turkish-primary, multilingual-aware content |
 | `role` | `pretrain_clean`, `tokenizer_pilot`, `lm_probe_pilot` | Intended use |
 | `version` | `v1_0` | Cleaning/version policy |
 | `date` | `20260601` | Freeze date |
@@ -40,17 +40,17 @@ Recommended fields:
 Examples:
 
 ```text
-celik_tr_en_pretrain_clean_v1_0_20260601.jsonl
-celik_tr_en_tokenizer_pilot_100k_v1_0_20260601.txt
-celik_tr_en_lm_probe_pilot_20k_v1_0_20260601.txt
+celik_tr_primary_multilingual_mix_pretrain_clean_v1_0_20260601.jsonl
+celik_tr_primary_multilingual_mix_tokenizer_pilot_100k_v1_0_20260601.txt
+celik_tr_primary_multilingual_mix_lm_probe_pilot_20k_v1_0_20260601.txt
 ```
 
 ## Current Registry
 
 | Current path | Proposed canonical name | Status |
 | --- | --- | --- |
-| `data/train/private/celik_ai/celik_gold_corpus.clean.jsonl` | `celik_tr_en_pretrain_clean_v1_0_20260601.jsonl` | current full clean corpus |
-| `data/train/claim_grade/celik_gold_clean_pilot.txt` | `celik_tr_en_tokenizer_pilot_100k_v1_0_20260601.txt` | current clean SP/downstream pilot |
+| `data/train/private/celik_ai/celik_gold_corpus.clean.jsonl` | `celik_tr_primary_multilingual_mix_pretrain_clean_v1_0_20260601.jsonl` | current full clean corpus |
+| `data/train/claim_grade/celik_gold_clean_pilot.txt` | `celik_tr_primary_multilingual_mix_tokenizer_pilot_100k_v1_0_20260601.txt` | current clean SP/downstream pilot |
 
 ## Policy
 
