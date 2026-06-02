@@ -63,6 +63,7 @@ scripts/materialize_v2_raw_hard_candidate_views.py
 scripts/evaluate_v2_raw_hard_candidate_intrinsic.py
 scripts/materialize_v2_raw_soft_marker_candidate_views.py
 scripts/evaluate_v2_soft_marker_candidate_intrinsic.py
+scripts/materialize_v2_protected_routes.py
 ```
 
 Current finding:

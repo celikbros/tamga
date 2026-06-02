@@ -302,6 +302,12 @@ The first implementation should be intentionally small:
 6. run intrinsic gates before tiny-LM
 ```
 
+Current first support script:
+
+```text
+scripts/materialize_v2_protected_routes.py
+```
+
 Do not start by:
 
 ```text

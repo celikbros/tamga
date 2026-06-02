@@ -304,6 +304,19 @@ decode invariants
 evaluation gates
 ```
 
+First implementation support:
+
+```text
+scripts/materialize_v2_protected_routes.py
+```
+
+Purpose:
+
+```text
+record protected route labels and protected suffix tails from train-only data
+before selecting finite protected pieces or user-defined symbols
+```
+
 ## Roadmap
 
 ### Phase 1: Candidate Serialization
