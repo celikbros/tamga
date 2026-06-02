@@ -10,6 +10,12 @@ not an implementation
 v1.8 tiny-LM screening complete enough for direction-setting
 ```
 
+Roadmap companion:
+
+```text
+docs/v2_0_roadmap_review.md
+```
+
 ## Decision From v1.8
 
 v1.8 appears to show two things at the same time:
@@ -259,8 +265,10 @@ Build a small v2.0 prototype path:
 
 ```text
 1. materialize custom-morph token stream with explicit hard/soft boundary markers
-2. train a learned model that may merge soft boundaries but not protected hard boundaries
-3. compare against pure custom, SP 64k, and hard hybrid on the existing v1.8 split
+2. select a seed policy
+3. build a training-ready candidate serialization
+4. train a learned model that may merge soft boundaries but not protected hard boundaries
+5. compare against pure custom, SP 64k, and hard hybrid on the existing v1.8 split
 ```
 
 Prototype materializer:

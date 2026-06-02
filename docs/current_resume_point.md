@@ -21,6 +21,7 @@ Most recent decision artifacts:
 
 - [v1.8 tiny-LM smoke findings](v1_8_tiny_lm_bpb_smoke_findings.md)
 - [v2.0 hybrid vocabulary plan](v2_0_hybrid_vocab_plan.md)
+- [v2.0 roadmap review](v2_0_roadmap_review.md)
 - [advisor request for v2.0 hybrid/vocab direction](advisor_update_v2_0_hybrid_vocab_request.md)
 - [advisor feedback triage](advisor_feedback_v2_0_triage.md)
 
@@ -70,6 +71,14 @@ suffix selected: 244 unique / 925856 occurrences
 protected selected: 944 unique / 51231 occurrences, count >= 10
 word_start selected: 62560 unique / 2284533 occurrences
 report: artifacts/v2_0_seed_policy_selection.md
+```
+
+Current roadmap phase:
+
+```text
+Phase 1: candidate serialization
+turn selected seed policy + soft/hard boundary JSONL into a training-ready
+prototype corpus before training any learned tokenizer
 ```
 
 Completed:
