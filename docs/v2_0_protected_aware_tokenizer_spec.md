@@ -306,6 +306,9 @@ Current first support script:
 
 ```text
 scripts/materialize_v2_protected_routes.py
+scripts/analyze_v2_protected_route_inventory.py
+scripts/select_v2_protected_piece_vocab.py
+scripts/evaluate_v2_protected_encoder.py
 ```
 
 Do not start by:

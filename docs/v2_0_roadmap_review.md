@@ -310,6 +310,7 @@ First implementation support:
 scripts/materialize_v2_protected_routes.py
 scripts/analyze_v2_protected_route_inventory.py
 scripts/select_v2_protected_piece_vocab.py
+scripts/evaluate_v2_protected_encoder.py
 ```
 
 Purpose:
@@ -343,6 +344,19 @@ candidate unique pieces: 2741
 selected weighted coverage: 0.993236
 unused protected-piece budget at 4096 cap: 3722
 decision: start with a small protected char/extension piece set, then byte fallback
+```
+
+Protected encoder diagnostic:
+
+```text
+report: artifacts/v2_0_protected_encoder_diagnostic.md
+selected protected pieces: 374
+mandatory byte fallback pieces: 256
+protected encoded tokens/source byte: 0.853723
+overall byte fallback byte rate: 0.002679
+file_like byte fallback byte rate: 0.000000
+numeric_like byte fallback byte rate: 0.000018
+decision: finite protected-piece path is viable for a full tokenizer prototype
 ```
 
 ## Roadmap
