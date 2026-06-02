@@ -10,10 +10,9 @@ audit work to choose the v2.0 direction.
 Current next step:
 
 ```text
-Materialize and probe the next v2.0 candidate:
-protected_hard_soft_marker_raw_sp64. It keeps hard-boundary whitespace but
-serializes soft morphology boundaries with a private-use marker instead of
-custom token labels. Do not run tiny-LM yet.
+Design a protected-aware v2.0 candidate. The raw-soft-marker candidate improved
+some morphology categories but still failed the visible intrinsic gate and did
+not preserve protected spans. Do not run tiny-LM yet.
 ```
 
 Most recent decision artifacts:
@@ -55,6 +54,7 @@ scripts/run_v2_candidate_sentencepiece_probe.py
 scripts/materialize_v2_raw_hard_candidate_views.py
 scripts/evaluate_v2_raw_hard_candidate_intrinsic.py
 scripts/materialize_v2_raw_soft_marker_candidate_views.py
+scripts/evaluate_v2_soft_marker_candidate_intrinsic.py
 ```
 
 Current finding:
@@ -104,6 +104,14 @@ decision: do not run tiny-LM on protected_hard_raw_sp64
 next gate: design a candidate that preserves protected spans and improves
 visible boundary F1 without returning to pure custom token pressure
 next candidate: protected_hard_soft_marker_raw_sp64
+soft-marker SP probe: artifacts/v2_0_raw_soft_marker_candidate_sentencepiece_probe.md
+soft-marker intrinsic eval: artifacts/v2_0_raw_soft_marker_candidate_intrinsic_eval.md
+soft-marker valid/test SP tokens/raw byte: 0.236749 / 0.236700
+soft-marker challenge boundary F1: 0.6724
+soft-marker protected span preservation: 1/25
+decision: do not run tiny-LM on protected_hard_soft_marker_raw_sp64
+next gate: protected spans must become operational in the tokenizer, not merely
+metadata in the candidate JSONL
 ```
 
 Completed:

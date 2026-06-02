@@ -34,6 +34,7 @@ candidate train/valid/test serialization
 first candidate SentencePiece token-pressure probe
 raw-hard candidate SentencePiece token-pressure probe
 raw-hard candidate visible intrinsic eval
+raw-soft-marker candidate token-pressure and visible intrinsic eval
 ```
 
 Most important results:
@@ -48,6 +49,8 @@ main remaining pressure is word_start long-tail + whitespace serialization
 first token-label serialization candidate failed token-pressure gate
 raw-hard candidate passed token-pressure gate
 raw-hard candidate failed visible intrinsic gate
+raw-soft-marker candidate improved morphology categories but failed protected
+span and overall visible gates
 ```
 
 ## Candidate 1: Rejected
@@ -167,7 +170,7 @@ avoid serializing custom token labels into the training view
 avoid arbitrary open-vocabulary tokens as fixed model IDs
 ```
 
-## Candidate 3: Planned
+## Candidate 3: Rejected Before Tiny-LM
 
 ```text
 protected_hard_soft_marker_raw_sp64
@@ -191,6 +194,44 @@ expensive
 candidate 2 restored compression but erased morphology signal
 candidate 3 tests whether a minimal soft-boundary marker can recover visible
 boundary behavior without returning to pure custom token pressure
+```
+
+Results:
+
+```text
+view report: artifacts/v2_0_raw_soft_marker_candidate_views.md
+SP report: artifacts/v2_0_raw_soft_marker_candidate_sentencepiece_probe.md
+intrinsic report: artifacts/v2_0_raw_soft_marker_candidate_intrinsic_eval.md
+valid/test SP tokens/raw byte: 0.236749 / 0.236700
+challenge boundary F1: 0.6724
+SP64 reference challenge boundary F1: 0.7351
+protected span preservation: 1/25
+decision: reject before tiny-LM screening
+```
+
+Interpretation:
+
+```text
+soft markers recover useful morphology signal in suffix-heavy categories
+but the overall challenge score remains below SP64
+protected spans remain broken because they are still not operationally forced
+the next candidate must solve protection at encode/vocab level
+```
+
+## Current Candidate Need
+
+```text
+protected-aware learned candidate
+```
+
+Required behavior:
+
+```text
+protected spans are atomic or otherwise losslessly shielded during learned
+tokenization
+compression should stay closer to raw-hard than pure custom
+morphology hints may be soft markers or metadata, but they cannot break
+protected spans
 ```
 
 ## Roadmap
@@ -222,6 +263,7 @@ scripts/run_v2_candidate_sentencepiece_probe.py
 scripts/materialize_v2_raw_hard_candidate_views.py
 scripts/evaluate_v2_raw_hard_candidate_intrinsic.py
 scripts/materialize_v2_raw_soft_marker_candidate_views.py
+scripts/evaluate_v2_soft_marker_candidate_intrinsic.py
 ```
 
 Current output:
@@ -242,6 +284,7 @@ train/valid/test candidate views are materialized
 token-label serialization candidate failed Phase 2 token-pressure gate
 raw-hard serialization candidate passed Phase 2 token-pressure gate
 raw-hard candidate failed Phase 3 visible intrinsic gate
+raw-soft-marker candidate failed Phase 3 visible intrinsic gate
 ```
 
 Gate:
@@ -263,7 +306,7 @@ train one small learned tokenizer candidate using the candidate serialization
 Initial candidate:
 
 ```text
-protected_hard_soft_marker_raw_sp64
+protected-aware learned candidate
 ```
 
 Control baselines:
