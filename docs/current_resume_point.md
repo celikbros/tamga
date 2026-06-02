@@ -78,12 +78,15 @@ report: artifacts/v2_0_seed_policy_selection.md
 Current roadmap phase:
 
 ```text
-Phase 1: candidate train serialization completed
+Phase 1: candidate train/valid/test serialization completed
 report: artifacts/v2_0_candidate_serialization.md
+valid/test report: artifacts/v2_0_candidate_split_views.md
 hard segments/raw byte: 0.130918
 train-view/raw bytes: 1.511092
-next gate: materialize valid/test candidate views with the train-selected seed
-policy before training/evaluating one learned tokenizer
+valid hard segments/raw byte: 0.130737
+test hard segments/raw byte: 0.130560
+next gate: train one learned tokenizer prototype on the train view and measure
+token pressure on valid/test train views before any tiny-LM screening
 ```
 
 Completed:

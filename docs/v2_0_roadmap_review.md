@@ -93,15 +93,17 @@ Current output:
 
 ```text
 artifacts/v2_0_candidate_serialization.md
+artifacts/v2_0_candidate_split_views.md
 hard segments/raw byte: 0.130918
+valid hard segments/raw byte: 0.130737
+test hard segments/raw byte: 0.130560
 train-view/raw bytes: 1.511092
 ```
 
-Remaining Phase 1 work:
+Phase 1 status:
 
 ```text
-materialize the same soft/hard boundary and candidate serialization views for
-valid and test splits using the train-selected seed policy
+train/valid/test candidate views are materialized
 ```
 
 Gate:
