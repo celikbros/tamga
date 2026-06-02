@@ -309,6 +309,7 @@ First implementation support:
 ```text
 scripts/materialize_v2_protected_routes.py
 scripts/analyze_v2_protected_route_inventory.py
+scripts/select_v2_protected_piece_vocab.py
 ```
 
 Purpose:
@@ -330,6 +331,18 @@ non_turkish_latin_word occurrence share: 0.157637
 min-count 10 full-surface UDS coverage: 0.532923
 decision: full-surface UDS is not the main solution
 next: finite protected subword pieces plus byte fallback
+```
+
+Protected piece selection finding:
+
+```text
+report: artifacts/v2_0_protected_piece_vocab_selection.md
+selected unique protected pieces: 374
+mandatory byte fallback pieces: 256
+candidate unique pieces: 2741
+selected weighted coverage: 0.993236
+unused protected-piece budget at 4096 cap: 3722
+decision: start with a small protected char/extension piece set, then byte fallback
 ```
 
 ## Roadmap
