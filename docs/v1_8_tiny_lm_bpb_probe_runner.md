@@ -6,6 +6,7 @@ Date: 2026-06-02
 
 ```text
 runner prepared
+encoding dry-run completed
 training not yet run
 screening only
 not final LLM tokenizer evidence
@@ -114,3 +115,9 @@ test bits-per-byte
 ```
 
 and keep the v1.8 protocol caveats attached to every result.
+
+Current encoding findings:
+
+```text
+docs/v1_8_tiny_lm_bpb_probe_encoding_findings.md
+```

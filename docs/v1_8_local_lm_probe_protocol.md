@@ -326,4 +326,5 @@ a custom win on clean pilot proves multilingual robustness
 4. Completed: add roundtrip and split-overlap reports.
 5. Completed: add canary text and diagnostics.
 6. Prepared: tiny LM bits-per-byte runner; see docs/v1_8_tiny_lm_bpb_probe_runner.md.
-7. Next: run full encoding dry-run manually, then run one-tokenizer training smoke.
+7. Completed: run full encoding dry-run; see docs/v1_8_tiny_lm_bpb_probe_encoding_findings.md.
+8. Next: run narrow training smoke for custom_tr_morph_lossless and sp_bpe_64000_train_only.
