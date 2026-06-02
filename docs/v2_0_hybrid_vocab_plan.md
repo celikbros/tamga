@@ -255,40 +255,40 @@ it is at least competitive on tiny-LM BPB under documented budget views
 
 Do not implement a full tokenizer rewrite first.
 
-The accounting blocker is now closed:
+The accounting blocker is closed:
 
 ```text
 artifacts/v1_8_token_accounting_audit.md
 ```
 
-Build a small v2.0 prototype path:
+The protected-aware architecture gate is now:
 
 ```text
-1. materialize custom-morph token stream with explicit hard/soft boundary markers
-2. select a seed policy
-3. build a training-ready candidate serialization
-4. train a learned model that may merge soft boundaries but not protected hard boundaries
-5. compare against pure custom, SP 64k, and hard hybrid on the existing v1.8 split
+docs/v2_0_protected_aware_tokenizer_spec.md
 ```
 
-Prototype materializer:
+Use that spec before another candidate. The next prototype should:
+
+```text
+1. implement protected-span route labels
+2. train/select finite protected pieces from train-only data
+3. keep normal learned text encoding near SP64 token pressure
+4. add universal byte fallback
+5. export a stateless decode vocabulary
+6. run intrinsic gates before tiny-LM
+```
+
+Already-built prototype tools remain useful diagnostics:
 
 ```text
 scripts/materialize_v2_soft_morph_artifacts.py
 scripts/materialize_v2_candidate_serialization.py
+scripts/materialize_v2_raw_hard_candidate_views.py
+scripts/materialize_v2_raw_soft_marker_candidate_views.py
 ```
 
-It writes:
-
-```text
-private JSONL with per-piece boundary labels
-private seed TSV with custom piece frequencies
-public summary report
-```
-
-The JSONL is not a production tokenizer format. It is the small bridge artifact
-for deciding how to seed or constrain a learned vocabulary without turning every
-morphology boundary into a hard no-merge boundary.
+But do not add another raw-soft-marker or token-label candidate before the
+finite protected-aware spec is implemented.
 
 Seed finding:
 
@@ -308,4 +308,4 @@ allow merges across soft morphology boundaries
 keep protected/script/punctuation boundaries hard
 ```
 
-This should be a prototype artifact, not a public production API.
+This remains a useful diagnostic history, not the next implementation path.

@@ -50,6 +50,12 @@ generation can emit malformed placeholder sequences
 it does not fit ordinary HF/vLLM-style tokenizer expectations
 ```
 
+Design spec:
+
+```text
+docs/v2_0_protected_aware_tokenizer_spec.md
+```
+
 ## What Is Done
 
 Evidence and hygiene:
@@ -289,7 +295,7 @@ protected spans
 Immediate next step:
 
 ```text
-write the finite protected-aware tokenizer design/spec before another candidate
+use the finite protected-aware tokenizer design/spec before another candidate
 protected categories
 protected internal encoding strategy
 byte fallback token set

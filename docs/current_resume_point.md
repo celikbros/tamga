@@ -29,6 +29,7 @@ Most recent decision artifacts:
 - [advisor request for v2.0 hybrid/vocab direction](advisor_update_v2_0_hybrid_vocab_request.md)
 - [advisor feedback triage](advisor_feedback_v2_0_triage.md)
 - [advisor feedback: protected-aware architecture](advisor_feedback_v2_0_protected_aware_triage.md)
+- [v2.0 protected-aware tokenizer spec](v2_0_protected_aware_tokenizer_spec.md)
 
 v1.8 key result:
 
@@ -125,6 +126,7 @@ advisor decision: use the Option 1 + Option 3 hybrid
 LLM-safe invariant: decode(ids) must be stateless
 rejected: placeholder + payload side-channel decoding
 next gate: write finite protected-aware encoding/fallback spec before tiny-LM
+spec: docs/v2_0_protected_aware_tokenizer_spec.md
 ```
 
 Completed:
