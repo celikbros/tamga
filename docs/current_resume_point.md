@@ -64,6 +64,7 @@ scripts/evaluate_v2_raw_hard_candidate_intrinsic.py
 scripts/materialize_v2_raw_soft_marker_candidate_views.py
 scripts/evaluate_v2_soft_marker_candidate_intrinsic.py
 scripts/materialize_v2_protected_routes.py
+scripts/analyze_v2_protected_route_inventory.py
 ```
 
 Current finding:
@@ -128,6 +129,9 @@ LLM-safe invariant: decode(ids) must be stateless
 rejected: placeholder + payload side-channel decoding
 next gate: write finite protected-aware encoding/fallback spec before tiny-LM
 spec: docs/v2_0_protected_aware_tokenizer_spec.md
+protected route report: artifacts/v2_0_protected_route_inventory_analysis.md
+decision: UDS cannot be the main protected solution; use finite protected
+subword pieces plus byte fallback
 ```
 
 Completed:

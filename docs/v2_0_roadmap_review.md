@@ -308,6 +308,7 @@ First implementation support:
 
 ```text
 scripts/materialize_v2_protected_routes.py
+scripts/analyze_v2_protected_route_inventory.py
 ```
 
 Purpose:
@@ -315,6 +316,20 @@ Purpose:
 ```text
 record protected route labels and protected suffix tails from train-only data
 before selecting finite protected pieces or user-defined symbols
+```
+
+Protected inventory finding:
+
+```text
+report: artifacts/v2_0_protected_route_inventory_analysis.md
+protected unique surfaces: 29811
+protected occurrences: 96132
+numeric_like occurrence share: 0.677111
+file_like occurrence share: 0.101891
+non_turkish_latin_word occurrence share: 0.157637
+min-count 10 full-surface UDS coverage: 0.532923
+decision: full-surface UDS is not the main solution
+next: finite protected subword pieces plus byte fallback
 ```
 
 ## Roadmap
