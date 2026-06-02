@@ -33,6 +33,7 @@ seed policy selection
 candidate train/valid/test serialization
 first candidate SentencePiece token-pressure probe
 raw-hard candidate SentencePiece token-pressure probe
+raw-hard candidate visible intrinsic eval
 ```
 
 Most important results:
@@ -46,6 +47,7 @@ suffix inventory is small and cheap to seed
 main remaining pressure is word_start long-tail + whitespace serialization
 first token-label serialization candidate failed token-pressure gate
 raw-hard candidate passed token-pressure gate
+raw-hard candidate failed visible intrinsic gate
 ```
 
 ## Candidate 1: Rejected
@@ -93,7 +95,7 @@ the first SP run skipped 603 too-long train-view lines at the default
 SentencePiece max_sentence_length; future configs set max_sentence_length=16384
 ```
 
-## Current Candidate
+## Candidate 2: Rejected Before Tiny-LM
 
 ```text
 protected_hard_raw_sp64
@@ -125,7 +127,44 @@ Interpretation:
 ```text
 raw-hard serialization removed the artificial token-label pressure
 the learned tokenizer is now close to SP64 compression
-the candidate is worth Phase 3 intrinsic diagnostics
+the candidate was worth Phase 3 intrinsic diagnostics
+```
+
+Visible intrinsic result:
+
+```text
+report: artifacts/v2_0_raw_hard_candidate_intrinsic_eval.md
+gold boundary F1: 0.5931
+challenge boundary F1: 0.5951
+SP64 reference challenge boundary F1: 0.7351
+protected span preservation: 1/25
+decision: reject before tiny-LM screening
+```
+
+Why it failed:
+
+```text
+collapsing all soft morphology boundaries restored compression but removed the
+main morphology advantage
+protected spans were only metadata; SentencePiece still split almost all of
+them
+the candidate is a useful compression control, not an acceptable tokenizer
+```
+
+## Current Candidate Need
+
+```text
+unnamed next hybrid candidate
+```
+
+Required behavior:
+
+```text
+keep raw-hard level token pressure near SP64
+make protected spans operational, not just metadata
+recover at least part of custom morphology boundary advantage
+avoid serializing custom token labels into the training view
+avoid arbitrary open-vocabulary tokens as fixed model IDs
 ```
 
 ## Roadmap
@@ -155,6 +194,7 @@ scripts/materialize_v2_candidate_serialization.py
 scripts/materialize_v2_candidate_split_views.py
 scripts/run_v2_candidate_sentencepiece_probe.py
 scripts/materialize_v2_raw_hard_candidate_views.py
+scripts/evaluate_v2_raw_hard_candidate_intrinsic.py
 ```
 
 Current output:
@@ -174,6 +214,7 @@ Phase 1 status:
 train/valid/test candidate views are materialized
 token-label serialization candidate failed Phase 2 token-pressure gate
 raw-hard serialization candidate passed Phase 2 token-pressure gate
+raw-hard candidate failed Phase 3 visible intrinsic gate
 ```
 
 Gate:
@@ -195,7 +236,7 @@ train one small learned tokenizer candidate using the candidate serialization
 Initial candidate:
 
 ```text
-protected_hard_raw_sp64
+unnamed next hybrid candidate
 ```
 
 Control baselines:
@@ -219,7 +260,8 @@ Current Phase 2 status:
 
 ```text
 protected_hard_raw_sp64 passes the token-pressure part of the gate
-protected/protection/boundary behavior is not proven yet
+protected_hard_raw_sp64 fails protected-span and visible-boundary diagnostics
+do not run tiny-LM on protected_hard_raw_sp64
 ```
 
 ### Phase 3: Intrinsic Evaluation
@@ -236,7 +278,7 @@ boundary F1 on gold/challenge
 canary diagnostics
 ```
 
-Current candidate:
+Current rejected candidate:
 
 ```text
 protected_hard_raw_sp64
@@ -312,10 +354,9 @@ do not run broad tiny-LM matrices before a real v2.0 candidate exists
 Run Phase 3 intrinsic diagnostics:
 
 ```text
-roundtrip
-protected span preservation
-boundary F1 on gold/challenge
-canary diagnostics
+design next hybrid candidate
+measure token pressure
+run visible intrinsic diagnostics before tiny-LM
 ```
 
-This is required before any tiny-LM screening.
+The current raw-hard candidate should not proceed to tiny-LM.

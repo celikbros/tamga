@@ -10,10 +10,10 @@ audit work to choose the v2.0 direction.
 Current next step:
 
 ```text
-Run Phase 3 intrinsic evaluation for protected_hard_raw_sp64. The raw-hard
-candidate passed the intrinsic token-pressure gate and is close enough to SP64
-to justify roundtrip/protected-span/boundary diagnostics before any tiny-LM
-screening.
+Redesign the v2.0 candidate after protected_hard_raw_sp64 passed token pressure
+but failed Phase 3 visible intrinsic diagnostics. Do not run tiny-LM yet.
+The next candidate must keep SP-like compression while restoring protected-span
+and morphology-boundary behavior.
 ```
 
 Most recent decision artifacts:
@@ -53,6 +53,7 @@ scripts/materialize_v2_candidate_serialization.py
 scripts/materialize_v2_candidate_split_views.py
 scripts/run_v2_candidate_sentencepiece_probe.py
 scripts/materialize_v2_raw_hard_candidate_views.py
+scripts/evaluate_v2_raw_hard_candidate_intrinsic.py
 ```
 
 Current finding:
@@ -79,24 +80,28 @@ report: artifacts/v2_0_seed_policy_selection.md
 Current roadmap phase:
 
 ```text
-Phase 2: second learned-tokenizer candidate passed intrinsic token-pressure gate
+Phase 3: raw-hard candidate passed compression but failed visible intrinsic gate
 report: artifacts/v2_0_candidate_serialization.md
 valid/test report: artifacts/v2_0_candidate_split_views.md
 failed SP probe: artifacts/v2_0_candidate_sentencepiece_probe.md
 raw-hard view report: artifacts/v2_0_raw_hard_candidate_views.md
 raw-hard SP probe: artifacts/v2_0_raw_hard_candidate_sentencepiece_probe.md
+raw-hard intrinsic eval: artifacts/v2_0_raw_hard_candidate_intrinsic_eval.md
 hard segments/raw byte: 0.130918
 train-view/raw bytes: 1.511092
 valid hard segments/raw byte: 0.130737
 test hard segments/raw byte: 0.130560
 failed candidate valid/test SP tokens/raw byte: 0.398475 / 0.397593
 raw-hard candidate valid/test SP tokens/raw byte: 0.162884 / 0.163117
+raw-hard challenge boundary F1: 0.5951
+SP64 challenge boundary F1: 0.7351
+raw-hard protected span preservation: 1/25
 SP64 baseline valid/test tokens/raw byte: about 0.1566 / 0.1570
 pure custom lossless+64k valid/test tokens/raw byte: about 0.4162 / 0.4194
 decision: do not run tiny-LM on protected_hard_soft_morph_seeded_sp64
-decision: protected_hard_raw_sp64 passes token-pressure gate
-next gate: intrinsic eval for roundtrip, protected spans, boundary F1, and
-canary diagnostics before any tiny-LM screening
+decision: do not run tiny-LM on protected_hard_raw_sp64
+next gate: design a candidate that preserves protected spans and improves
+visible boundary F1 without returning to pure custom token pressure
 ```
 
 Completed:
