@@ -1,36 +1,35 @@
 # Current Resume Point
 
-Date: 2026-05-31
+Date: 2026-06-02
 
 ## Current State
 
-The project has completed v1.6b Batch 4 do-no-harm routing work and deferred R3
-Azerbaijani routing after advisor review.
+The project has completed v1.8 tiny-LM screening and should now move to v2.0
+hybrid/vocabulary design.
 
 Current next step:
 
 ```text
-v1.7 baseline matrix config and visible reports are now available.
-The Turkish-trained SentencePiece sweep scaffold is now available in demo-only
-mode. Advisor feedback on claim-grade corpus choice has been converted into a
-corpus plan. A read-only audit of the user's `C:\CELIK_AI` corpus/tokenizer
-artifacts found useful raw text candidates and a local 64k ByteLevel BPE
-tokenizer reference. Local CELIK_AI text sources have been copied into the
-repo's ignored private corpus area, and the corpus-preparation/leakage-check
-skeleton now produces aggregate reports. A 75,388-line local CELIK_AI pilot
-sample and 4k/8k SentencePiece BPE/Unigram pilot sweep are available, with
-private model/vocab files kept out of git. The user's primary
-raw `celik_gold_corpus.jsonl` source was copied into the ignored private area,
-audited on the first 100k lines, filtered into a cleaner 100k-line pilot sample,
-and used for a 4k/8k SentencePiece BPE/Unigram sweep. That raw copy is now
-archived locally as `archive/deprecated/celik_gold_corpus.raw.deprecated.jsonl`
-so it does not get confused with the active clean source. Next: begin the
-downstream-probe runner skeleton, or scale SentencePiece only after defining
-source proportions and claim-grade corpus policy. The downstream-probe prep
-skeleton is now available and has produced demo plus 20k CELIK gold pilot
-aggregate reports. The cleaned `celik_gold_corpus.clean.jsonl` source has now
-been copied into the ignored private area and used for a visible leakage-checked
-8k/16k SentencePiece sweep. Corpus polishing is stopped for v1.7.
+Stop v1.8 tiny-LM experimentation unless an advisor asks for a specific extra
+control. Build a v2.0 hybrid/vocabulary prototype that uses custom morphology as
+a hard/soft prior, preserves protected spans, keeps byte fallback lossless, and
+reduces tokens/byte closer to learned SP baselines.
+```
+
+Most recent decision artifacts:
+
+- [v1.8 tiny-LM smoke findings](v1_8_tiny_lm_bpb_smoke_findings.md)
+- [v2.0 hybrid vocabulary plan](v2_0_hybrid_vocab_plan.md)
+- [advisor request for v2.0 hybrid/vocab direction](advisor_update_v2_0_hybrid_vocab_request.md)
+
+v1.8 key result:
+
+```text
+fixed-token / fixed-step view: SP wins
+approx iso-byte view: custom wins
+decision: do not hand pure custom to LLM team as default
+decision: do not discard morphology-aware tokenization
+next: v2.0 hybrid/vocabulary design
 ```
 
 Completed:

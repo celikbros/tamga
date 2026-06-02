@@ -1,17 +1,18 @@
 # v2.0 Router + MorphBPE RFC
 
-Date: 2026-05-31
+Date: 2026-06-02
 
-Status: draft RFC skeleton, not an implementation plan
+Status: draft RFC, updated after v1.8 tiny-LM screening
 
 ## Purpose
 
 This RFC sketches the v2.0 tokenizer architecture direction.
 
 v1.x established a Turkish deterministic morphology core, protected-span guards,
-evaluation scripts, baseline comparisons, and do-no-harm smoke tests. v2.0
-should decide how to combine that core with routing and learned fallback without
-turning the project into hand-written morphology for every Turkic language.
+evaluation scripts, baseline comparisons, do-no-harm smoke tests, and v1.8
+tiny-LM screening. v2.0 should decide how to combine that core with routing and
+learned vocabulary/fallback without turning the project into hand-written
+morphology for every Turkic language.
 
 ## Design Goal
 
@@ -40,7 +41,36 @@ v2.0 should not start by:
 
 ## Motivating Evidence
 
-v1.6b ended with:
+v1.8 now provides the strongest planning evidence:
+
+```text
+pure custom has strong byte-exposure/data-efficiency signal
+pure custom has serious token/context/compute pressure
+```
+
+Tiny-LM smoke:
+
+| Tokenizer checkpoint | Approx bytes seen | Valid BPB | Test BPB |
+| --- | ---: | ---: | ---: |
+| sp_bpe_64000 step 500 | 1668920 | 3.729064 | 3.745292 |
+| custom step 1258 | 1670292 | 2.943302 | 2.961183 |
+
+Fixed-token smoke still favors SP:
+
+| Tokenizer checkpoint | Approx bytes seen | Valid BPB | Test BPB |
+| --- | ---: | ---: | ---: |
+| custom step 500 | 663868 | 4.295575 | 4.312877 |
+| sp_bpe_64000 step 500 | 1668920 | 3.729064 | 3.745292 |
+
+Decision:
+
+```text
+do not hand pure custom to the LLM team as default
+do not discard morphology-aware tokenization
+design a learned hybrid/vocabulary layer to reduce tokens/byte
+```
+
+Earlier v1.6b ended with:
 
 ```text
 tr_gold_expanded.tsv: 50/50
