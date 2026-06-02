@@ -117,3 +117,48 @@ rare word_start long-tail must not become byte fallback by default
 ```
 
 This is still a prototype path. It is not ready for LLM-team handoff.
+
+## Seed Policy Selection
+
+Report:
+
+```text
+artifacts/v2_0_seed_policy_selection.md
+```
+
+Primary policy:
+
+```text
+budget: 64000
+include all suffix tokens
+include all punctuation/symbol tokens
+include protected surface tokens only when count >= 10
+include other non-word-start tokens
+fill the remaining budget with high-frequency word_start tokens
+```
+
+Result:
+
+| Group | Unique selected | Covered token count | Share of all seed tokens |
+| --- | ---: | ---: | ---: |
+| suffix | 244 | 925856 | 0.238500 |
+| punct_or_symbol | 152 | 430085 | 0.110789 |
+| protected | 944 | 51231 | 0.013197 |
+| word_start | 62560 | 2284533 | 0.588494 |
+| other | 100 | 584 | 0.000150 |
+
+Overall:
+
+```text
+selected unique: 64000
+selected coverage: 0.951130
+protected surface types selected: 944, not 29811
+```
+
+Decision:
+
+```text
+do not seed every protected surface form
+hard boundary preservation is separate from atomic vocabulary allocation
+seed only frequent protected surfaces and let the learned tokenizer handle the rest
+```

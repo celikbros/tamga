@@ -48,6 +48,7 @@ Current script:
 ```text
 scripts/materialize_v2_soft_morph_artifacts.py
 scripts/analyze_v2_seed_vocab.py
+scripts/select_v2_seed_policy.py
 ```
 
 Current finding:
@@ -57,6 +58,18 @@ Current finding:
 suffix inventory is small: 244 unique suffix tokens, 925856 occurrences
 remaining pressure is mostly word_start long-tail + whitespace serialization
 docs/v2_0_soft_morph_seed_findings.md
+```
+
+Current seed policy:
+
+```text
+protected_hard_soft_morph_seeded_sp64
+budget: 64000
+selected coverage: 95.11%
+suffix selected: 244 unique / 925856 occurrences
+protected selected: 944 unique / 51231 occurrences, count >= 10
+word_start selected: 62560 unique / 2284533 occurrences
+report: artifacts/v2_0_seed_policy_selection.md
 ```
 
 Completed:

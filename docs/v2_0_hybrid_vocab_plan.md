@@ -293,6 +293,7 @@ First candidate policy:
 ```text
 seed suffixes and punctuation/protected pieces
 seed only high-frequency word_start pieces
+seed only frequent protected surface pieces, not every observed protected surface
 use learned merges for the word_start long-tail
 allow merges across soft morphology boundaries
 keep protected/script/punctuation boundaries hard
