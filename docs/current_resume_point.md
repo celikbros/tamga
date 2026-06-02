@@ -10,10 +10,10 @@ audit work to choose the v2.0 direction.
 Current next step:
 
 ```text
-Materialize and probe the revised v2.0 raw-hard candidate:
-protected_hard_raw_sp64. The first token-label serialization candidate failed
-the intrinsic token-pressure gate, so the next candidate keeps hard boundaries
-but collapses soft morphology boundaries back into raw surface text.
+Run Phase 3 intrinsic evaluation for protected_hard_raw_sp64. The raw-hard
+candidate passed the intrinsic token-pressure gate and is close enough to SP64
+to justify roundtrip/protected-span/boundary diagnostics before any tiny-LM
+screening.
 ```
 
 Most recent decision artifacts:
@@ -79,20 +79,24 @@ report: artifacts/v2_0_seed_policy_selection.md
 Current roadmap phase:
 
 ```text
-Phase 2: first learned-tokenizer candidate failed intrinsic token-pressure gate
+Phase 2: second learned-tokenizer candidate passed intrinsic token-pressure gate
 report: artifacts/v2_0_candidate_serialization.md
 valid/test report: artifacts/v2_0_candidate_split_views.md
 failed SP probe: artifacts/v2_0_candidate_sentencepiece_probe.md
+raw-hard view report: artifacts/v2_0_raw_hard_candidate_views.md
+raw-hard SP probe: artifacts/v2_0_raw_hard_candidate_sentencepiece_probe.md
 hard segments/raw byte: 0.130918
 train-view/raw bytes: 1.511092
 valid hard segments/raw byte: 0.130737
 test hard segments/raw byte: 0.130560
 failed candidate valid/test SP tokens/raw byte: 0.398475 / 0.397593
+raw-hard candidate valid/test SP tokens/raw byte: 0.162884 / 0.163117
 SP64 baseline valid/test tokens/raw byte: about 0.1566 / 0.1570
 pure custom lossless+64k valid/test tokens/raw byte: about 0.4162 / 0.4194
 decision: do not run tiny-LM on protected_hard_soft_morph_seeded_sp64
-next gate: materialize protected_hard_raw_sp64 and run the same SP token-pressure
-probe before any tiny-LM screening
+decision: protected_hard_raw_sp64 passes token-pressure gate
+next gate: intrinsic eval for roundtrip, protected spans, boundary F1, and
+canary diagnostics before any tiny-LM screening
 ```
 
 Completed:

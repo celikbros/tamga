@@ -86,7 +86,7 @@ def test_format_report_includes_gate_and_seed_caveat(tmp_path: Path):
     report = format_report(config, rows)
 
     assert "v2.0 Candidate SentencePiece Probe" in report
-    assert "does not" in report
-    assert "force every selected seed" in report
+    assert "Candidate metadata" in report
+    assert "user-defined symbols" in report
     assert "SP tokens/raw byte" in report
     assert "| valid | 2 | 100 | 150 | 1.500000 | 20 | 0.133333 | 0.200000 |" in report

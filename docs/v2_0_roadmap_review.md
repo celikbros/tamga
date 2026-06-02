@@ -32,6 +32,7 @@ seed vocab analysis
 seed policy selection
 candidate train/valid/test serialization
 first candidate SentencePiece token-pressure probe
+raw-hard candidate SentencePiece token-pressure probe
 ```
 
 Most important results:
@@ -44,6 +45,7 @@ lossless+64k byte fallback is about 2.66x-2.67x SP64 tokens/byte on valid/test
 suffix inventory is small and cheap to seed
 main remaining pressure is word_start long-tail + whitespace serialization
 first token-label serialization candidate failed token-pressure gate
+raw-hard candidate passed token-pressure gate
 ```
 
 ## Candidate 1: Rejected
@@ -106,6 +108,26 @@ custom token labels are not serialized into the learned-tokenizer view
 morphology remains metadata/diagnostic signal, not mandatory token pressure
 ```
 
+Intrinsic token-pressure result:
+
+```text
+view report: artifacts/v2_0_raw_hard_candidate_views.md
+SP report: artifacts/v2_0_raw_hard_candidate_sentencepiece_probe.md
+view/raw bytes train/valid/test: 1.020919 / 1.020813 / 1.020957
+valid/test SP tokens/raw byte: 0.162884 / 0.163117
+SP64 baseline valid/test: about 0.1566 / 0.1570
+custom lossless+64k valid/test: about 0.4162 / 0.4194
+decision: passes token-pressure gate
+```
+
+Interpretation:
+
+```text
+raw-hard serialization removed the artificial token-label pressure
+the learned tokenizer is now close to SP64 compression
+the candidate is worth Phase 3 intrinsic diagnostics
+```
+
 ## Roadmap
 
 ### Phase 1: Candidate Serialization
@@ -151,6 +173,7 @@ Phase 1 status:
 ```text
 train/valid/test candidate views are materialized
 token-label serialization candidate failed Phase 2 token-pressure gate
+raw-hard serialization candidate passed Phase 2 token-pressure gate
 ```
 
 Gate:
@@ -192,6 +215,13 @@ candidate must keep visible boundary F1 advantage over SP64
 do not proceed to tiny-LM if token pressure remains near 0.40 tokens/raw byte
 ```
 
+Current Phase 2 status:
+
+```text
+protected_hard_raw_sp64 passes the token-pressure part of the gate
+protected/protection/boundary behavior is not proven yet
+```
+
 ### Phase 3: Intrinsic Evaluation
 
 Run only after one candidate exists:
@@ -204,6 +234,12 @@ byte fallback/source fallback rate
 protected span break rate
 boundary F1 on gold/challenge
 canary diagnostics
+```
+
+Current candidate:
+
+```text
+protected_hard_raw_sp64
 ```
 
 Gate:
@@ -273,12 +309,13 @@ do not run broad tiny-LM matrices before a real v2.0 candidate exists
 
 ## Next Immediate Step
 
-Build the revised Phase 2 candidate:
+Run Phase 3 intrinsic diagnostics:
 
 ```text
-materialize protected_hard_raw_sp64
-train/evaluate its 64k SentencePiece prototype
+roundtrip
+protected span preservation
+boundary F1 on gold/challenge
+canary diagnostics
 ```
 
-This is the smallest useful step after the first candidate failed the
-token-pressure gate.
+This is required before any tiny-LM screening.
