@@ -107,6 +107,10 @@ def train_model(config: CandidateSPConfig, *, force: bool) -> None:
         print(f"model_exists: {config.model_path}")
         return
     config.model_prefix.parent.mkdir(parents=True, exist_ok=True)
+    print(
+        "Training SentencePiece candidate: "
+        f"input={config.train_view} model_type={config.model_type} vocab_size={config.vocab_size}"
+    )
     spm.SentencePieceTrainer.train(
         input=str(config.train_view),
         model_prefix=str(config.model_prefix),
@@ -166,26 +170,26 @@ def evaluate_model(config: CandidateSPConfig) -> list[ViewStats]:
     spm = ensure_sentencepiece()
     processor = spm.SentencePieceProcessor()
     processor.Load(str(config.model_path))
-    return [
-        count_view(
+    print(f"Loaded model: {config.model_path}")
+    rows = []
+    for split, view_path in (
+        ("train", config.train_view),
+        ("valid", config.valid_view),
+        ("test", config.test_view),
+    ):
+        print(f"Evaluating split={split} view={view_path}")
+        row = count_view(
             processor=processor,
-            split="train",
-            view_path=config.train_view,
-            raw_bytes=raw_bytes_from_candidate_jsonl(config.train_view),
-        ),
-        count_view(
-            processor=processor,
-            split="valid",
-            view_path=config.valid_view,
-            raw_bytes=raw_bytes_from_candidate_jsonl(config.valid_view),
-        ),
-        count_view(
-            processor=processor,
-            split="test",
-            view_path=config.test_view,
-            raw_bytes=raw_bytes_from_candidate_jsonl(config.test_view),
-        ),
-    ]
+            split=split,
+            view_path=view_path,
+            raw_bytes=raw_bytes_from_candidate_jsonl(view_path),
+        )
+        print(
+            f"Evaluated split={split} lines={row.lines} sp_tokens={row.sp_tokens} "
+            f"tokens/raw_byte={row.sp_tokens_per_raw_byte:.6f}"
+        )
+        rows.append(row)
+    return rows
 
 
 def format_report(config: CandidateSPConfig, rows: list[ViewStats]) -> str:
