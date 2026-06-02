@@ -60,13 +60,29 @@ python scripts/run_tiny_lm_bpb_probe.py configs\v1_8_tiny_lm_bpb_probe.toml --dr
 Single-tokenizer training smoke:
 
 ```powershell
-python scripts/run_tiny_lm_bpb_probe.py configs\v1_8_tiny_lm_bpb_probe.toml --tokenizer custom_tr_morph_lossless
+python scripts/run_tiny_lm_bpb_probe.py configs\v1_8_tiny_lm_bpb_probe.toml `
+  --tokenizer custom_tr_morph_lossless `
+  --report-out artifacts\v1_8_tiny_lm_bpb_probe_custom_500steps.md `
+  --output-dir artifacts\private\v1_8_tiny_lm_bpb_probe_custom_500steps
 ```
 
 Strong SP comparison run:
 
 ```powershell
-python scripts/run_tiny_lm_bpb_probe.py configs\v1_8_tiny_lm_bpb_probe.toml --tokenizer sp_unigram_64000_train_only
+python scripts/run_tiny_lm_bpb_probe.py configs\v1_8_tiny_lm_bpb_probe.toml `
+  --tokenizer sp_bpe_64000_train_only `
+  --report-out artifacts\v1_8_tiny_lm_bpb_probe_sp_bpe_64000_500steps.md `
+  --output-dir artifacts\private\v1_8_tiny_lm_bpb_probe_sp_bpe_64000_500steps
+```
+
+Iso-byte SP comparison near the custom 500-step byte exposure:
+
+```powershell
+python scripts/run_tiny_lm_bpb_probe.py configs\v1_8_tiny_lm_bpb_probe.toml `
+  --tokenizer sp_bpe_64000_train_only `
+  --max-steps 200 `
+  --report-out artifacts\v1_8_tiny_lm_bpb_probe_sp_bpe_64000_200steps.md `
+  --output-dir artifacts\private\v1_8_tiny_lm_bpb_probe_sp_bpe_64000_200steps
 ```
 
 Full matrix training is possible, but should be run manually because it may take
@@ -120,4 +136,10 @@ Current encoding findings:
 
 ```text
 docs/v1_8_tiny_lm_bpb_probe_encoding_findings.md
+```
+
+Current 500-step smoke findings:
+
+```text
+docs/v1_8_tiny_lm_bpb_smoke_findings.md
 ```

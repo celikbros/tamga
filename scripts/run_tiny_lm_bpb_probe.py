@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections import Counter
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 import argparse
 import json
 import math
@@ -644,9 +644,23 @@ def main(argv: list[str] | None = None) -> int:
         default=[],
         help="Restrict to one or more tokenizer names.",
     )
+    parser.add_argument("--max-steps", type=int, help="Override configured max_steps.")
+    parser.add_argument("--report-out", help="Override configured public report path.")
+    parser.add_argument("--output-dir", help="Override configured private output directory.")
     args = parser.parse_args(argv)
 
     config = load_probe_config(args.config)
+    if args.max_steps is not None:
+        if args.max_steps <= 0:
+            raise ValueError("--max-steps must be positive")
+        config = replace(
+            config,
+            model=replace(config.model, max_steps=args.max_steps),
+        )
+    if args.report_out:
+        config = replace(config, report_out=Path(args.report_out))
+    if args.output_dir:
+        config = replace(config, output_dir=Path(args.output_dir))
     if args.tokenizer:
         selected = set(args.tokenizer)
         config = ProbeConfig(
