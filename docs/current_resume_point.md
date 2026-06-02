@@ -10,11 +10,11 @@ audit work to choose the v2.0 direction.
 Current next step:
 
 ```text
-Materialize the v2.0 soft-morph/protected-hard prototype artifacts on the full
-16k train split, then use those artifacts to decide the first learned-vocabulary
-candidate. The prototype should specifically attack the two pressure sources
-found by the accounting audit: whitespace-preserving serialization and 64k
-custom-vocab byte fallback.
+Implement the first v2.0 learned-vocabulary prototype policy:
+protected_hard_soft_morph_seeded_sp64. It should seed suffixes and
+punctuation/protected pieces, seed only high-frequency word_start pieces, allow
+learned merges across soft morphology boundaries, and avoid byte fallback for
+the word_start long-tail.
 ```
 
 Most recent decision artifacts:
@@ -47,6 +47,16 @@ Current script:
 
 ```text
 scripts/materialize_v2_soft_morph_artifacts.py
+scripts/analyze_v2_seed_vocab.py
+```
+
+Current finding:
+
+```text
+64k seed cap covers 95.34% of non-whitespace custom seed occurrences
+suffix inventory is small: 244 unique suffix tokens, 925856 occurrences
+remaining pressure is mostly word_start long-tail + whitespace serialization
+docs/v2_0_soft_morph_seed_findings.md
 ```
 
 Completed:

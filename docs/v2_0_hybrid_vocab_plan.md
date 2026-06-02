@@ -66,6 +66,15 @@ the lossless LLM mode is the expensive one
 v2.0 must reduce whitespace/fallback pressure while keeping lossless decode
 ```
 
+Soft-morph materialization and seed analysis refined the pressure source:
+
+```text
+suffix inventory is small and well-covered
+64k seed coverage reaches 95.34% of non-whitespace custom seed occurrences
+remaining uncovered count is mostly word_start long-tail
+whitespace serialization remains a major pressure source
+```
+
 ## v2.0 Goal
 
 Design a tokenizer that keeps the useful morphology/protection signal while
@@ -208,6 +217,7 @@ Keep the first v2.0 matrix small:
 | `hybrid_hard_unigram_64000` | current hard-boundary hybrid baseline |
 | `hybrid_soft_unigram_64000` | main v2.0 candidate |
 | `protected_sp_unigram_64000` | protected-span-aware learned baseline |
+| `protected_hard_soft_morph_seeded_sp64` | first main soft-morph seeded prototype |
 
 Avoid adding more candidates until these answer the main question.
 
@@ -270,5 +280,22 @@ public summary report
 The JSONL is not a production tokenizer format. It is the small bridge artifact
 for deciding how to seed or constrain a learned vocabulary without turning every
 morphology boundary into a hard no-merge boundary.
+
+Seed finding:
+
+```text
+artifacts/v2_0_soft_morph_seed_vocab_analysis.md
+docs/v2_0_soft_morph_seed_findings.md
+```
+
+First candidate policy:
+
+```text
+seed suffixes and punctuation/protected pieces
+seed only high-frequency word_start pieces
+use learned merges for the word_start long-tail
+allow merges across soft morphology boundaries
+keep protected/script/punctuation boundaries hard
+```
 
 This should be a prototype artifact, not a public production API.
