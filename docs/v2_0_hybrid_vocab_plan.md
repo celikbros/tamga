@@ -12,10 +12,10 @@ v1.8 tiny-LM screening complete enough for direction-setting
 
 ## Decision From v1.8
 
-v1.8 showed two things at the same time:
+v1.8 appears to show two things at the same time:
 
 ```text
-pure custom morphology has strong byte-exposure/data-efficiency signal
+pure custom morphology has a promising byte-exposure signal
 pure custom morphology has serious token/context/compute pressure
 ```
 
@@ -34,12 +34,28 @@ Key iso-byte checkpoint:
 | custom step 1258 | 1670292 | 2.943302 | 2.961183 |
 
 But pure custom needs about 2.5x more tokens/steps to see the same raw byte
-exposure as the 64k SP baseline. Therefore:
+exposure as the 64k SP baseline in the tiny-LM lossless encoding. Advisors
+also flagged a token-accounting discrepancy: earlier prep metrics reported
+custom near the 32k/64k SP fertility band, while the tiny-LM lossless mode is
+much more expensive. This must be audited before treating the iso-byte result
+as a data-efficiency claim.
+
+Therefore:
 
 ```text
 do not hand pure custom to the LLM team as the default tokenizer
 do not throw away the morphology-aware signal
 move to hybrid/vocabulary design
+```
+
+Blocking audit before strong claims:
+
+```text
+compare custom_standard_no_whitespace
+vs custom_lossless_open_vocab
+vs custom_lossless_64000_byte_fallback
+vs sp_bpe_64000_train_only
+on the same filtered v1.8 split
 ```
 
 ## v2.0 Goal
@@ -90,7 +106,9 @@ does not close the gap to pure custom
 still has token-pressure risk
 ```
 
-Use as a baseline, not the final design.
+Use as a baseline/control, not the main v2.0 design. Advisors flagged this as
+a possible worst-of-both-worlds path: it can preserve some boundary signal but
+still carry high token pressure.
 
 ### B. Soft Boundary Hints
 
@@ -110,7 +128,8 @@ lets frequent forms compress
 may reduce the 2.5x token-pressure penalty
 ```
 
-This is the most promising v2.0 direction.
+This is the most promising v2.0 direction and should be the first main
+prototype after the token-accounting audit.
 
 ### C. Protected-Span-Aware Learned Tokenizer
 
@@ -212,7 +231,13 @@ it is at least competitive on tiny-LM BPB under documented budget views
 
 Do not implement a full tokenizer rewrite first.
 
-Build a small v2.0 prototype path:
+First, close the accounting blocker:
+
+```text
+python scripts/audit_v1_8_token_accounting.py
+```
+
+Then build a small v2.0 prototype path:
 
 ```text
 1. materialize custom-morph token stream with explicit hard/soft boundary markers

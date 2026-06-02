@@ -4,16 +4,19 @@ Date: 2026-06-02
 
 ## Current State
 
-The project has completed v1.8 tiny-LM screening and should now move to v2.0
-hybrid/vocabulary design.
+The project has completed enough v1.8 tiny-LM screening to choose the v2.0
+direction, but advisor feedback added one accounting blocker before strong BPB
+claims or v2.0 implementation.
 
 Current next step:
 
 ```text
-Stop v1.8 tiny-LM experimentation unless an advisor asks for a specific extra
-control. Build a v2.0 hybrid/vocabulary prototype that uses custom morphology as
-a hard/soft prior, preserves protected spans, keeps byte fallback lossless, and
-reduces tokens/byte closer to learned SP baselines.
+Run the v1.8 token-accounting audit first. It must explain why earlier prep
+metrics showed custom near SP fertility while the tiny-LM lossless mode showed
+about 2.5x token pressure. After that, build a v2.0 hybrid/vocabulary prototype
+that uses custom morphology as a soft prior, preserves protected spans as hard
+boundaries, keeps byte fallback lossless, and reduces tokens/byte closer to
+learned SP baselines.
 ```
 
 Most recent decision artifacts:
@@ -21,15 +24,22 @@ Most recent decision artifacts:
 - [v1.8 tiny-LM smoke findings](v1_8_tiny_lm_bpb_smoke_findings.md)
 - [v2.0 hybrid vocabulary plan](v2_0_hybrid_vocab_plan.md)
 - [advisor request for v2.0 hybrid/vocab direction](advisor_update_v2_0_hybrid_vocab_request.md)
+- [advisor feedback triage](advisor_feedback_v2_0_triage.md)
 
 v1.8 key result:
 
 ```text
 fixed-token / fixed-step view: SP wins
-approx iso-byte view: custom wins
+approx iso-byte view: custom wins, but not iso-compute
 decision: do not hand pure custom to LLM team as default
 decision: do not discard morphology-aware tokenization
-next: v2.0 hybrid/vocabulary design
+next: token-accounting audit, then v2.0 hybrid/vocabulary design
+```
+
+Current blocker:
+
+```text
+scripts/audit_v1_8_token_accounting.py
 ```
 
 Completed:
