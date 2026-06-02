@@ -5,7 +5,8 @@ Date: 2026-06-02
 ## Status
 
 ```text
-two single-tokenizer smoke runs completed
+two single-tokenizer 500-step smoke runs completed
+SP 200-step iso-byte follow-up completed
 not full matrix
 not final LLM evidence
 ```
@@ -59,17 +60,16 @@ number of training tokens:
 SP approx bytes seen / custom approx bytes seen = 1668920 / 663868 = 2.51x
 ```
 
-At approximately the custom 500-step byte exposure, the closest SP checkpoint is
-step 200:
+At approximately the custom 500-step byte exposure, the closest SP run is
+the 200-step follow-up:
 
-| Tokenizer checkpoint | Approx bytes seen | Valid BPB |
-| --- | ---: | ---: |
-| custom step 500 | 663868 | 4.295575 |
-| sp_bpe_64000 step 200 | 667568 | 5.960158 |
+| Tokenizer checkpoint | Approx bytes seen | Valid BPB | Test BPB |
+| --- | ---: | ---: | ---: |
+| custom step 500 | 663868 | 4.295575 | 4.312877 |
+| sp_bpe_64000 step 200 | 667568 | 5.960158 | 5.984094 |
 
 Under this byte-exposure view, custom is better at the same approximate raw-text
-exposure. However, the test BPB for SP at step 200 was not recorded because the
-current runner evaluates test only at the final step.
+exposure.
 
 ## Interpretation
 
@@ -77,7 +77,7 @@ The smoke result is mixed, not decisive:
 
 ```text
 fixed-token / fixed-step view: SP wins
-approx iso-byte validation view: custom wins
+approx iso-byte view: custom wins
 ```
 
 This is exactly the budget-confound advisors warned about. The current result
@@ -89,18 +89,22 @@ the morphology-aware path.
 Use a narrower iso-byte follow-up before any full matrix:
 
 ```text
-1. Run SP at 200 steps to get final test BPB near custom 500-step byte exposure.
-2. Optionally run custom longer, around 1250-1300 steps, to match SP 500-step byte exposure.
+1. Completed: run SP at 200 steps near custom 500-step byte exposure.
+2. Next optional check: run custom longer, around 1258 steps, to match SP 500-step byte exposure.
 ```
 
-The SP 200-step command is cheaper and should be run first.
+Do not run the full matrix yet. The mixed result says the tokenizer question is
+mostly budget-sensitive and should inform v2.0 vocabulary/hybrid design.
 
 ## Next Command
 
 ```powershell
 python scripts/run_tiny_lm_bpb_probe.py configs\v1_8_tiny_lm_bpb_probe.toml `
-  --tokenizer sp_bpe_64000_train_only `
-  --max-steps 200 `
-  --report-out artifacts\v1_8_tiny_lm_bpb_probe_sp_bpe_64000_200steps.md `
-  --output-dir artifacts\private\v1_8_tiny_lm_bpb_probe_sp_bpe_64000_200steps
+  --tokenizer custom_tr_morph_lossless `
+  --max-steps 1258 `
+  --report-out artifacts\v1_8_tiny_lm_bpb_probe_custom_1258steps.md `
+  --output-dir artifacts\private\v1_8_tiny_lm_bpb_probe_custom_1258steps
 ```
+
+This is longer than the first custom smoke. Run it only if the extra local time
+is acceptable.

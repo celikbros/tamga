@@ -328,4 +328,5 @@ a custom win on clean pilot proves multilingual robustness
 6. Prepared: tiny LM bits-per-byte runner; see docs/v1_8_tiny_lm_bpb_probe_runner.md.
 7. Completed: run full encoding dry-run; see docs/v1_8_tiny_lm_bpb_probe_encoding_findings.md.
 8. Completed: run narrow 500-step smoke for custom_tr_morph_lossless and sp_bpe_64000_train_only.
-9. Next: run iso-byte SP 200-step follow-up; see docs/v1_8_tiny_lm_bpb_smoke_findings.md.
+9. Completed: run iso-byte SP 200-step follow-up; see docs/v1_8_tiny_lm_bpb_smoke_findings.md.
+10. Optional next: run custom 1258-step follow-up to match the SP 500-step byte exposure.

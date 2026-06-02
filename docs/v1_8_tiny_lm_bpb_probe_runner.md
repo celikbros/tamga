@@ -143,3 +143,6 @@ Current 500-step smoke findings:
 ```text
 docs/v1_8_tiny_lm_bpb_smoke_findings.md
 ```
+
+The smoke findings include the SP 200-step iso-byte follow-up. The next optional
+command is a longer custom run around 1258 steps.
