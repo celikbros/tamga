@@ -13,3 +13,4 @@ hard_vocab_limit = false
 split_by_whitespace = true
 remove_extra_whitespaces = false
 train_extremely_large_corpus = false
+max_sentence_length = 16384

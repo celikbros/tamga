@@ -1,0 +1,71 @@
+from pathlib import Path
+import json
+
+from scripts.materialize_v2_raw_hard_candidate_views import (
+    build_raw_hard_view,
+    format_report,
+    materialize_views,
+)
+
+
+def test_build_raw_hard_view_collapses_soft_boundaries():
+    pieces = [
+        {"surface": "kitap", "kind": "word_start", "boundary_before": "hard"},
+        {"surface": "lar", "kind": "suffix", "boundary_before": "soft"},
+        {"surface": " ", "kind": "whitespace", "boundary_before": "hard"},
+        {"surface": "README.md", "kind": "protected:file_like", "boundary_before": "hard"},
+        {"surface": "'", "kind": "apostrophe", "boundary_before": "hard"},
+        {"surface": "den", "kind": "suffix", "boundary_before": "hard"},
+    ]
+
+    view, segments, soft, hard = build_raw_hard_view(pieces)
+
+    assert view == "kitaplar README.md ' den"
+    assert segments == 4
+    assert soft == 1
+    assert hard == 5
+
+
+def test_materialize_raw_hard_views_writes_split_outputs(tmp_path: Path):
+    source_root = tmp_path / "candidate"
+    source_root.mkdir()
+    source_candidate = "source"
+    target_candidate = "raw_hard"
+    for split in ("train", "valid", "test"):
+        (source_root / f"{source_candidate}.{split}.jsonl").write_text(
+            json.dumps(
+                {
+                    "text": "kitaplar README.md'den",
+                    "pieces": [
+                        {"surface": "kitap", "kind": "word_start", "boundary_before": "hard"},
+                        {"surface": "lar", "kind": "suffix", "boundary_before": "soft"},
+                        {"surface": " ", "kind": "whitespace", "boundary_before": "hard"},
+                        {"surface": "README.md", "kind": "protected:file_like", "boundary_before": "hard"},
+                        {"surface": "'", "kind": "apostrophe", "boundary_before": "hard"},
+                        {"surface": "den", "kind": "suffix", "boundary_before": "hard"},
+                    ],
+                },
+                ensure_ascii=False,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+
+    results = materialize_views(
+        source_root=source_root,
+        source_candidate=source_candidate,
+        target_candidate=target_candidate,
+        splits=("train", "valid", "test"),
+        progress=0,
+    )
+    report = format_report(
+        source_root=source_root,
+        source_candidate=source_candidate,
+        target_candidate=target_candidate,
+        results=results,
+    )
+
+    assert len(results) == 3
+    assert all(result.view_out.exists() for result in results)
+    assert "kitaplar README.md ' den" in (source_root / "raw_hard.train.txt").read_text(encoding="utf-8")
+    assert "v2.0 Raw-Hard Candidate Views" in report

@@ -10,11 +10,10 @@ audit work to choose the v2.0 direction.
 Current next step:
 
 ```text
-Implement the first v2.0 learned-vocabulary prototype policy:
-protected_hard_soft_morph_seeded_sp64. It should seed suffixes and
-punctuation/protected pieces, seed only high-frequency word_start pieces, allow
-learned merges across soft morphology boundaries, and avoid byte fallback for
-the word_start long-tail.
+Materialize and probe the revised v2.0 raw-hard candidate:
+protected_hard_raw_sp64. The first token-label serialization candidate failed
+the intrinsic token-pressure gate, so the next candidate keeps hard boundaries
+but collapses soft morphology boundaries back into raw surface text.
 ```
 
 Most recent decision artifacts:
@@ -52,6 +51,8 @@ scripts/analyze_v2_seed_vocab.py
 scripts/select_v2_seed_policy.py
 scripts/materialize_v2_candidate_serialization.py
 scripts/materialize_v2_candidate_split_views.py
+scripts/run_v2_candidate_sentencepiece_probe.py
+scripts/materialize_v2_raw_hard_candidate_views.py
 ```
 
 Current finding:
@@ -78,15 +79,20 @@ report: artifacts/v2_0_seed_policy_selection.md
 Current roadmap phase:
 
 ```text
-Phase 1: candidate train/valid/test serialization completed
+Phase 2: first learned-tokenizer candidate failed intrinsic token-pressure gate
 report: artifacts/v2_0_candidate_serialization.md
 valid/test report: artifacts/v2_0_candidate_split_views.md
+failed SP probe: artifacts/v2_0_candidate_sentencepiece_probe.md
 hard segments/raw byte: 0.130918
 train-view/raw bytes: 1.511092
 valid hard segments/raw byte: 0.130737
 test hard segments/raw byte: 0.130560
-next gate: train one learned tokenizer prototype on the train view and measure
-token pressure on valid/test train views before any tiny-LM screening
+failed candidate valid/test SP tokens/raw byte: 0.398475 / 0.397593
+SP64 baseline valid/test tokens/raw byte: about 0.1566 / 0.1570
+pure custom lossless+64k valid/test tokens/raw byte: about 0.4162 / 0.4194
+decision: do not run tiny-LM on protected_hard_soft_morph_seeded_sp64
+next gate: materialize protected_hard_raw_sp64 and run the same SP token-pressure
+probe before any tiny-LM screening
 ```
 
 Completed:

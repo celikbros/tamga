@@ -30,6 +30,8 @@ token accounting audit
 soft-morph materialization
 seed vocab analysis
 seed policy selection
+candidate train/valid/test serialization
+first candidate SentencePiece token-pressure probe
 ```
 
 Most important results:
@@ -41,9 +43,10 @@ lossless+64k byte fallback is about 2.66x-2.67x SP64 tokens/byte on valid/test
 64k seed policy covers 95.11% of non-whitespace seed occurrences
 suffix inventory is small and cheap to seed
 main remaining pressure is word_start long-tail + whitespace serialization
+first token-label serialization candidate failed token-pressure gate
 ```
 
-## Current Candidate
+## Candidate 1: Rejected
 
 ```text
 protected_hard_soft_morph_seeded_sp64
@@ -60,6 +63,47 @@ seed protected surface tokens only when count >= 10
 seed top word_start pieces up to 64k budget
 do not seed the word_start long-tail by default
 learned tokenizer must handle long-tail without byte fallback explosion
+```
+
+Intrinsic probe result:
+
+```text
+report: artifacts/v2_0_candidate_sentencepiece_probe.md
+valid/test SP tokens/raw byte: 0.398475 / 0.397593
+SP64 baseline valid/test: about 0.1566 / 0.1570
+custom lossless+64k valid/test: about 0.4162 / 0.4194
+decision: reject before tiny-LM screening
+```
+
+Why it failed:
+
+```text
+the train view serialized custom token labels and morphology markers
+view bytes/raw byte was about 1.51
+SentencePiece learned over the synthetic view, not over raw surface text
+token pressure stayed much closer to pure custom lossless than SP64
+```
+
+Additional hygiene note:
+
+```text
+the first SP run skipped 603 too-long train-view lines at the default
+SentencePiece max_sentence_length; future configs set max_sentence_length=16384
+```
+
+## Current Candidate
+
+```text
+protected_hard_raw_sp64
+```
+
+Policy:
+
+```text
+hard boundaries remain train-view whitespace
+soft morphology boundaries collapse back into raw surface text
+custom token labels are not serialized into the learned-tokenizer view
+morphology remains metadata/diagnostic signal, not mandatory token pressure
 ```
 
 ## Roadmap
@@ -87,6 +131,8 @@ Current script:
 ```text
 scripts/materialize_v2_candidate_serialization.py
 scripts/materialize_v2_candidate_split_views.py
+scripts/run_v2_candidate_sentencepiece_probe.py
+scripts/materialize_v2_raw_hard_candidate_views.py
 ```
 
 Current output:
@@ -104,6 +150,7 @@ Phase 1 status:
 
 ```text
 train/valid/test candidate views are materialized
+token-label serialization candidate failed Phase 2 token-pressure gate
 ```
 
 Gate:
@@ -125,7 +172,7 @@ train one small learned tokenizer candidate using the candidate serialization
 Initial candidate:
 
 ```text
-protected_hard_soft_morph_seeded_sp64
+protected_hard_raw_sp64
 ```
 
 Control baselines:
@@ -142,6 +189,7 @@ Gate:
 candidate must materially reduce tokens/byte versus custom_lossless_64000_byte_fallback
 candidate must not destroy protected-span behavior
 candidate must keep visible boundary F1 advantage over SP64
+do not proceed to tiny-LM if token pressure remains near 0.40 tokens/raw byte
 ```
 
 ### Phase 3: Intrinsic Evaluation
@@ -225,10 +273,12 @@ do not run broad tiny-LM matrices before a real v2.0 candidate exists
 
 ## Next Immediate Step
 
-Build Phase 1:
+Build the revised Phase 2 candidate:
 
 ```text
-candidate serialization for protected_hard_soft_morph_seeded_sp64
+materialize protected_hard_raw_sp64
+train/evaluate its 64k SentencePiece prototype
 ```
 
-This is the smallest useful step toward LLM readiness.
+This is the smallest useful step after the first candidate failed the
+token-pressure gate.

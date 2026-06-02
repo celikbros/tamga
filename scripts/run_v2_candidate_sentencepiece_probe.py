@@ -30,6 +30,7 @@ class CandidateSPConfig:
     split_by_whitespace: bool
     remove_extra_whitespaces: bool
     train_extremely_large_corpus: bool
+    max_sentence_length: int
 
     @property
     def model_path(self) -> Path:
@@ -90,6 +91,7 @@ def load_config(path: str | Path) -> CandidateSPConfig:
         split_by_whitespace=bool(settings.get("split_by_whitespace", True)),
         remove_extra_whitespaces=bool(settings.get("remove_extra_whitespaces", False)),
         train_extremely_large_corpus=bool(settings.get("train_extremely_large_corpus", False)),
+        max_sentence_length=int(settings.get("max_sentence_length", 16384)),
     )
 
 
@@ -122,6 +124,7 @@ def train_model(config: CandidateSPConfig, *, force: bool) -> None:
         split_by_whitespace=config.split_by_whitespace,
         remove_extra_whitespaces=config.remove_extra_whitespaces,
         train_extremely_large_corpus=config.train_extremely_large_corpus,
+        max_sentence_length=config.max_sentence_length,
     )
     print(f"wrote_model: {config.model_path}")
     print(f"wrote_vocab: {config.vocab_path}")
@@ -213,6 +216,7 @@ def format_report(config: CandidateSPConfig, rows: list[ViewStats]) -> str:
         f"| vocab_size | {config.vocab_size} |",
         f"| split_by_whitespace | {config.split_by_whitespace} |",
         f"| remove_extra_whitespaces | {config.remove_extra_whitespaces} |",
+        f"| max_sentence_length | {config.max_sentence_length} |",
         "",
         "## Token Pressure",
         "",
