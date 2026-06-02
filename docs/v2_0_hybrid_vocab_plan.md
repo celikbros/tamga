@@ -253,4 +253,22 @@ Build a small v2.0 prototype path:
 3. compare against pure custom, SP 64k, and hard hybrid on the existing v1.8 split
 ```
 
+Prototype materializer:
+
+```text
+scripts/materialize_v2_soft_morph_artifacts.py
+```
+
+It writes:
+
+```text
+private JSONL with per-piece boundary labels
+private seed TSV with custom piece frequencies
+public summary report
+```
+
+The JSONL is not a production tokenizer format. It is the small bridge artifact
+for deciding how to seed or constrain a learned vocabulary without turning every
+morphology boundary into a hard no-merge boundary.
+
 This should be a prototype artifact, not a public production API.

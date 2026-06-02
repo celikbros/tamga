@@ -10,11 +10,11 @@ audit work to choose the v2.0 direction.
 Current next step:
 
 ```text
-Build a v2.0 hybrid/vocabulary prototype that uses custom morphology as a soft
-prior, preserves protected spans as hard boundaries, keeps byte fallback
-lossless, and reduces tokens/byte closer to learned SP baselines. The prototype
-should specifically attack the two pressure sources found by the accounting
-audit: whitespace-preserving serialization and 64k custom-vocab byte fallback.
+Materialize the v2.0 soft-morph/protected-hard prototype artifacts on the full
+16k train split, then use those artifacts to decide the first learned-vocabulary
+candidate. The prototype should specifically attack the two pressure sources
+found by the accounting audit: whitespace-preserving serialization and 64k
+custom-vocab byte fallback.
 ```
 
 Most recent decision artifacts:
@@ -41,6 +41,12 @@ standard custom is close to SP64 in token pressure
 lossless custom is much more expensive
 lossless+64k byte fallback is about 2.66x-2.67x SP64 tokens/byte on valid/test
 report: artifacts/v1_8_token_accounting_audit.md
+```
+
+Current script:
+
+```text
+scripts/materialize_v2_soft_morph_artifacts.py
 ```
 
 Completed:
