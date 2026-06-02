@@ -82,6 +82,12 @@ roundtrip design note
 tokens/byte estimate before training
 ```
 
+Current script:
+
+```text
+scripts/materialize_v2_candidate_serialization.py
+```
+
 Gate:
 
 ```text

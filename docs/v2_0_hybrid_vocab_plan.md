@@ -275,6 +275,7 @@ Prototype materializer:
 
 ```text
 scripts/materialize_v2_soft_morph_artifacts.py
+scripts/materialize_v2_candidate_serialization.py
 ```
 
 It writes:

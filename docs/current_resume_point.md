@@ -50,6 +50,7 @@ Current script:
 scripts/materialize_v2_soft_morph_artifacts.py
 scripts/analyze_v2_seed_vocab.py
 scripts/select_v2_seed_policy.py
+scripts/materialize_v2_candidate_serialization.py
 ```
 
 Current finding:
