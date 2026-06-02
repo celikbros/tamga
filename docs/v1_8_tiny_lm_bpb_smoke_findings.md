@@ -7,6 +7,7 @@ Date: 2026-06-02
 ```text
 two single-tokenizer 500-step smoke runs completed
 SP 200-step iso-byte follow-up completed
+custom 1258-step iso-byte follow-up completed
 not full matrix
 not final LLM evidence
 ```
@@ -31,10 +32,21 @@ tokens_seen = 256000
 
 ## Results
 
+500-step fixed-token smoke:
+
 | Tokenizer | Train tokens/byte | Approx bytes seen | Best valid BPB | Test BPB |
 | --- | ---: | ---: | ---: | ---: |
 | custom_tr_morph_lossless | 0.385619 | 663868 | 4.295575 | 4.312877 |
 | sp_bpe_64000_train_only | 0.153393 | 1668920 | 3.729064 | 3.745292 |
+
+Iso-byte follow-ups:
+
+| Tokenizer checkpoint | Approx bytes seen | Best valid BPB | Test BPB |
+| --- | ---: | ---: | ---: |
+| custom step 500 | 663868 | 4.295575 | 4.312877 |
+| sp_bpe_64000 step 200 | 667568 | 5.960158 | 5.984094 |
+| sp_bpe_64000 step 500 | 1668920 | 3.729064 | 3.745292 |
+| custom step 1258 | 1670292 | 2.943302 | 2.961183 |
 
 ## Fixed-Token View
 
@@ -60,8 +72,8 @@ number of training tokens:
 SP approx bytes seen / custom approx bytes seen = 1668920 / 663868 = 2.51x
 ```
 
-At approximately the custom 500-step byte exposure, the closest SP run is
-the 200-step follow-up:
+At approximately the custom 500-step byte exposure, the closest SP run is the
+200-step follow-up:
 
 | Tokenizer checkpoint | Approx bytes seen | Valid BPB | Test BPB |
 | --- | ---: | ---: | ---: |
@@ -70,6 +82,16 @@ the 200-step follow-up:
 
 Under this byte-exposure view, custom is better at the same approximate raw-text
 exposure.
+
+At approximately the SP 500-step byte exposure, the closest custom run is the
+1258-step follow-up:
+
+| Tokenizer checkpoint | Approx bytes seen | Valid BPB | Test BPB |
+| --- | ---: | ---: | ---: |
+| sp_bpe_64000 step 500 | 1668920 | 3.729064 | 3.745292 |
+| custom step 1258 | 1670292 | 2.943302 | 2.961183 |
+
+Under this byte-exposure view, custom is again better.
 
 ## Interpretation
 
@@ -81,30 +103,41 @@ approx iso-byte view: custom wins
 ```
 
 This is exactly the budget-confound advisors warned about. The current result
-does not justify running the full matrix yet, and it does not justify killing
-the morphology-aware path.
+does not justify killing the morphology-aware path.
+
+It also does not make the pure custom tokenizer LLM-ready. The custom tokenizer
+needs about 2.5x more training tokens/steps to see the same raw byte exposure as
+`sp_bpe_64000_train_only`, and its fixed-token context window covers much less
+text.
 
 ## Decision
 
-Use a narrower iso-byte follow-up before any full matrix:
+The v1.8 screening question is answered enough for planning:
 
 ```text
-1. Completed: run SP at 200 steps near custom 500-step byte exposure.
-2. Next optional check: run custom longer, around 1258 steps, to match SP 500-step byte exposure.
+1. Pure custom has strong byte-exposure/data-efficiency signal.
+2. Pure custom has serious token/context/compute pressure.
+3. Full matrix training is not the next best use of time.
+4. Move the design effort to v2.0 vocabulary/hybrid work.
 ```
 
-Do not run the full matrix yet. The mixed result says the tokenizer question is
-mostly budget-sensitive and should inform v2.0 vocabulary/hybrid design.
+Recommended v2.0 direction:
 
-## Next Command
-
-```powershell
-python scripts/run_tiny_lm_bpb_probe.py configs\v1_8_tiny_lm_bpb_probe.toml `
-  --tokenizer custom_tr_morph_lossless `
-  --max-steps 1258 `
-  --report-out artifacts\v1_8_tiny_lm_bpb_probe_custom_1258steps.md `
-  --output-dir artifacts\private\v1_8_tiny_lm_bpb_probe_custom_1258steps
+```text
+morphology-aware tokenizer should not be thrown away
+pure deterministic custom should not be handed to the LLM team as default
+design a morphology-aware learned vocab / hybrid tokenizer to reduce tokens/byte
 ```
 
-This is longer than the first custom smoke. Run it only if the extra local time
-is acceptable.
+## Next Step
+
+Stop v1.8 tiny-LM experimentation unless an advisor specifically asks for more.
+
+Open v2.0 design around:
+
+```text
+custom morphology as pretokenization prior
+learned vocab/merge design
+byte fallback without excessive sequence pressure
+protected-span preservation
+```

@@ -144,5 +144,6 @@ Current 500-step smoke findings:
 docs/v1_8_tiny_lm_bpb_smoke_findings.md
 ```
 
-The smoke findings include the SP 200-step iso-byte follow-up. The next optional
-command is a longer custom run around 1258 steps.
+The smoke findings include the SP 200-step and custom 1258-step iso-byte
+follow-ups. v1.8 tiny-LM experimentation is sufficient for planning; the next
+work should be v2.0 hybrid/vocabulary design.
