@@ -10,11 +10,15 @@ audit work to choose the v2.0 direction.
 Current next step:
 
 ```text
-Design a finite-vocabulary protected-aware v2.0 candidate. The raw-soft-marker
-candidate improved some morphology categories but failed without operational
-protection. A protected-aware upper-bound diagnostic passed protected spans and
-raised challenge F1, so the next real candidate must make protection operational
-without relying on arbitrary open-vocabulary protected tokens.
+Write the finite protected-aware v2.0 tokenizer design/spec before more
+candidate probing. Advisors converged on an Option 1 + Option 3 hybrid:
+hard protected-span pretokenization, learned BPE/Unigram inside finite
+boundaries, a finite protected-subword/byte fallback path, optional frequent
+protected user-defined symbols, and morphology as a soft prior.
+
+Do not add another ad-hoc candidate until this spec is written. The next real
+candidate must make protection operational without relying on arbitrary
+open-vocabulary protected tokens or placeholder payload side channels.
 ```
 
 Most recent decision artifacts:
@@ -24,6 +28,7 @@ Most recent decision artifacts:
 - [v2.0 roadmap review](v2_0_roadmap_review.md)
 - [advisor request for v2.0 hybrid/vocab direction](advisor_update_v2_0_hybrid_vocab_request.md)
 - [advisor feedback triage](advisor_feedback_v2_0_triage.md)
+- [advisor feedback: protected-aware architecture](advisor_feedback_v2_0_protected_aware_triage.md)
 
 v1.8 key result:
 
@@ -116,7 +121,10 @@ protected-aware upper-bound protected span preservation: 25/25
 decision: do not run tiny-LM on protected_hard_soft_marker_raw_sp64
 decision: protected-aware routing is necessary, but open-vocab protected tokens
 are not final LLM-safe
-next gate: design finite protected-aware encoding/fallback before tiny-LM
+advisor decision: use the Option 1 + Option 3 hybrid
+LLM-safe invariant: decode(ids) must be stateless
+rejected: placeholder + payload side-channel decoding
+next gate: write finite protected-aware encoding/fallback spec before tiny-LM
 ```
 
 Completed:

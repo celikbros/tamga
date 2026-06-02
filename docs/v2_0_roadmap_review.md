@@ -7,7 +7,7 @@ Date: 2026-06-02
 ```text
 v1.x deterministic Turkish morphology core: useful but not LLM-final
 v1.8 tiny-LM smoke: informative but not decisive
-v2.0 direction: learned hybrid vocabulary with morphology as soft prior
+v2.0 direction: finite protected-aware learned hybrid
 ```
 
 The project should not return to broad hand-written morphology rules now. The
@@ -15,6 +15,39 @@ main engineering problem is no longer "can we split Turkish suffixes?" It is:
 
 ```text
 can we keep morphology/protection signal while reducing lossless LM token pressure?
+```
+
+## Advisor Decision
+
+Recent advisor feedback converges on an Option 1 + Option 3 hybrid:
+
+```text
+hard pretokenization for protected spans and text regions
+learned BPE/Unigram inside finite boundaries
+dedicated protected-subword/byte fallback for protected spans
+optional user-defined symbols for frequent protected literals/patterns
+morphology as soft prior / marker / seed
+plain SP64 remains the null hypothesis
+```
+
+Key invariant:
+
+```text
+LLM-safe means stateless decode(ids)
+```
+
+Rejected direction:
+
+```text
+placeholder + side-channel payload decoding
+```
+
+Reason:
+
+```text
+it is not a pure function of token IDs
+generation can emit malformed placeholder sequences
+it does not fit ordinary HF/vLLM-style tokenizer expectations
 ```
 
 ## What Is Done
@@ -35,6 +68,7 @@ first candidate SentencePiece token-pressure probe
 raw-hard candidate SentencePiece token-pressure probe
 raw-hard candidate visible intrinsic eval
 raw-soft-marker candidate token-pressure and visible intrinsic eval
+advisor feedback triage for finite protected-aware architecture
 ```
 
 Most important results:
@@ -53,6 +87,7 @@ raw-soft-marker candidate improved morphology categories but failed protected
 span and overall visible gates
 protected-aware upper-bound diagnostic shows protection routing is the missing
 piece
+open-vocab protected tokens are diagnostic only, not final LLM-safe design
 ```
 
 ## Candidate 1: Rejected
@@ -235,7 +270,7 @@ the next candidate must solve protection at encode/vocab level
 ## Current Candidate Need
 
 ```text
-finite-vocabulary protected-aware learned candidate
+finite protected-aware learned candidate
 ```
 
 Required behavior:
@@ -243,9 +278,24 @@ Required behavior:
 ```text
 protected spans are losslessly shielded during learned tokenization
 protected handling must not depend on arbitrary open-vocabulary IDs
+decode(ids) must remain stateless
+protected spans need a finite protected-subword/byte fallback path
+frequent protected literals/patterns may be promoted as user-defined symbols
 compression should stay closer to raw-hard than pure custom
 morphology hints may be soft markers or metadata, but they cannot break
 protected spans
+```
+
+Immediate next step:
+
+```text
+write the finite protected-aware tokenizer design/spec before another candidate
+protected categories
+protected internal encoding strategy
+byte fallback token set
+UDS promotion policy
+decode invariants
+evaluation gates
 ```
 
 ## Roadmap
