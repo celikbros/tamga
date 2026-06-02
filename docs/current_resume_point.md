@@ -10,10 +10,10 @@ audit work to choose the v2.0 direction.
 Current next step:
 
 ```text
-Redesign the v2.0 candidate after protected_hard_raw_sp64 passed token pressure
-but failed Phase 3 visible intrinsic diagnostics. Do not run tiny-LM yet.
-The next candidate must keep SP-like compression while restoring protected-span
-and morphology-boundary behavior.
+Materialize and probe the next v2.0 candidate:
+protected_hard_soft_marker_raw_sp64. It keeps hard-boundary whitespace but
+serializes soft morphology boundaries with a private-use marker instead of
+custom token labels. Do not run tiny-LM yet.
 ```
 
 Most recent decision artifacts:
@@ -54,6 +54,7 @@ scripts/materialize_v2_candidate_split_views.py
 scripts/run_v2_candidate_sentencepiece_probe.py
 scripts/materialize_v2_raw_hard_candidate_views.py
 scripts/evaluate_v2_raw_hard_candidate_intrinsic.py
+scripts/materialize_v2_raw_soft_marker_candidate_views.py
 ```
 
 Current finding:
@@ -102,6 +103,7 @@ decision: do not run tiny-LM on protected_hard_soft_morph_seeded_sp64
 decision: do not run tiny-LM on protected_hard_raw_sp64
 next gate: design a candidate that preserves protected spans and improves
 visible boundary F1 without returning to pure custom token pressure
+next candidate: protected_hard_soft_marker_raw_sp64
 ```
 
 Completed:

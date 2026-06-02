@@ -167,6 +167,32 @@ avoid serializing custom token labels into the training view
 avoid arbitrary open-vocabulary tokens as fixed model IDs
 ```
 
+## Candidate 3: Planned
+
+```text
+protected_hard_soft_marker_raw_sp64
+```
+
+Policy:
+
+```text
+hard boundaries remain train-view whitespace
+soft morphology boundaries are represented by a private-use marker
+raw surface text is preserved around the marker
+custom token labels such as word-start markers and suffix prefixes are not
+serialized
+```
+
+Rationale:
+
+```text
+candidate 1 kept morphology but serialized custom token labels and was too
+expensive
+candidate 2 restored compression but erased morphology signal
+candidate 3 tests whether a minimal soft-boundary marker can recover visible
+boundary behavior without returning to pure custom token pressure
+```
+
 ## Roadmap
 
 ### Phase 1: Candidate Serialization
@@ -195,6 +221,7 @@ scripts/materialize_v2_candidate_split_views.py
 scripts/run_v2_candidate_sentencepiece_probe.py
 scripts/materialize_v2_raw_hard_candidate_views.py
 scripts/evaluate_v2_raw_hard_candidate_intrinsic.py
+scripts/materialize_v2_raw_soft_marker_candidate_views.py
 ```
 
 Current output:
@@ -236,7 +263,7 @@ train one small learned tokenizer candidate using the candidate serialization
 Initial candidate:
 
 ```text
-unnamed next hybrid candidate
+protected_hard_soft_marker_raw_sp64
 ```
 
 Control baselines:
