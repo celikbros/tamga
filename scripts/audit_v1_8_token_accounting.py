@@ -15,7 +15,6 @@ from scripts.run_tiny_lm_bpb_probe import (  # noqa: E402
     BYTE_OFFSET,
     BYTE_VOCAB_SIZE,
     EOS_ID,
-    build_custom_vocab,
     encode_custom_split,
     encode_sentencepiece_split,
     load_split_texts,
@@ -116,6 +115,42 @@ def _count_custom_lossless_fallback(
     )
 
 
+def build_custom_vocab_with_progress(
+    lines: list[str],
+    *,
+    max_vocab_size: int | None,
+    progress_interval: int,
+) -> dict[str, int]:
+    tokenizer = TurkishTokenizer(preserve_whitespace=True)
+    counts: Counter[str] = Counter()
+    total = len(lines)
+    for index, line in enumerate(lines, start=1):
+        counts.update(tokenizer.encode(line))
+        if progress_interval > 0 and (index % progress_interval == 0 or index == total):
+            print(
+                f"  custom vocab scan {index:,}/{total:,} train lines "
+                f"unique_source_tokens={len(counts):,}",
+                flush=True,
+            )
+
+    vocab = {"<pad>": 0, "<unk>": 1, "<eos>": EOS_ID}
+    for byte in range(BYTE_VOCAB_SIZE):
+        vocab[f"<byte_{byte:02x}>"] = BYTE_OFFSET + byte
+
+    reserved = len(vocab)
+    if max_vocab_size is not None and max_vocab_size < reserved:
+        raise ValueError(
+            f"custom max_vocab_size={max_vocab_size} is too small; "
+            f"needs at least {reserved} for specials plus byte fallback"
+        )
+
+    limit = max_vocab_size - reserved if max_vocab_size is not None else None
+    for token, _count in counts.most_common(limit):
+        if token not in vocab:
+            vocab[token] = len(vocab)
+    return vocab
+
+
 def _count_sentencepiece(
     *,
     mode: str,
@@ -146,6 +181,7 @@ def audit_token_accounting(
     sp_model: Path | None,
     custom_vocab_size: int,
     max_lines: int | None,
+    progress_interval: int = 0,
 ) -> list[AccountingRow]:
     raw_splits = load_split_texts(split_dir)
     splits = {
@@ -163,7 +199,11 @@ def audit_token_accounting(
         flush=True,
     )
     print("Building custom lossless train-only vocabulary...", flush=True)
-    custom_vocab = build_custom_vocab(splits["train"], max_vocab_size=custom_vocab_size)
+    custom_vocab = build_custom_vocab_with_progress(
+        splits["train"],
+        max_vocab_size=custom_vocab_size,
+        progress_interval=progress_interval,
+    )
 
     rows: list[AccountingRow] = []
     for split_name in ("train", "valid", "test"):
@@ -290,6 +330,12 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--custom-vocab-size", type=int, default=64000)
     parser.add_argument("--max-lines", type=int)
+    parser.add_argument(
+        "--progress",
+        type=int,
+        default=1000,
+        help="Print progress every N train lines while building the custom vocabulary. Use 0 to disable.",
+    )
     parser.add_argument("--out", default="artifacts/v1_8_token_accounting_audit.md")
     args = parser.parse_args(argv)
 
@@ -305,6 +351,7 @@ def main(argv: list[str] | None = None) -> int:
         sp_model=sp_model,
         custom_vocab_size=args.custom_vocab_size,
         max_lines=args.max_lines,
+        progress_interval=args.progress,
     )
     report = format_report(
         split_dir=split_dir,
