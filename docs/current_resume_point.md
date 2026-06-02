@@ -4,19 +4,17 @@ Date: 2026-06-02
 
 ## Current State
 
-The project has completed enough v1.8 tiny-LM screening to choose the v2.0
-direction, but advisor feedback added one accounting blocker before strong BPB
-claims or v2.0 implementation.
+The project has completed enough v1.8 tiny-LM screening and token accounting
+audit work to choose the v2.0 direction.
 
 Current next step:
 
 ```text
-Run the v1.8 token-accounting audit first. It must explain why earlier prep
-metrics showed custom near SP fertility while the tiny-LM lossless mode showed
-about 2.5x token pressure. After that, build a v2.0 hybrid/vocabulary prototype
-that uses custom morphology as a soft prior, preserves protected spans as hard
-boundaries, keeps byte fallback lossless, and reduces tokens/byte closer to
-learned SP baselines.
+Build a v2.0 hybrid/vocabulary prototype that uses custom morphology as a soft
+prior, preserves protected spans as hard boundaries, keeps byte fallback
+lossless, and reduces tokens/byte closer to learned SP baselines. The prototype
+should specifically attack the two pressure sources found by the accounting
+audit: whitespace-preserving serialization and 64k custom-vocab byte fallback.
 ```
 
 Most recent decision artifacts:
@@ -33,13 +31,16 @@ fixed-token / fixed-step view: SP wins
 approx iso-byte view: custom wins, but not iso-compute
 decision: do not hand pure custom to LLM team as default
 decision: do not discard morphology-aware tokenization
-next: token-accounting audit, then v2.0 hybrid/vocabulary design
+next: v2.0 hybrid/vocabulary prototype
 ```
 
-Current blocker:
+Token-accounting audit result:
 
 ```text
-scripts/audit_v1_8_token_accounting.py
+standard custom is close to SP64 in token pressure
+lossless custom is much more expensive
+lossless+64k byte fallback is about 2.66x-2.67x SP64 tokens/byte on valid/test
+report: artifacts/v1_8_token_accounting_audit.md
 ```
 
 Completed:

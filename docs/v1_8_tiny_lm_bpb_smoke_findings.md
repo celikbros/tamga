@@ -8,6 +8,7 @@ Date: 2026-06-02
 two single-tokenizer 500-step smoke runs completed
 SP 200-step iso-byte follow-up completed
 custom 1258-step iso-byte follow-up completed
+token-accounting audit completed
 not full matrix
 not final LLM evidence
 ```
@@ -110,13 +111,51 @@ needs about 2.5x more training tokens/steps to see the same raw byte exposure as
 `sp_bpe_64000_train_only`, and its fixed-token context window covers much less
 text.
 
+## Token Accounting Audit
+
+The follow-up accounting audit explains why earlier prep metrics showed custom
+near the SP fertility band while the tiny-LM run showed much higher pressure.
+
+Report:
+
+```text
+artifacts/v1_8_token_accounting_audit.md
+```
+
+Key valid/test results:
+
+| Mode | Split | Tokens/byte | Notes |
+| --- | --- | ---: | --- |
+| custom_standard_no_whitespace | valid | 0.170863 | older intrinsic/fertility-style view |
+| custom_lossless_open_vocab | valid | 0.280095 | whitespace-preserving, no vocab cap |
+| custom_lossless_64000_byte_fallback | valid | 0.416206 | tiny-LM custom mode |
+| sp_bpe_64000_train_only | valid | 0.156571 | SP64 baseline |
+| custom_standard_no_whitespace | test | 0.170504 | older intrinsic/fertility-style view |
+| custom_lossless_open_vocab | test | 0.279405 | whitespace-preserving, no vocab cap |
+| custom_lossless_64000_byte_fallback | test | 0.419445 | tiny-LM custom mode |
+| sp_bpe_64000_train_only | test | 0.157028 | SP64 baseline |
+
+Conclusion:
+
+```text
+the apparent discrepancy is an encoding-mode difference
+standard custom is close to SP64 in token pressure
+lossless custom adds substantial whitespace serialization pressure
+64k byte fallback adds further held-out pressure
+the tiny-LM custom mode is about 2.66x-2.67x SP64 tokens/byte on valid/test
+```
+
+Therefore the iso-byte follow-up is a promising screening signal, not a strong
+data-efficiency proof. It used more optimization steps and a much more expensive
+serialization.
+
 ## Decision
 
 The v1.8 screening question is answered enough for planning:
 
 ```text
-1. Pure custom has strong byte-exposure/data-efficiency signal.
-2. Pure custom has serious token/context/compute pressure.
+1. Pure custom has a promising but confounded byte-exposure signal.
+2. Pure custom has confirmed token/context/compute pressure in lossless mode.
 3. Full matrix training is not the next best use of time.
 4. Move the design effort to v2.0 vocabulary/hybrid work.
 ```

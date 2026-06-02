@@ -59,6 +59,46 @@ Implementation added:
 scripts/audit_v1_8_token_accounting.py
 ```
 
+## Accounting Audit Result
+
+The audit was run on the same filtered v1.8 split:
+
+```text
+artifacts/v1_8_token_accounting_audit.md
+```
+
+The discrepancy is resolved. The earlier near-SP fertility view used the
+standard, non-whitespace-preserving custom encoding. The tiny-LM BPB probe used
+the generation-safe lossless custom encoding with a 64k train-only vocabulary
+and UTF-8 byte fallback for source tokens outside that vocabulary.
+
+Key valid/test rows:
+
+| Mode | Split | Tokens/byte | Bytes/token | Notes |
+| --- | --- | ---: | ---: | --- |
+| custom_standard_no_whitespace | valid | 0.170863 | 5.852639 | older intrinsic/fertility-style view |
+| custom_lossless_open_vocab | valid | 0.280095 | 3.570219 | whitespace-preserving, no vocab cap |
+| custom_lossless_64000_byte_fallback | valid | 0.416206 | 2.402658 | tiny-LM custom mode |
+| sp_bpe_64000_train_only | valid | 0.156571 | 6.386899 | SP64 baseline |
+| custom_standard_no_whitespace | test | 0.170504 | 5.864981 | older intrinsic/fertility-style view |
+| custom_lossless_open_vocab | test | 0.279405 | 3.579031 | whitespace-preserving, no vocab cap |
+| custom_lossless_64000_byte_fallback | test | 0.419445 | 2.384101 | tiny-LM custom mode |
+| sp_bpe_64000_train_only | test | 0.157028 | 6.368278 | SP64 baseline |
+
+Result:
+
+```text
+standard custom is close to SP64 in token pressure
+lossless whitespace preservation raises token pressure substantially
+64k byte fallback raises it further on held-out splits
+the tiny-LM custom mode is about 2.66x-2.67x SP64 tokens/byte on valid/test
+```
+
+This validates the concern: the pure custom LLM serialization is too expensive
+as a final tokenizer candidate. It also clarifies the useful path: v2.0 should
+not try to ship pure custom; it should preserve morphology/protection signal
+while learning a compact vocabulary and reducing fallback pressure.
+
 ## v1.8 Interpretation Update
 
 The current v1.8 finding should be framed as:
@@ -108,12 +148,13 @@ project decision: keep hard pretok as a baseline, make soft morphology the main 
 
 ## Next Actions
 
-1. Run the token accounting audit.
-2. Update the v1.8 findings with the audit result.
-3. Decide whether an SP64 1258-step iso-compute run is still necessary.
-4. Prototype the v2.0 soft-morph learned vocabulary path.
+1. Update the v1.8 findings with the audit result.
+2. Decide whether an SP64 1258-step iso-compute run is still necessary.
+3. Prototype the v2.0 soft-morph learned vocabulary path.
 
 ## Guardrail
 
-Do not start a large v2.0 tokenizer rewrite until the accounting audit is
-recorded. This keeps the project from building on a misleading measurement.
+Do not start a large v2.0 tokenizer rewrite. The accounting audit is now
+recorded, so the next safe step is a small v2.0 prototype that targets the
+specific pressure sources found here: whitespace serialization and byte fallback
+from a capped custom vocabulary.

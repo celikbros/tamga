@@ -37,8 +37,9 @@ But pure custom needs about 2.5x more tokens/steps to see the same raw byte
 exposure as the 64k SP baseline in the tiny-LM lossless encoding. Advisors
 also flagged a token-accounting discrepancy: earlier prep metrics reported
 custom near the 32k/64k SP fertility band, while the tiny-LM lossless mode is
-much more expensive. This must be audited before treating the iso-byte result
-as a data-efficiency claim.
+much more expensive. The audit resolved this as an encoding-mode difference.
+The iso-byte result should still be treated as a screening signal rather than a
+data-efficiency proof because it is not iso-compute.
 
 Therefore:
 
@@ -48,14 +49,21 @@ do not throw away the morphology-aware signal
 move to hybrid/vocabulary design
 ```
 
-Blocking audit before strong claims:
+Accounting audit result:
+
+| Mode | Valid tokens/byte | Test tokens/byte |
+| --- | ---: | ---: |
+| custom_standard_no_whitespace | 0.170863 | 0.170504 |
+| custom_lossless_open_vocab | 0.280095 | 0.279405 |
+| custom_lossless_64000_byte_fallback | 0.416206 | 0.419445 |
+| sp_bpe_64000_train_only | 0.156571 | 0.157028 |
+
+Conclusion:
 
 ```text
-compare custom_standard_no_whitespace
-vs custom_lossless_open_vocab
-vs custom_lossless_64000_byte_fallback
-vs sp_bpe_64000_train_only
-on the same filtered v1.8 split
+the older custom view was not generation-safe
+the lossless LLM mode is the expensive one
+v2.0 must reduce whitespace/fallback pressure while keeping lossless decode
 ```
 
 ## v2.0 Goal
@@ -231,13 +239,13 @@ it is at least competitive on tiny-LM BPB under documented budget views
 
 Do not implement a full tokenizer rewrite first.
 
-First, close the accounting blocker:
+The accounting blocker is now closed:
 
 ```text
-python scripts/audit_v1_8_token_accounting.py
+artifacts/v1_8_token_accounting_audit.md
 ```
 
-Then build a small v2.0 prototype path:
+Build a small v2.0 prototype path:
 
 ```text
 1. materialize custom-morph token stream with explicit hard/soft boundary markers
