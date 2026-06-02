@@ -51,6 +51,7 @@ scripts/materialize_v2_soft_morph_artifacts.py
 scripts/analyze_v2_seed_vocab.py
 scripts/select_v2_seed_policy.py
 scripts/materialize_v2_candidate_serialization.py
+scripts/materialize_v2_candidate_split_views.py
 ```
 
 Current finding:
@@ -77,9 +78,12 @@ report: artifacts/v2_0_seed_policy_selection.md
 Current roadmap phase:
 
 ```text
-Phase 1: candidate serialization
-turn selected seed policy + soft/hard boundary JSONL into a training-ready
-prototype corpus before training any learned tokenizer
+Phase 1: candidate train serialization completed
+report: artifacts/v2_0_candidate_serialization.md
+hard segments/raw byte: 0.130918
+train-view/raw bytes: 1.511092
+next gate: materialize valid/test candidate views with the train-selected seed
+policy before training/evaluating one learned tokenizer
 ```
 
 Completed:

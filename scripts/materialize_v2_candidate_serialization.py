@@ -37,6 +37,10 @@ class CandidateStats:
     def train_view_bytes_per_raw_byte(self) -> float:
         return self.train_view_bytes / self.raw_bytes if self.raw_bytes else 0.0
 
+    @property
+    def hard_segments_per_raw_byte(self) -> float:
+        return self.hard_segments / self.raw_bytes if self.raw_bytes else 0.0
+
 
 def load_selected_tokens(path: str | Path) -> set[str]:
     selected: set[str] = set()
@@ -244,8 +248,8 @@ def format_report(
             "",
             "## Summary",
             "",
-            "| Lines | Raw bytes | Train-view bytes | Train-view/raw bytes | Pieces | Selected pieces | Selected piece rate | Unselected non-whitespace pieces | Unselected word_start pieces | Whitespace pieces | Protected pieces | Soft boundaries | Hard segments | Max segments/line |",
-            "| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+            "| Lines | Raw bytes | Train-view bytes | Train-view/raw bytes | Pieces | Selected pieces | Selected piece rate | Unselected non-whitespace pieces | Unselected word_start pieces | Whitespace pieces | Protected pieces | Soft boundaries | Hard segments | Hard segments/raw byte | Max segments/line |",
+            "| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
             (
                 f"| {stats.lines} | {stats.raw_bytes} | {stats.train_view_bytes} | "
                 f"{stats.train_view_bytes_per_raw_byte:.6f} | {stats.pieces} | "
@@ -253,12 +257,13 @@ def format_report(
                 f"{stats.unselected_pieces} | {stats.unselected_word_start_pieces} | "
                 f"{stats.whitespace_pieces} | {stats.protected_pieces} | "
                 f"{stats.soft_boundaries} | {stats.hard_segments} | "
+                f"{stats.hard_segments_per_raw_byte:.6f} | "
                 f"{stats.max_segments_line} |"
             ),
             "",
             "## Serialization Rules",
             "",
-            f"- Soft morphology boundaries are represented with `{SOFT_MARKER}` in the train view.",
+            "- Soft morphology boundaries are represented with `SOFT_MARKER_U+E000` in the train view.",
             "- Hard boundaries become train-view whitespace.",
             "- Whitespace pieces are preserved in the candidate JSONL, but not as separate train-view tokens.",
             "- Selected seed membership is recorded per piece in the candidate JSONL.",
@@ -267,6 +272,8 @@ def format_report(
             "",
             "Before training, verify that this train view does not recreate pure-custom",
             "token pressure and that the JSONL remains the source for lossless decode.",
+            "The hard-segment/raw-byte value is only a segmentation floor; the learned",
+            "tokenizer can still split hard segments into more tokens.",
         ]
     ) + "\n"
 

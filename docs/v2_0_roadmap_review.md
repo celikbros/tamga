@@ -86,6 +86,22 @@ Current script:
 
 ```text
 scripts/materialize_v2_candidate_serialization.py
+scripts/materialize_v2_candidate_split_views.py
+```
+
+Current output:
+
+```text
+artifacts/v2_0_candidate_serialization.md
+hard segments/raw byte: 0.130918
+train-view/raw bytes: 1.511092
+```
+
+Remaining Phase 1 work:
+
+```text
+materialize the same soft/hard boundary and candidate serialization views for
+valid and test splits using the train-selected seed policy
 ```
 
 Gate:
@@ -93,6 +109,7 @@ Gate:
 ```text
 do not train a tokenizer if the serialization itself cannot be decoded losslessly
 or if it already looks close to pure custom token pressure
+do not evaluate a learned tokenizer on train-only serialization
 ```
 
 ### Phase 2: Learned Tokenizer Prototype
