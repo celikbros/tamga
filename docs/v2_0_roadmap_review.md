@@ -51,6 +51,8 @@ raw-hard candidate passed token-pressure gate
 raw-hard candidate failed visible intrinsic gate
 raw-soft-marker candidate improved morphology categories but failed protected
 span and overall visible gates
+protected-aware upper-bound diagnostic shows protection routing is the missing
+piece
 ```
 
 ## Candidate 1: Rejected
@@ -209,6 +211,18 @@ protected span preservation: 1/25
 decision: reject before tiny-LM screening
 ```
 
+Protected-aware upper-bound diagnostic:
+
+```text
+same report: artifacts/v2_0_raw_soft_marker_candidate_intrinsic_eval.md
+protected-aware challenge boundary F1: 0.8259
+protected-aware protected span preservation: 25/25
+protected-aware multilingual smoke F1: 0.8015
+interpretation: operational protection routing is necessary
+caveat: this row uses protected spans as atomic source tokens and is not a
+final finite-vocabulary LLM design
+```
+
 Interpretation:
 
 ```text
@@ -221,14 +235,14 @@ the next candidate must solve protection at encode/vocab level
 ## Current Candidate Need
 
 ```text
-protected-aware learned candidate
+finite-vocabulary protected-aware learned candidate
 ```
 
 Required behavior:
 
 ```text
-protected spans are atomic or otherwise losslessly shielded during learned
-tokenization
+protected spans are losslessly shielded during learned tokenization
+protected handling must not depend on arbitrary open-vocabulary IDs
 compression should stay closer to raw-hard than pure custom
 morphology hints may be soft markers or metadata, but they cannot break
 protected spans

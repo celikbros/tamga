@@ -1,5 +1,6 @@
 from scripts.compare_tokenizers import boundary_score
 from scripts.evaluate_v2_soft_marker_candidate_intrinsic import (
+    encode_protected_aware_soft_marker_sentencepiece,
     encode_soft_marker_sentencepiece,
     raw_soft_marker_segments,
 )
@@ -32,3 +33,10 @@ def test_soft_marker_boundary_can_score_against_suffix_gold():
     gold = [f"{WORD_START}kitap", "+lar", "+dan"]
 
     assert boundary_score(tokens, gold).f1 == 1.0
+
+
+def test_protected_aware_encoder_keeps_file_like_span_atomic():
+    tokens = encode_protected_aware_soft_marker_sentencepiece("README.md'den geldim", FakeProcessor())
+
+    assert tokens[:3] == [f"{WORD_START}README.md", "'", "+den"]
+    assert any(token.startswith(WORD_START + "gel") for token in tokens)

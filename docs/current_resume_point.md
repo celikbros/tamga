@@ -10,9 +10,11 @@ audit work to choose the v2.0 direction.
 Current next step:
 
 ```text
-Design a protected-aware v2.0 candidate. The raw-soft-marker candidate improved
-some morphology categories but still failed the visible intrinsic gate and did
-not preserve protected spans. Do not run tiny-LM yet.
+Design a finite-vocabulary protected-aware v2.0 candidate. The raw-soft-marker
+candidate improved some morphology categories but failed without operational
+protection. A protected-aware upper-bound diagnostic passed protected spans and
+raised challenge F1, so the next real candidate must make protection operational
+without relying on arbitrary open-vocabulary protected tokens.
 ```
 
 Most recent decision artifacts:
@@ -109,9 +111,12 @@ soft-marker intrinsic eval: artifacts/v2_0_raw_soft_marker_candidate_intrinsic_e
 soft-marker valid/test SP tokens/raw byte: 0.236749 / 0.236700
 soft-marker challenge boundary F1: 0.6724
 soft-marker protected span preservation: 1/25
+protected-aware upper-bound challenge boundary F1: 0.8259
+protected-aware upper-bound protected span preservation: 25/25
 decision: do not run tiny-LM on protected_hard_soft_marker_raw_sp64
-next gate: protected spans must become operational in the tokenizer, not merely
-metadata in the candidate JSONL
+decision: protected-aware routing is necessary, but open-vocab protected tokens
+are not final LLM-safe
+next gate: design finite protected-aware encoding/fallback before tiny-LM
 ```
 
 Completed:

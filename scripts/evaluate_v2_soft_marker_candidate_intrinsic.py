@@ -138,28 +138,111 @@ def _append_surface_token(tokens: list[str], surface: str, *, word_start: bool, 
         tokens.append(surface)
 
 
+def encode_marked_segment(surface: str, *, starts_after_space: bool, processor) -> list[str]:
+    logical_tokens: list[str] = []
+    pieces = processor.EncodeAsPieces(surface)
+    first_output_in_segment = True
+    suffix_mode = False
+    for piece in pieces:
+        piece_surface = strip_sp_word_start(piece)
+        if not piece_surface:
+            continue
+        parts = piece_surface.split(SOFT_MARKER)
+        for index, part in enumerate(parts):
+            if index > 0:
+                suffix_mode = True
+            _append_surface_token(
+                logical_tokens,
+                part,
+                word_start=first_output_in_segment and starts_after_space and not suffix_mode,
+                suffix=suffix_mode,
+            )
+            if part:
+                first_output_in_segment = False
+    return logical_tokens
+
+
 def encode_soft_marker_sentencepiece(text: str, processor) -> list[str]:
     logical_tokens: list[str] = []
     for segment in raw_soft_marker_segments(text):
-        pieces = processor.EncodeAsPieces(segment.surface)
-        first_output_in_segment = True
-        suffix_mode = False
-        for piece in pieces:
-            surface = strip_sp_word_start(piece)
-            if not surface:
-                continue
-            parts = surface.split(SOFT_MARKER)
-            for index, part in enumerate(parts):
-                if index > 0:
-                    suffix_mode = True
-                _append_surface_token(
-                    logical_tokens,
-                    part,
-                    word_start=first_output_in_segment and segment.starts_after_space and not suffix_mode,
-                    suffix=suffix_mode,
+        logical_tokens.extend(
+            encode_marked_segment(
+                segment.surface,
+                starts_after_space=segment.starts_after_space,
+                processor=processor,
+            )
+        )
+    return logical_tokens
+
+
+def encode_protected_aware_soft_marker_sentencepiece(text: str, processor) -> list[str]:
+    tokenizer = TurkishTokenizer(preserve_whitespace=True)
+    pieces = analyze_line(text, tokenizer)
+    logical_tokens: list[str] = []
+    segment = ""
+    starts_after_space = True
+    pending_space = True
+
+    def flush() -> None:
+        nonlocal segment
+        if segment:
+            logical_tokens.extend(
+                encode_marked_segment(
+                    segment,
+                    starts_after_space=starts_after_space,
+                    processor=processor,
                 )
-                if part:
-                    first_output_in_segment = False
+            )
+            segment = ""
+
+    for piece in pieces:
+        if piece.kind == "whitespace":
+            flush()
+            pending_space = True
+            continue
+
+        if piece.kind.startswith("protected:"):
+            flush()
+            _append_surface_token(
+                logical_tokens,
+                piece.surface,
+                word_start=pending_space,
+                suffix=False,
+            )
+            pending_space = False
+            continue
+
+        if piece.kind == "apostrophe":
+            flush()
+            logical_tokens.append(piece.surface)
+            pending_space = False
+            continue
+
+        if piece.kind == "suffix" and piece.boundary_before == "hard":
+            flush()
+            _append_surface_token(
+                logical_tokens,
+                piece.surface,
+                word_start=False,
+                suffix=True,
+            )
+            pending_space = False
+            continue
+
+        if piece.boundary_before == "soft":
+            segment += SOFT_MARKER + piece.surface
+            continue
+
+        if piece.boundary_before == "hard":
+            flush()
+            segment = piece.surface
+            starts_after_space = pending_space
+            pending_space = False
+            continue
+
+        segment += piece.surface
+
+    flush()
     return logical_tokens
 
 
@@ -216,6 +299,7 @@ def evaluate_cases_for_models(
     ]
     output: dict[str, list[ModelCaseResult]] = {spec.name: [] for spec in specs}
     output["protected_hard_soft_marker_raw_sp64"] = []
+    output["protected_aware_soft_marker_sp64"] = []
 
     for case in cases:
         for spec in specs:
@@ -253,6 +337,19 @@ def evaluate_cases_for_models(
                 status="ok",
                 reason="marker-aware boundary diagnostic",
                 boundary=boundary_score(tokens, case.expected),
+            )
+        )
+        protected_tokens = encode_protected_aware_soft_marker_sentencepiece(case.text, processor)
+        output["protected_aware_soft_marker_sp64"].append(
+            ModelCaseResult(
+                model_name="protected_aware_soft_marker_sp64",
+                category=case.category,
+                text=case.text,
+                expected=case.expected,
+                tokens=protected_tokens,
+                status="ok",
+                reason="protected-aware marker diagnostic",
+                boundary=boundary_score(protected_tokens, case.expected),
             )
         )
 
@@ -307,6 +404,10 @@ def evaluate_protected(
         },
         "protected_hard_soft_marker_raw_sp64": {
             case.text: encode_soft_marker_sentencepiece(case.text, processor)
+            for case in cases
+        },
+        "protected_aware_soft_marker_sp64": {
+            case.text: encode_protected_aware_soft_marker_sentencepiece(case.text, processor)
             for case in cases
         },
     }
@@ -408,6 +509,8 @@ def format_report(
         "not an LLM result. Candidate boundary F1 is marker-aware: private-use",
         "soft markers inside SentencePiece pieces are interpreted as morphology",
         "boundary hints for this diagnostic.",
+        "The protected-aware row is an upper-bound diagnostic, not a final",
+        "finite-vocabulary design.",
         "",
     ]
     lines.extend(format_eval_table("Gold Expanded", gold_results))
