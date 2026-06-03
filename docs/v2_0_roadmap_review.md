@@ -648,3 +648,13 @@ toward SP64?
 
 Do not continue by adding more tiny-LM rows for the same candidate. The result
 already exposes the tradeoff clearly enough for the next design iteration.
+
+Selective marker next step:
+
+```text
+plan: docs/v2_0_selective_soft_marker_plan.md
+advisor request: docs/advisor_request_v2_0_selective_soft_marker.md
+goal: keep boundary/protected gains while reducing valid/test tokens/raw byte
+preferred target: <=0.20
+maximum for next tiny-LM screen: <=0.22
+```
