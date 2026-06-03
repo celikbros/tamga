@@ -373,6 +373,21 @@ decision: protected path works, but plain SP64 loses too much morphology signal
 next: combine finite protected encoder with a soft-morph learned prior
 ```
 
+Finite protected + soft-marker intrinsic prototype:
+
+```text
+report: artifacts/v2_0_finite_protected_soft_marker_intrinsic_eval.md
+normal text encoder: train-only soft-marker Unigram model
+protected encoder: 374 finite protected pieces + UTF-8 byte fallback
+protected span stress: 25/25 preserved
+challenge boundary F1: 0.8259
+SP64 challenge boundary F1: 0.7351
+custom challenge boundary F1: 0.9220
+multilingual smoke F1: 0.8015
+decision: morphology/protection gate passes intrinsically
+open gate: measure split-level token pressure before tiny-LM
+```
+
 ## Roadmap
 
 ### Phase 1: Candidate Serialization

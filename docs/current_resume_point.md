@@ -68,6 +68,7 @@ scripts/analyze_v2_protected_route_inventory.py
 scripts/select_v2_protected_piece_vocab.py
 scripts/evaluate_v2_protected_encoder.py
 scripts/evaluate_v2_finite_protected_sp64_intrinsic.py
+scripts/evaluate_v2_finite_protected_soft_marker_intrinsic.py
 ```
 
 Current finding:
@@ -144,6 +145,11 @@ finite protected + SP64 report: artifacts/v2_0_finite_protected_sp64_intrinsic_e
 finite protected + SP64 protected stress: 25/25
 finite protected + SP64 challenge F1: 0.6913, below SP64 0.7351
 decision: plain SP64 normal text is not enough; next use soft-morph prior
+finite protected + soft-marker report: artifacts/v2_0_finite_protected_soft_marker_intrinsic_eval.md
+finite protected + soft-marker protected stress: 25/25
+finite protected + soft-marker challenge F1: 0.8259
+decision: intrinsic morphology/protection gate passes
+next gate: measure split-level token pressure before tiny-LM
 ```
 
 Completed:

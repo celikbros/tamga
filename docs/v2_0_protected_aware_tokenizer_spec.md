@@ -310,6 +310,7 @@ scripts/analyze_v2_protected_route_inventory.py
 scripts/select_v2_protected_piece_vocab.py
 scripts/evaluate_v2_protected_encoder.py
 scripts/evaluate_v2_finite_protected_sp64_intrinsic.py
+scripts/evaluate_v2_finite_protected_soft_marker_intrinsic.py
 ```
 
 Current prototype finding:
@@ -317,7 +318,8 @@ Current prototype finding:
 ```text
 finite protected encoder + plain SP64 preserves protected spans
 finite protected encoder + plain SP64 does not beat SP64 boundary F1
-therefore the next prototype needs a soft-morph learned prior for normal text
+finite protected encoder + soft-marker model passes intrinsic morphology/protection
+the next gate is split-level token pressure before tiny-LM
 ```
 
 Do not start by:
