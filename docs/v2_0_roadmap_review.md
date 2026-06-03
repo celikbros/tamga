@@ -416,6 +416,21 @@ training run: not executed yet
 decision: infrastructure is ready for one narrow BPB screen, not a broad matrix
 ```
 
+Narrow tiny-LM smoke:
+
+```text
+findings: docs/v2_0_tiny_lm_finite_protected_soft_marker_findings.md
+200-step report: artifacts/v2_0_tiny_lm_finite_protected_soft_marker_probe_200steps.md
+finite 321-step iso-byte report: artifacts/v2_0_tiny_lm_finite_protected_soft_marker_probe_finite_321_iso_byte.md
+fixed-token 200-step test BPB: finite=7.067777, SP64=5.966637
+approx iso-byte test BPB: finite_321=5.263920, SP64_200=5.966637
+interpretation: fixed-token view favors SP64, approximate iso-byte view favors
+the finite protected soft-marker candidate
+caveat: iso-byte is not iso-compute; the candidate used more tokens/steps to
+see the same raw bytes
+decision: do not hand off; do not discard; next pressure is compression
+```
+
 ## Roadmap
 
 ### Phase 1: Candidate Serialization
@@ -619,3 +634,11 @@ state the token-pressure penalty before interpreting BPB
 The current finite protected soft-marker candidate is the first candidate that
 passes the intrinsic gate strongly enough to justify considering a narrow
 tiny-LM screen. It is not an LLM handoff candidate yet.
+
+After the first smoke, the immediate question is no longer "does morphology
+ever help?" but:
+
+```text
+can the candidate keep the iso-byte BPB gain while lowering token pressure
+toward SP64?
+```
