@@ -157,8 +157,12 @@ raw-soft-marker candidate valid/test tokens/raw byte: about 0.2367 / 0.2367
 pure custom lossless+64k valid/test tokens/raw byte: about 0.4162 / 0.4194
 decision: token pressure is much closer to raw-soft-marker than pure custom,
 but still materially above SP64
-next gate: decide whether to run a narrow tiny-LM screen against SP64, with
-the compression penalty stated up front
+tiny-LM dry-run config: configs/v2_0_tiny_lm_finite_protected_soft_marker_probe.toml
+tiny-LM dry-run report: artifacts/v2_0_tiny_lm_finite_protected_soft_marker_probe_dry_run.md
+tiny-LM dry-run candidate valid/test tokens/raw byte: 0.251658 / 0.252212
+tiny-LM dry-run SP64 valid/test tokens/raw byte: 0.159020 / 0.159620
+next gate: run the narrow tiny-LM screen only if we accept this explicit
+compression penalty for an experimental BPB check
 ```
 
 Completed:

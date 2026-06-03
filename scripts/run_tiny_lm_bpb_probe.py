@@ -15,6 +15,12 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 
 from scripts.report_baseline_matrix import _load_toml  # noqa: E402
+from scripts.evaluate_v2_finite_protected_sp64_intrinsic import (  # noqa: E402
+    load_sp_processor,
+    selected_piece_strings,
+)
+from scripts.materialize_v2_raw_soft_marker_candidate_views import SOFT_MARKER  # noqa: E402
+from scripts.materialize_v2_soft_morph_artifacts import analyze_line  # noqa: E402
 from tr_tokenizer import TurkishTokenizer  # noqa: E402
 
 PAD_ID = 0
@@ -30,6 +36,7 @@ class TokenizerConfig:
     kind: str
     path: Path | None = None
     max_vocab_size: int | None = None
+    selected_pieces: Path | None = None
 
 
 @dataclass(frozen=True)
@@ -152,7 +159,7 @@ def load_probe_config(path: str | Path) -> ProbeConfig:
             continue
         name = _string_field(item, "name", context="tokenizer")
         kind = _string_field(item, "kind", context=f"tokenizer {name}")
-        if kind not in {"custom", "sentencepiece", "utf8_byte"}:
+        if kind not in {"custom", "sentencepiece", "utf8_byte", "finite_protected_soft_marker"}:
             raise ValueError(f"unsupported tokenizer kind for {name}: {kind}")
         tokenizers.append(
             TokenizerConfig(
@@ -162,6 +169,11 @@ def load_probe_config(path: str | Path) -> ProbeConfig:
                 max_vocab_size=item.get("max_vocab_size")
                 if isinstance(item.get("max_vocab_size"), int)
                 else None,
+                selected_pieces=(
+                    Path(item["selected_pieces"])
+                    if isinstance(item.get("selected_pieces"), str)
+                    else None
+                ),
             )
         )
 
@@ -269,6 +281,149 @@ def encode_sentencepiece_split(model_path: Path, lines: list[str], byte_count: i
     return EncodedSplit(split, ids, byte_count, len(lines))
 
 
+def _processor_piece_size(processor) -> int:
+    if hasattr(processor, "GetPieceSize"):
+        return int(processor.GetPieceSize())
+    return int(processor.PieceSize())
+
+
+def _processor_eos_id(processor) -> int:
+    return int(processor.eos_id()) if hasattr(processor, "eos_id") else -1
+
+
+def _processor_encode_ids(processor, surface: str) -> list[int]:
+    if not surface:
+        return []
+    if hasattr(processor, "EncodeAsIds"):
+        return [int(item) for item in processor.EncodeAsIds(surface)]
+    return [int(item) for item in processor.encode(surface, out_type=int)]
+
+
+def encode_protected_surface_ids(
+    surface: str,
+    *,
+    selected_pieces: list[str],
+    piece_to_id: dict[str, int],
+    byte_offset: int,
+) -> tuple[list[int], int]:
+    ids: list[int] = []
+    byte_fallback_tokens = 0
+    position = 0
+    while position < len(surface):
+        match = ""
+        for piece in selected_pieces:
+            if surface.startswith(piece, position):
+                match = piece
+                break
+        if match:
+            ids.append(piece_to_id[match])
+            position += len(match)
+            continue
+
+        encoded = surface[position].encode("utf-8")
+        ids.extend(byte_offset + byte for byte in encoded)
+        byte_fallback_tokens += len(encoded)
+        position += 1
+    return ids, byte_fallback_tokens
+
+
+def encode_finite_protected_soft_marker_line_ids(
+    text: str,
+    *,
+    processor,
+    selected_pieces: list[str],
+    protected_piece_offset: int,
+) -> tuple[list[int], int]:
+    piece_to_id = {
+        piece: protected_piece_offset + index
+        for index, piece in enumerate(selected_pieces)
+    }
+    byte_offset = protected_piece_offset + len(selected_pieces)
+    pieces = analyze_line(text, TurkishTokenizer(preserve_whitespace=True))
+    ids: list[int] = []
+    protected_byte_tokens = 0
+    segment = ""
+
+    def flush() -> None:
+        nonlocal segment
+        if segment:
+            ids.extend(_processor_encode_ids(processor, segment))
+            segment = ""
+
+    for piece in pieces:
+        if piece.kind == "whitespace":
+            flush()
+            continue
+
+        if piece.kind.startswith("protected:"):
+            flush()
+            protected_ids, byte_tokens = encode_protected_surface_ids(
+                piece.surface,
+                selected_pieces=selected_pieces,
+                piece_to_id=piece_to_id,
+                byte_offset=byte_offset,
+            )
+            ids.extend(protected_ids)
+            protected_byte_tokens += byte_tokens
+            continue
+
+        if piece.kind == "apostrophe":
+            flush()
+            ids.extend(_processor_encode_ids(processor, piece.surface))
+            continue
+
+        if piece.kind == "suffix" and piece.boundary_before == "hard":
+            flush()
+            ids.extend(_processor_encode_ids(processor, piece.surface))
+            continue
+
+        if piece.boundary_before == "soft":
+            segment += SOFT_MARKER + piece.surface
+            continue
+
+        if piece.boundary_before == "hard":
+            flush()
+            segment = piece.surface
+            continue
+
+        segment += piece.surface
+
+    flush()
+    return ids, protected_byte_tokens
+
+
+def encode_finite_protected_soft_marker_split(
+    *,
+    model_path: Path,
+    selected_pieces_path: Path,
+    lines: list[str],
+    byte_count: int,
+    split: str,
+) -> tuple[int, EncodedSplit]:
+    processor = load_sp_processor(model_path)
+    selected = selected_piece_strings(selected_pieces_path)
+    piece_size = _processor_piece_size(processor)
+    eos = _processor_eos_id(processor)
+    ids: list[int] = []
+    protected_byte_tokens = 0
+    for line in lines:
+        line_ids, byte_tokens = encode_finite_protected_soft_marker_line_ids(
+            line,
+            processor=processor,
+            selected_pieces=selected,
+            protected_piece_offset=piece_size,
+        )
+        ids.extend(line_ids)
+        protected_byte_tokens += byte_tokens
+        if eos >= 0:
+            ids.append(eos)
+    vocab_size = piece_size + len(selected) + BYTE_VOCAB_SIZE
+    return (
+        vocab_size,
+        EncodedSplit(split, ids, byte_count, len(lines), oov_tokens=protected_byte_tokens),
+    )
+
+
 def encode_tokenizer(config: TokenizerConfig, splits: dict[str, SplitText]) -> EncodedTokenizer:
     try:
         if config.kind == "custom":
@@ -298,6 +453,27 @@ def encode_tokenizer(config: TokenizerConfig, splits: dict[str, SplitText]) -> E
                 for name, split in splits.items()
             }
             return EncodedTokenizer(config, int(processor.GetPieceSize()), "ok", splits=encoded)
+        if config.kind == "finite_protected_soft_marker":
+            if config.path is None or not config.path.exists():
+                return EncodedTokenizer(config, 0, "skipped", reason=f"missing model: {config.path}")
+            if config.selected_pieces is None or not config.selected_pieces.exists():
+                return EncodedTokenizer(
+                    config,
+                    0,
+                    "skipped",
+                    reason=f"missing selected pieces: {config.selected_pieces}",
+                )
+            encoded: dict[str, EncodedSplit] = {}
+            vocab_size = 0
+            for name, split in splits.items():
+                vocab_size, encoded[name] = encode_finite_protected_soft_marker_split(
+                    model_path=config.path,
+                    selected_pieces_path=config.selected_pieces,
+                    lines=split.lines,
+                    byte_count=split.bytes,
+                    split=name,
+                )
+            return EncodedTokenizer(config, vocab_size, "ok", splits=encoded)
     except Exception as exc:
         return EncodedTokenizer(config, 0, "skipped", reason=str(exc))
     raise ValueError(f"unsupported tokenizer kind: {config.kind}")
@@ -531,7 +707,7 @@ def format_report(
     dry_run: bool,
 ) -> str:
     lines = [
-        "# v1.8 Tiny LM Bits-Per-Byte Probe",
+        "# Tiny LM Bits-Per-Byte Probe",
         "",
         f"Config: `{config.path.as_posix()}`",
         f"Split dir: `{config.split_dir.as_posix()}`",
@@ -599,8 +775,9 @@ def format_report(
             "",
             "- Compare only byte-normalized validation/test loss, not token perplexity.",
             "- Custom uses a temporary train-only vocabulary plus UTF-8 byte fallback for unseen source tokens.",
+            "- Finite protected candidates use finite protected pieces plus UTF-8 byte fallback for protected spans.",
             "- This script does not make the tokenizer LLM-ready.",
-            "- A negative result should be read with the v1.8 protocol caveats.",
+            "- A negative result should be read with the protocol caveats for the active experiment.",
         ]
     )
     return "\n".join(lines) + "\n"

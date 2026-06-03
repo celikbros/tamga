@@ -1,0 +1,31 @@
+[settings]
+split_dir = "artifacts/private/v1_8_local_lm_probe/celik_tr_primary_multilingual_mix_lm_probe_pilot_20k/filtered_split"
+output_dir = "artifacts/private/v2_0_tiny_lm_finite_protected_soft_marker_probe"
+report_out = "artifacts/v2_0_tiny_lm_finite_protected_soft_marker_probe.md"
+seed = 20260603
+
+[model]
+seq_len = 128
+batch_size = 4
+max_steps = 500
+eval_interval = 100
+learning_rate = 0.0003
+d_model = 256
+n_layers = 4
+n_heads = 4
+ff_mult = 4
+dropout = 0.1
+device = "auto"
+
+[[tokenizers]]
+name = "finite_protected_soft_marker"
+kind = "finite_protected_soft_marker"
+path = "artifacts/private/v2_0_candidate_sentencepiece/protected_hard_soft_marker_raw_sp64_unigram_64000.model"
+selected_pieces = "artifacts/private/v2_0_protected_aware/protected_piece_vocab.train.tsv"
+enabled = true
+
+[[tokenizers]]
+name = "sp_unigram_64000_train_only"
+kind = "sentencepiece"
+path = "artifacts/private/v1_8_train_only_sentencepiece/sp_unigram_64000_train_only.model"
+enabled = true

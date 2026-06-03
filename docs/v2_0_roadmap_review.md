@@ -405,6 +405,17 @@ tiny-LM screen, but the candidate carries a clear compression penalty versus
 SP64 and must not be represented as final
 ```
 
+Narrow tiny-LM dry-run:
+
+```text
+config: configs/v2_0_tiny_lm_finite_protected_soft_marker_probe.toml
+report: artifacts/v2_0_tiny_lm_finite_protected_soft_marker_probe_dry_run.md
+finite protected soft-marker valid/test tokens/raw byte: 0.251658 / 0.252212
+SP64 null valid/test tokens/raw byte: 0.159020 / 0.159620
+training run: not executed yet
+decision: infrastructure is ready for one narrow BPB screen, not a broad matrix
+```
+
 ## Roadmap
 
 ### Phase 1: Candidate Serialization
