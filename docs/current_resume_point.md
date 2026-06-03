@@ -67,6 +67,7 @@ scripts/materialize_v2_protected_routes.py
 scripts/analyze_v2_protected_route_inventory.py
 scripts/select_v2_protected_piece_vocab.py
 scripts/evaluate_v2_protected_encoder.py
+scripts/evaluate_v2_finite_protected_sp64_intrinsic.py
 ```
 
 Current finding:
@@ -139,6 +140,10 @@ selected finite protected pieces: 374 + 256 byte fallback pieces
 protected encoder report: artifacts/v2_0_protected_encoder_diagnostic.md
 protected encoder byte fallback byte rate: 0.002679 overall
 decision: finite protected-piece path is viable for a full tokenizer prototype
+finite protected + SP64 report: artifacts/v2_0_finite_protected_sp64_intrinsic_eval.md
+finite protected + SP64 protected stress: 25/25
+finite protected + SP64 challenge F1: 0.6913, below SP64 0.7351
+decision: plain SP64 normal text is not enough; next use soft-morph prior
 ```
 
 Completed:

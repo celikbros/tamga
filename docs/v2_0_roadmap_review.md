@@ -359,6 +359,20 @@ numeric_like byte fallback byte rate: 0.000018
 decision: finite protected-piece path is viable for a full tokenizer prototype
 ```
 
+Finite protected + plain SP64 intrinsic prototype:
+
+```text
+report: artifacts/v2_0_finite_protected_sp64_intrinsic_eval.md
+normal text encoder: train-only SP64 Unigram
+protected encoder: 374 finite protected pieces + UTF-8 byte fallback
+protected span stress: 25/25 preserved
+challenge boundary F1: 0.6913
+SP64 challenge boundary F1: 0.7351
+custom challenge boundary F1: 0.9220
+decision: protected path works, but plain SP64 loses too much morphology signal
+next: combine finite protected encoder with a soft-morph learned prior
+```
+
 ## Roadmap
 
 ### Phase 1: Candidate Serialization
