@@ -311,6 +311,7 @@ scripts/select_v2_protected_piece_vocab.py
 scripts/evaluate_v2_protected_encoder.py
 scripts/evaluate_v2_finite_protected_sp64_intrinsic.py
 scripts/evaluate_v2_finite_protected_soft_marker_intrinsic.py
+scripts/measure_v2_finite_protected_soft_marker_pressure.py
 ```
 
 Current prototype finding:
@@ -319,7 +320,11 @@ Current prototype finding:
 finite protected encoder + plain SP64 preserves protected spans
 finite protected encoder + plain SP64 does not beat SP64 boundary F1
 finite protected encoder + soft-marker model passes intrinsic morphology/protection
-the next gate is split-level token pressure before tiny-LM
+finite protected encoder + soft-marker model valid/test token pressure is
+0.249142 / 0.249758 model tokens/raw byte
+this is much lower than pure custom lossless+64k byte fallback, but materially
+higher than SP64
+the next gate is a narrow tiny-LM screen decision, not final handoff
 ```
 
 Do not start by:

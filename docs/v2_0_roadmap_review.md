@@ -94,6 +94,10 @@ span and overall visible gates
 protected-aware upper-bound diagnostic shows protection routing is the missing
 piece
 open-vocab protected tokens are diagnostic only, not final LLM-safe design
+finite protected encoder + soft-marker model passes the visible morphology and
+protected-span intrinsic gate
+finite protected encoder + soft-marker model has valid/test token pressure
+around 0.249 tokens/raw byte, well below pure custom lossless but above SP64
 ```
 
 ## Candidate 1: Rejected
@@ -388,6 +392,19 @@ decision: morphology/protection gate passes intrinsically
 open gate: measure split-level token pressure before tiny-LM
 ```
 
+Finite protected + soft-marker token pressure:
+
+```text
+report: artifacts/v2_0_finite_protected_soft_marker_token_pressure.md
+valid/test model tokens/raw byte: 0.249142 / 0.249758
+raw-soft-marker valid/test tokens/raw byte: about 0.2367 / 0.2367
+SP64 valid/test tokens/raw byte: about 0.1566 / 0.1570
+pure custom lossless+64k valid/test tokens/raw byte: about 0.4162 / 0.4194
+decision: token-pressure gate is conditionally acceptable for a narrow
+tiny-LM screen, but the candidate carries a clear compression penalty versus
+SP64 and must not be represented as final
+```
+
 ## Roadmap
 
 ### Phase 1: Candidate Serialization
@@ -486,6 +503,10 @@ Current Phase 2 status:
 protected_hard_raw_sp64 passes the token-pressure part of the gate
 protected_hard_raw_sp64 fails protected-span and visible-boundary diagnostics
 do not run tiny-LM on protected_hard_raw_sp64
+finite protected + soft-marker passes protected-span and visible-boundary
+diagnostics, and token pressure is far from pure custom lossless
+finite protected + soft-marker still costs about 59% more model tokens/raw byte
+than SP64 on valid/test
 ```
 
 ### Phase 3: Intrinsic Evaluation
@@ -575,12 +596,15 @@ do not run broad tiny-LM matrices before a real v2.0 candidate exists
 
 ## Next Immediate Step
 
-Run Phase 3 intrinsic diagnostics:
+Run a narrow Phase 4 decision step, not a broad matrix:
 
 ```text
-design next hybrid candidate
-measure token pressure
-run visible intrinsic diagnostics before tiny-LM
+decide whether to run one tiny-LM screen:
+finite_protected_soft_marker vs SP64 null baseline
+report fixed-token and approximate iso-byte views
+state the token-pressure penalty before interpreting BPB
 ```
 
-The current raw-hard candidate should not proceed to tiny-LM.
+The current finite protected soft-marker candidate is the first candidate that
+passes the intrinsic gate strongly enough to justify considering a narrow
+tiny-LM screen. It is not an LLM handoff candidate yet.

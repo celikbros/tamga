@@ -69,6 +69,7 @@ scripts/select_v2_protected_piece_vocab.py
 scripts/evaluate_v2_protected_encoder.py
 scripts/evaluate_v2_finite_protected_sp64_intrinsic.py
 scripts/evaluate_v2_finite_protected_soft_marker_intrinsic.py
+scripts/measure_v2_finite_protected_soft_marker_pressure.py
 ```
 
 Current finding:
@@ -149,7 +150,15 @@ finite protected + soft-marker report: artifacts/v2_0_finite_protected_soft_mark
 finite protected + soft-marker protected stress: 25/25
 finite protected + soft-marker challenge F1: 0.8259
 decision: intrinsic morphology/protection gate passes
-next gate: measure split-level token pressure before tiny-LM
+token pressure report: artifacts/v2_0_finite_protected_soft_marker_token_pressure.md
+finite protected + soft-marker valid/test model tokens/raw byte: 0.249142 / 0.249758
+SP64 baseline valid/test tokens/raw byte: about 0.1566 / 0.1570
+raw-soft-marker candidate valid/test tokens/raw byte: about 0.2367 / 0.2367
+pure custom lossless+64k valid/test tokens/raw byte: about 0.4162 / 0.4194
+decision: token pressure is much closer to raw-soft-marker than pure custom,
+but still materially above SP64
+next gate: decide whether to run a narrow tiny-LM screen against SP64, with
+the compression penalty stated up front
 ```
 
 Completed:
