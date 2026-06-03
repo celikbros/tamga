@@ -171,13 +171,49 @@ if tokens/raw byte remains near 0.25:
   is the next lever
 ```
 
+## Exp 0 Result
+
+Report:
+
+```text
+artifacts/v2_0_marker_stripped_soft_marker_diagnostic.md
+```
+
+Result:
+
+```text
+marker-stripped valid/test tokens/raw byte: 0.195611 / 0.196236
+SP64 valid/test tokens/raw byte: 0.159020 / 0.159620
+all-soft in-stream valid/test tokens/raw byte: 0.251658 / 0.252212
+marker-stripped challenge F1: 0.7703
+SP64 challenge F1: 0.7351
+all-soft in-stream challenge F1: 0.8259
+protected stress: 25/25
+```
+
+Interpretation:
+
+```text
+in-stream marker cost is a major source of token pressure
+marker-stripped/train-only vocab shaping is promising
+current marker-stripped F1 is above SP64 but below the preferred gate
+```
+
+Decision:
+
+```text
+prioritize train-only vocab shaping / constrained-Unigram style experiments
+do not run tiny-LM on marker-stripped yet
+do not return to all-soft in-stream marker as a candidate
+```
+
 ## Revised Roadmap
 
 ```text
-1. Exp 0 marker-stripped diagnostic
-2. if Exp 0 succeeds: design train-only vocab-shaping / constrained Unigram path
-3. if Exp 0 fails or F1 collapses: run selective marker budget sweep
-4. only one surviving candidate gets another tiny-LM screen
+1. Exp 0 marker-stripped diagnostic: complete
+2. design train-only vocab-shaping / constrained Unigram style sweep
+3. use selective marker policies only in the training view first
+4. only one surviving low-pressure candidate gets another tiny-LM screen
 ```
 
 ## What Not To Do
@@ -188,4 +224,3 @@ do not choose marker classes from visible challenge failures
 do not broaden Turkish morphology rules
 do not change protected encoder before normal-text pressure is understood
 ```
-

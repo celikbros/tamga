@@ -31,6 +31,7 @@ Most recent decision artifacts:
 - [advisor feedback: protected-aware architecture](advisor_feedback_v2_0_protected_aware_triage.md)
 - [v2.0 protected-aware tokenizer spec](v2_0_protected_aware_tokenizer_spec.md)
 - [v2.0 tiny-LM finite protected soft-marker findings](v2_0_tiny_lm_finite_protected_soft_marker_findings.md)
+- [v2.0 marker-stripped soft-marker findings](v2_0_marker_stripped_soft_marker_findings.md)
 - [v2.0 selective soft-marker plan](v2_0_selective_soft_marker_plan.md)
 - [advisor request: v2.0 selective soft-marker direction](advisor_request_v2_0_selective_soft_marker.md)
 
@@ -178,6 +179,13 @@ next gate: redesign toward lower token pressure while keeping protected-span
 and boundary gains
 selective marker plan: docs/v2_0_selective_soft_marker_plan.md
 advisor request: docs/advisor_request_v2_0_selective_soft_marker.md
+marker-stripped diagnostic report: artifacts/v2_0_marker_stripped_soft_marker_diagnostic.md
+marker-stripped findings: docs/v2_0_marker_stripped_soft_marker_findings.md
+marker-stripped valid/test tokens/raw byte: 0.195611 / 0.196236
+marker-stripped challenge F1: 0.7703
+marker-stripped protected stress: 25/25
+decision: in-stream marker cost is a major bottleneck; prioritize train-only
+vocab shaping / constrained-Unigram style experiments before any more tiny-LM
 ```
 
 Completed:

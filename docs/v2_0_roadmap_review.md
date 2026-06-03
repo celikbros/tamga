@@ -658,3 +658,17 @@ goal: keep boundary/protected gains while reducing valid/test tokens/raw byte
 preferred target: <=0.20
 maximum for next tiny-LM screen: <=0.22
 ```
+
+Marker-stripped mechanism check:
+
+```text
+report: artifacts/v2_0_marker_stripped_soft_marker_diagnostic.md
+findings: docs/v2_0_marker_stripped_soft_marker_findings.md
+valid/test tokens/raw byte: 0.195611 / 0.196236
+challenge F1: 0.7703
+protected stress: 25/25
+interpretation: marker cost is largely in-stream; train-only vocab shaping is
+promising but current F1 is below the preferred gate
+decision: prioritize train-view vocab-shaping/constrained-Unigram style sweep;
+do not tiny-LM this candidate yet
+```

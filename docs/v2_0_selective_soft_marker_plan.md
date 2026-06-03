@@ -24,6 +24,21 @@ current all-soft-marker design is too token-expensive for LLM handoff
 The next design iteration should reduce marker pressure before any broader LM
 probe.
 
+Exp 0 marker-stripped diagnostic changed the priority:
+
+```text
+marker-stripped valid/test tokens/raw byte: 0.195611 / 0.196236
+marker-stripped challenge F1: 0.7703
+protected stress: 25/25
+```
+
+Interpretation:
+
+```text
+in-stream markers are a major source of token pressure
+train-only vocabulary shaping is now the preferred next path
+```
+
 ## Objective
 
 Find a lower-pressure learned candidate that preserves the useful parts of:
@@ -35,7 +50,9 @@ stateless decode
 SP64-like compression behavior
 ```
 
-This is not a new morphology-rule project. It is a marker-budget project.
+This is not a new morphology-rule project. It is now primarily a train-view
+vocabulary-shaping project. In-stream selective markers are a fallback, not the
+first option.
 
 ## Non-Goals
 
@@ -152,7 +169,16 @@ Do not start here unless advisors recommend it.
 ## First Implementation Step
 
 Implement a marker-policy materializer that reuses the existing soft-morph
-analysis but can emit train views with marker policies:
+analysis but can emit train views with marker policies. The first use is
+train-only shaping:
+
+```text
+markers appear in the SentencePiece training view
+markers are stripped / not inserted at encode time
+finite protected encoder remains frozen
+```
+
+Policies:
 
 ```text
 none
@@ -201,7 +227,8 @@ marker density is close to all-soft marker
 
 ### Gate 2: SentencePiece token pressure
 
-Train only small train-only Unigram 64k candidates for policies that pass Gate 1.
+Train only train-only Unigram 64k candidates for policies that pass Gate 1.
+Evaluate them first in marker-stripped encode mode.
 
 Reject a policy if:
 
@@ -267,7 +294,8 @@ same-step BPB gap vs SP64 narrows materially
 Stop marker path if:
 
 ```text
-no selective policy beats SP64 F1 while staying <=0.22 tokens/raw byte
+no train-view shaping policy beats SP64 F1 by the target margin while staying
+<=0.22 tokens/raw byte
 or tiny-LM same-step gap remains large after pressure reduction
 ```
 
@@ -290,7 +318,6 @@ docs/advisor_request_v2_0_selective_soft_marker.md
 
 ## Current Recommendation
 
-Proceed with a small selective-marker intrinsic/token-pressure sweep only.
+Proceed with a small train-only vocab-shaping intrinsic/token-pressure sweep.
 
 Do not run another LM experiment until a candidate has lower token pressure.
-
