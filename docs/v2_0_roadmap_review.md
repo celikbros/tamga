@@ -422,13 +422,16 @@ Narrow tiny-LM smoke:
 findings: docs/v2_0_tiny_lm_finite_protected_soft_marker_findings.md
 200-step report: artifacts/v2_0_tiny_lm_finite_protected_soft_marker_probe_200steps.md
 finite 321-step iso-byte report: artifacts/v2_0_tiny_lm_finite_protected_soft_marker_probe_finite_321_iso_byte.md
+SP64 321-step control: artifacts/v2_0_tiny_lm_finite_protected_soft_marker_probe_sp64_321steps.md
 fixed-token 200-step test BPB: finite=7.067777, SP64=5.966637
 approx iso-byte test BPB: finite_321=5.263920, SP64_200=5.966637
+same-step 321-step test BPB: finite=5.263920, SP64=4.629442
 interpretation: fixed-token view favors SP64, approximate iso-byte view favors
 the finite protected soft-marker candidate
 caveat: iso-byte is not iso-compute; the candidate used more tokens/steps to
 see the same raw bytes
-decision: do not hand off; do not discard; next pressure is compression
+decision: do not hand off; do not discard; stop broad LM probing for this
+candidate and reduce token pressure next
 ```
 
 ## Roadmap
@@ -642,3 +645,6 @@ ever help?" but:
 can the candidate keep the iso-byte BPB gain while lowering token pressure
 toward SP64?
 ```
+
+Do not continue by adding more tiny-LM rows for the same candidate. The result
+already exposes the tradeoff clearly enough for the next design iteration.

@@ -163,13 +163,16 @@ tiny-LM dry-run candidate valid/test tokens/raw byte: 0.251658 / 0.252212
 tiny-LM dry-run SP64 valid/test tokens/raw byte: 0.159020 / 0.159620
 tiny-LM 200-step report: artifacts/v2_0_tiny_lm_finite_protected_soft_marker_probe_200steps.md
 tiny-LM finite 321-step iso-byte report: artifacts/v2_0_tiny_lm_finite_protected_soft_marker_probe_finite_321_iso_byte.md
+tiny-LM SP64 321-step control: artifacts/v2_0_tiny_lm_finite_protected_soft_marker_probe_sp64_321steps.md
 tiny-LM findings: docs/v2_0_tiny_lm_finite_protected_soft_marker_findings.md
 fixed-token 200-step test BPB: finite=7.067777, SP64=5.966637
 approx iso-byte test BPB: finite_321=5.263920 vs SP64_200=5.966637
-decision: fixed-token view favors SP64; approximate iso-byte view favors the
-finite protected soft-marker candidate; this is promising but not iso-compute
-next gate: either run one SP64 321-step fixed-step control or redesign the
-candidate to reduce token pressure before larger LM probes
+same-step 321-step test BPB: finite=5.263920, SP64=4.629442
+decision: fixed-token/same-step views favor SP64; approximate iso-byte view
+shows useful morphology/protection signal, but current candidate is too
+token-expensive for handoff or larger LM probes
+next gate: redesign toward lower token pressure while keeping protected-span
+and boundary gains
 ```
 
 Completed:

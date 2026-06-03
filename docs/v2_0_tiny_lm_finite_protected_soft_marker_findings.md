@@ -82,11 +82,36 @@ approx iso-byte view favors finite_protected_soft_marker
 this is not iso-compute: the candidate used more tokens/steps to see the same bytes
 ```
 
+## Same-Step SP64 Control
+
+Report:
+
+```text
+artifacts/v2_0_tiny_lm_finite_protected_soft_marker_probe_sp64_321steps.md
+```
+
+At 321 SP64 steps:
+
+| Tokenizer | Steps | Tokens seen | Approx bytes seen | Test BPB |
+| --- | ---: | ---: | ---: | ---: |
+| finite_protected_soft_marker | 321 | 164352 | 662180 | 5.263920 |
+| sp_unigram_64000_train_only | 321 | 164352 | 1062527 | 4.629442 |
+
+Interpretation:
+
+```text
+same-token/same-step view strongly favors SP64
+SP64 uses its lower token pressure to see more raw text at the same compute step count
+the candidate's iso-byte gain is real but currently too expensive in tokens
+```
+
 ## Current Read
 
 ```text
 positive: morphology/protection signal can improve BPB after equal raw-byte exposure
 negative: the candidate pays a large token-pressure/compute/context cost
+net: current candidate is promising as a research direction but not efficient
+enough for LLM handoff or larger LM probes
 ```
 
 This is a useful research signal, not a final tokenizer decision.
@@ -96,8 +121,8 @@ This is a useful research signal, not a final tokenizer decision.
 ```text
 do not hand this tokenizer to the LLM team as final
 do not discard the morphology-aware path
-do run at most one more fixed-step SP64 control if a same-step table is needed
-then decide whether v2.0 should reduce token pressure before larger LM probes
+do not run a broad tiny-LM matrix for this candidate
+make token-pressure reduction the next v2.0 design target
 ```
 
 The next design pressure is clear:
