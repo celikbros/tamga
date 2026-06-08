@@ -259,8 +259,15 @@ SP probe report: artifacts/v2_0_morph_seed_bias_sentencepiece_probe.md
 augmentation bytes/base byte: 0.000022
 morph_seed_bias valid/test tokens/raw byte: 0.158312 / 0.158901
 decision: token-pressure gate passed; run finite-protected intrinsic eval next
+morph seed bias intrinsic report: artifacts/v2_0_morph_seed_bias_finite_protected_intrinsic_eval.md
+morph seed bias intrinsic findings: docs/v2_0_morph_seed_bias_intrinsic_findings.md
+challenge F1, finite protected + morph_seed_bias: 0.6913
+protected stress: 25/25
+decision: no tiny-LM; weak appendix did not move morphology F1
 next user-run command:
-  python scripts\evaluate_v2_finite_protected_sp64_intrinsic.py --sp64-model artifacts\private\v2_0_morph_seed_vocab\morph_seed_bias_unigram_64000.model --report-out artifacts\v2_0_morph_seed_bias_finite_protected_intrinsic_eval.md
+  python scripts\materialize_v2_morph_seed_augmented_view.py --repeat-divisor 10 --max-repeat-per-entry 2048 --include-safe-uds-later --out artifacts\private\v2_0_morph_seed_vocab\morph_seed_bias_strong_augmented_train.txt --report-out artifacts\v2_0_morph_seed_bias_strong_augmented_view.md
+then:
+  python scripts\run_v2_candidate_sentencepiece_probe.py configs\v2_0_morph_seed_bias_strong_sentencepiece.toml --force
 ```
 
 Completed:

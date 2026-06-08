@@ -267,13 +267,15 @@ def evaluate_cases_for_models(
     processor,
     sp64_model: Path,
     selected_pieces: list[str],
+    reference_label: str = "sp_unigram_64000_train_only",
+    finite_label: str = "finite_protected_sp64",
 ) -> dict[str, list[ModelCaseResult]]:
     specs = [
         RealBaselineSpec(name="custom_tr_morph", kind="custom"),
-        RealBaselineSpec(name="sp_unigram_64000_train_only", kind="sentencepiece", value=str(sp64_model)),
+        RealBaselineSpec(name=reference_label, kind="sentencepiece", value=str(sp64_model)),
     ]
     output: dict[str, list[ModelCaseResult]] = {spec.name: [] for spec in specs}
-    output["finite_protected_sp64"] = []
+    output[finite_label] = []
 
     for case in cases:
         for spec in specs:
@@ -306,9 +308,9 @@ def evaluate_cases_for_models(
             processor=processor,
             selected_pieces=selected_pieces,
         )
-        output["finite_protected_sp64"].append(
+        output[finite_label].append(
             ModelCaseResult(
-                model_name="finite_protected_sp64",
+                model_name=finite_label,
                 category=case.category,
                 text=case.text,
                 expected=case.expected,
@@ -402,20 +404,22 @@ def evaluate_protected(
     processor,
     sp64_model: Path,
     selected_pieces: list[str],
+    reference_label: str = "sp_unigram_64000_train_only",
+    finite_label: str = "finite_protected_sp64",
 ) -> list[ProtectedSummary]:
     custom = TurkishTokenizer()
     sp_spec = RealBaselineSpec(
-        name="sp_unigram_64000_train_only",
+        name=reference_label,
         kind="sentencepiece",
         value=str(sp64_model),
     )
     token_maps: dict[str, dict[str, PrototypeEncoding | list[str]]] = {
         "custom_tr_morph": {case.text: custom.encode(case.text) for case in cases},
-        "sp_unigram_64000_train_only": {
+        reference_label: {
             case.text: encode_with_spec(sp_spec, case.text, local_files_only=True).tokens
             for case in cases
         },
-        "finite_protected_sp64": {
+        finite_label: {
             case.text: encode_finite_protected_sp64(
                 case.text,
                 processor=processor,
@@ -508,15 +512,17 @@ def format_report(
     protected_rows: list[ProtectedSummary],
     sp64_model: Path,
     selected_pieces: Path,
+    reference_label: str,
 ) -> str:
     lines = [
-        "# v2.0 Finite Protected SP64 Intrinsic Eval",
+        "# v2.0 Finite Protected Reference Intrinsic Eval",
         "",
-        f"SP64 reference: `{sp64_model.as_posix()}`",
+        f"Reference model: `{reference_label}`",
+        f"Reference path: `{sp64_model.as_posix()}`",
         f"Selected protected pieces: `{selected_pieces.as_posix()}`",
         "",
         "This is an intrinsic prototype, not a final tokenizer. Normal text uses",
-        "the train-only SP64 Unigram model. Protected spans use finite selected",
+        "the supplied SentencePiece reference model. Protected spans use finite selected",
         "pieces with UTF-8 byte fallback. Boundary scoring uses logical protected",
         "span tokens; model token counts include finite protected pieces.",
         "",
@@ -561,6 +567,16 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--multilingual", default="data/eval/multilingual_smoke.tsv")
     parser.add_argument("--stress", default="data/eval/tr_stress_public.tsv")
     parser.add_argument("--report-out", default="artifacts/v2_0_finite_protected_sp64_intrinsic_eval.md")
+    parser.add_argument(
+        "--reference-label",
+        default="sp_unigram_64000_train_only",
+        help="Label for the supplied SentencePiece reference model in reports.",
+    )
+    parser.add_argument(
+        "--finite-label",
+        default="finite_protected_sp64",
+        help="Label for the finite protected wrapper row in reports.",
+    )
     args = parser.parse_args(argv)
 
     sp64_model = Path(args.sp64_model)
@@ -573,24 +589,32 @@ def main(argv: list[str] | None = None) -> int:
         processor=processor,
         sp64_model=sp64_model,
         selected_pieces=selected,
+        reference_label=args.reference_label,
+        finite_label=args.finite_label,
     )
     challenge_results = evaluate_cases_for_models(
         load_cases(args.challenge),
         processor=processor,
         sp64_model=sp64_model,
         selected_pieces=selected,
+        reference_label=args.reference_label,
+        finite_label=args.finite_label,
     )
     multilingual_results = evaluate_cases_for_models(
         load_cases(args.multilingual),
         processor=processor,
         sp64_model=sp64_model,
         selected_pieces=selected,
+        reference_label=args.reference_label,
+        finite_label=args.finite_label,
     )
     protected_rows = evaluate_protected(
         load_stress_cases(args.stress),
         processor=processor,
         sp64_model=sp64_model,
         selected_pieces=selected,
+        reference_label=args.reference_label,
+        finite_label=args.finite_label,
     )
 
     report = format_report(
@@ -600,6 +624,7 @@ def main(argv: list[str] | None = None) -> int:
         protected_rows=protected_rows,
         sp64_model=sp64_model,
         selected_pieces=selected_path,
+        reference_label=args.reference_label,
     )
     report_out = Path(args.report_out)
     report_out.parent.mkdir(parents=True, exist_ok=True)

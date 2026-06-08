@@ -766,4 +766,10 @@ SP probe report: artifacts/v2_0_morph_seed_bias_sentencepiece_probe.md
 findings: docs/v2_0_morph_seed_bias_findings.md
 valid/test tokens/raw byte: 0.158312 / 0.158901
 decision: token-pressure gate passed; next finite-protected intrinsic eval
+intrinsic report: artifacts/v2_0_morph_seed_bias_finite_protected_intrinsic_eval.md
+intrinsic findings: docs/v2_0_morph_seed_bias_intrinsic_findings.md
+challenge F1 with finite protection: 0.6913
+decision: weak appendix did not move morphology F1; try one stronger bounded
+seed-bias augmentation before stopping this branch
+strong config: configs/v2_0_morph_seed_bias_strong_sentencepiece.toml
 ```

@@ -86,3 +86,19 @@ the morph-seed model. Interpret the finite protected row as:
 finite protected routing + morph_seed_bias_unigram_64000
 ```
 
+Observed intrinsic result:
+
+```text
+report: artifacts/v2_0_morph_seed_bias_finite_protected_intrinsic_eval.md
+findings: docs/v2_0_morph_seed_bias_intrinsic_findings.md
+challenge F1, bare morph_seed_bias model: 0.7351
+challenge F1, finite protected + morph_seed_bias: 0.6913
+protected stress, finite protected + morph_seed_bias: 25/25
+decision: no tiny-LM; weak appendix was effectively too small
+```
+
+Next:
+
+```text
+run one stronger bounded seed-bias augmentation
+```
