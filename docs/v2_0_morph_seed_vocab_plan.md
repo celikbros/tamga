@@ -245,3 +245,13 @@ The next implementation decision is how to inject the selected morph pieces:
 
 The analysis report should decide which of these is safe enough for the first
 prototype.
+
+Current first prototype:
+
+```text
+script: scripts/materialize_v2_morph_seed_augmented_view.py
+config: configs/v2_0_morph_seed_bias_sentencepiece.toml
+report: artifacts/v2_0_morph_seed_bias_sentencepiece_probe.md
+strategy: append a small train-only morph seed appendix, then train Unigram
+normal encode-time text remains marker-free
+```

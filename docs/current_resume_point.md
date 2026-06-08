@@ -79,6 +79,7 @@ scripts/measure_v2_finite_protected_soft_marker_pressure.py
 scripts/materialize_v2_train_only_marker_views.py
 scripts/analyze_v2_morph_seed_candidates.py
 scripts/select_v2_morph_seed_policy.py
+scripts/materialize_v2_morph_seed_augmented_view.py
 ```
 
 Current finding:
@@ -250,6 +251,12 @@ selected unique: 107
 selected occurrence share: 0.962466
 decision: first prototype should use seed_bias as a learned-vocab prior, not
 broad user-defined symbols
+morph seed augmented-view script: scripts/materialize_v2_morph_seed_augmented_view.py
+morph seed SP config: configs/v2_0_morph_seed_bias_sentencepiece.toml
+next user-run command:
+  python scripts\materialize_v2_morph_seed_augmented_view.py
+then:
+  python scripts\run_v2_candidate_sentencepiece_probe.py configs\v2_0_morph_seed_bias_sentencepiece.toml --force
 ```
 
 Completed:

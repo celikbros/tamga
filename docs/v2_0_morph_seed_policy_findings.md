@@ -79,3 +79,19 @@ Candidate implementation options:
 
 The first option is the lowest-risk next experiment.
 
+## First Prototype Commands
+
+Materialize the augmentation view:
+
+```powershell
+python scripts\materialize_v2_morph_seed_augmented_view.py
+```
+
+Train/evaluate the first morph-seed Unigram probe:
+
+```powershell
+python scripts\run_v2_candidate_sentencepiece_probe.py configs\v2_0_morph_seed_bias_sentencepiece.toml --force
+```
+
+This is still not a tiny-LM run. It only checks token pressure on raw
+valid/test text.
