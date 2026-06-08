@@ -35,6 +35,7 @@ Most recent decision artifacts:
 - [advisor request: v2.0 selective soft-marker direction](advisor_request_v2_0_selective_soft_marker.md)
 - [advisor request: v2.0 train-only marker frontier](advisor_request_v2_0_train_only_marker_frontier.md)
 - [v2.0 tiny-LM marker calibration results](../artifacts/v2_0_tiny_lm_marker_calibration_results.md)
+- [v2.0 morph seed vocabulary plan](v2_0_morph_seed_vocab_plan.md)
 
 v1.8 key result:
 
@@ -76,6 +77,7 @@ scripts/evaluate_v2_finite_protected_sp64_intrinsic.py
 scripts/evaluate_v2_finite_protected_soft_marker_intrinsic.py
 scripts/measure_v2_finite_protected_soft_marker_pressure.py
 scripts/materialize_v2_train_only_marker_views.py
+scripts/analyze_v2_morph_seed_candidates.py
 ```
 
 Current finding:
@@ -234,6 +236,10 @@ decision: marker shaping improved visible F1 but worsened BPB versus the true
 protected floor; stop marker-dose tuning
 next: selected morph seed vocabulary / curated morph pieces / constrained
 Unigram or MorphBPE-style mechanism
+morph seed plan: docs/v2_0_morph_seed_vocab_plan.md
+morph seed candidate analyzer: scripts/analyze_v2_morph_seed_candidates.py
+next user-run command:
+  python scripts\analyze_v2_morph_seed_candidates.py --progress 1000
 ```
 
 Completed:
