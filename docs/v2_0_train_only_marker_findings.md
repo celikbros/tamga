@@ -4,8 +4,9 @@ Date: 2026-06-08
 
 ## Summary
 
-Train-only marker shaping is the right mechanism direction, but the current
-marker policies are not strong enough to justify another tiny-LM probe.
+Train-only marker shaping was the right mechanism to test, but the current
+marker policies are not strong enough to justify more work on this marker-dose
+branch.
 
 The key improvement is token pressure:
 
@@ -27,7 +28,7 @@ high-value suffix challenge F1:    0.7665
 preferred gate: materially above SP64, ideally >= ~0.78-0.80
 ```
 
-So the train-only approach is promising, but this exact policy family is still
+So the train-only approach was worth testing, but this exact policy family is
 below the preferred intrinsic gate.
 
 ## Frontier
@@ -85,17 +86,36 @@ avoid in-stream all-soft markers
 look for a better learned prior than the current simple marker policies
 ```
 
+## Tiny-LM Calibration
+
+The calibrated tiny-LM follow-up has now been run on bracketing candidates:
+
+```text
+report: artifacts/v2_0_tiny_lm_marker_calibration_results.md
+SP64 test BPB:                         4.860352
+finite protected SP64 floor test BPB:  4.976850
+suffix-chain2 marker-stripped BPB:     5.094965
+all-soft marker-stripped BPB:          5.157444
+```
+
+The result is clear in the fixed-step/fixed-token view: morphology marker
+shaping improved visible boundary F1 but worsened BPB relative to the finite
+protected floor. More marker dose also worsened token pressure and BPB.
+
 ## Next Decision
 
 Do not run more marker-dose intrinsic variants.
 
-The next useful step is either:
+Do not run larger LM probes for `suffix_chain2_marker_stripped` or
+`all_soft_marker_stripped` as-is.
+
+Updated direction:
 
 ```text
-1. run a calibrated BPB/tiny-LM probe on bracketing candidates to test whether
-   boundary F1 predicts language-modeling value; or
-2. switch to a genuinely different mechanism, e.g. selected suffix/morph seed
-   vocabulary or curated morph pieces, instead of changing marker density.
+keep finite protected routing
+treat finite_protected_sp64_floor as the true protected null baseline
+switch to a genuinely different mechanism: selected suffix/morph seed
+vocabulary, curated morph pieces, or constrained Unigram/MorphBPE
 ```
 
 Do not tune directly against visible challenge examples.

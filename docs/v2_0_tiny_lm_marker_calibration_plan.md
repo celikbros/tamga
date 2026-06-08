@@ -128,3 +128,32 @@ Recommended order:
 ```
 
 Use the same `--max-steps` for all four so this is a calibrated ranking check.
+
+## Completed Calibration
+
+The four short BPB rows have been run.
+
+Result report:
+
+```text
+artifacts/v2_0_tiny_lm_marker_calibration_results.md
+```
+
+300-step test BPB:
+
+```text
+sp_unigram_64000_train_only:      4.860352
+finite_protected_sp64_floor:      4.976850
+suffix_chain2_marker_stripped:    5.094965
+all_soft_marker_stripped:         5.157444
+```
+
+Decision:
+
+```text
+boundary F1 improved with morphology marker shaping, but BPB worsened versus
+the finite protected floor
+stop marker-dose tuning
+move to a different mechanism such as selected morph seed vocabulary, curated
+morph pieces, or constrained Unigram/MorphBPE
+```

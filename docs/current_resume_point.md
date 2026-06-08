@@ -10,14 +10,13 @@ audit work to choose the v2.0 direction.
 Current next step:
 
 ```text
-Continue v2.0 train-only morphology shaping. The finite protected-aware path is
-frozen as the protected-span mechanism, but in-stream all-soft markers are too
-token-expensive. The next candidate should use markerized train views only for
-learned vocabulary shaping, then strip markers at normal encode time.
+Stop v2.0 marker-dose tuning. The finite protected-aware path is frozen as the
+protected-span mechanism, but train-only morphology marker shaping did not pay
+back its token-pressure cost in the 300-step tiny-LM BPB calibration.
 
-Do not run more tiny-LM rows until token-pressure and visible intrinsic gates
-pass. The next gate is a train-only marker view + train-only Unigram intrinsic
-probe, not another BPB run.
+The next candidate should change the mechanism: selected morph seed vocabulary,
+curated high-value morph pieces, or a constrained Unigram/MorphBPE-style
+objective. Use finite_protected_sp64_floor as the true protected null baseline.
 ```
 
 Most recent decision artifacts:
@@ -35,6 +34,7 @@ Most recent decision artifacts:
 - [v2.0 selective soft-marker plan](v2_0_selective_soft_marker_plan.md)
 - [advisor request: v2.0 selective soft-marker direction](advisor_request_v2_0_selective_soft_marker.md)
 - [advisor request: v2.0 train-only marker frontier](advisor_request_v2_0_train_only_marker_frontier.md)
+- [v2.0 tiny-LM marker calibration results](../artifacts/v2_0_tiny_lm_marker_calibration_results.md)
 
 v1.8 key result:
 
@@ -224,6 +224,16 @@ full dry-run valid/test tokens/raw byte:
   all_soft: 0.196313 / 0.196954
 decision: dry-run passed; next run short per-tokenizer BPB probes in the fixed
 calibration order, not all at once
+tiny-LM marker calibration results: artifacts/v2_0_tiny_lm_marker_calibration_results.md
+300-step test BPB:
+  sp64: 4.860352
+  finite_protected_sp64_floor: 4.976850
+  suffix_chain2_marker_stripped: 5.094965
+  all_soft_marker_stripped: 5.157444
+decision: marker shaping improved visible F1 but worsened BPB versus the true
+protected floor; stop marker-dose tuning
+next: selected morph seed vocabulary / curated morph pieces / constrained
+Unigram or MorphBPE-style mechanism
 ```
 
 Completed:

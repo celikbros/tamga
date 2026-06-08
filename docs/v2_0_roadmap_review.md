@@ -714,7 +714,7 @@ decision: the current marker policies form a noisy pressure/F1 frontier;
 do not keep changing marker dose as the next lever
 ```
 
-Tiny-LM calibration preparation:
+Tiny-LM marker calibration:
 
 ```text
 config: configs/v2_0_tiny_lm_marker_calibration.toml
@@ -727,5 +727,22 @@ dry-run valid/test tokens/raw byte:
   finite_protected_sp64_floor: 0.182112 / 0.183362
   suffix_chain2: 0.184500 / 0.185337
   all_soft: 0.196313 / 0.196954
-decision: dry-run passed; run short per-tokenizer BPB calibration rows next
+results: artifacts/v2_0_tiny_lm_marker_calibration_results.md
+300-step test BPB:
+  sp64: 4.860352
+  finite_protected_sp64_floor: 4.976850
+  suffix_chain2: 5.094965
+  all_soft: 5.157444
+decision: train-only marker shaping did not pay back its token-pressure cost
+in fixed-step tiny-LM BPB
+next: stop marker-dose tuning and switch to a different mechanism
+```
+
+Updated next step:
+
+```text
+keep finite protected routing
+use finite_protected_sp64_floor as the true protected null baseline
+prototype selected morph seed vocabulary / curated morph pieces rather than
+more marker-density variants
 ```
