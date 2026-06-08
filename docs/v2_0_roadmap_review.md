@@ -464,6 +464,7 @@ scripts/materialize_v2_raw_hard_candidate_views.py
 scripts/evaluate_v2_raw_hard_candidate_intrinsic.py
 scripts/materialize_v2_raw_soft_marker_candidate_views.py
 scripts/evaluate_v2_soft_marker_candidate_intrinsic.py
+scripts/materialize_v2_train_only_marker_views.py
 ```
 
 Current output:
@@ -625,18 +626,18 @@ do not run broad tiny-LM matrices before a real v2.0 candidate exists
 
 ## Next Immediate Step
 
-Run a narrow Phase 4 decision step, not a broad matrix:
+Continue with a train-only marker shaping candidate, not more tiny-LM rows:
 
 ```text
-decide whether to run one tiny-LM screen:
-finite_protected_soft_marker vs SP64 null baseline
-report fixed-token and approximate iso-byte views
-state the token-pressure penalty before interpreting BPB
+materialize train/valid/test markerized SentencePiece training views
+train a train-only Unigram model from the train view
+evaluate with markers stripped at encode time plus finite protected routing
+gate on token pressure and visible intrinsic metrics before any BPB run
 ```
 
-The current finite protected soft-marker candidate is the first candidate that
-passes the intrinsic gate strongly enough to justify considering a narrow
-tiny-LM screen. It is not an LLM handoff candidate yet.
+The current finite protected soft-marker candidate showed useful morphology and
+protected-span signal, but it is still too token-expensive for handoff or broad
+tiny-LM screening.
 
 After the first smoke, the immediate question is no longer "does morphology
 ever help?" but:
@@ -671,4 +672,17 @@ interpretation: marker cost is largely in-stream; train-only vocab shaping is
 promising but current F1 is below the preferred gate
 decision: prioritize train-view vocab-shaping/constrained-Unigram style sweep;
 do not tiny-LM this candidate yet
+```
+
+Train-only marker view smoke:
+
+```text
+script: scripts/materialize_v2_train_only_marker_views.py
+smoke report: artifacts/v2_0_train_only_marker_views_suffix_chain2_smoke.md
+policy: suffix_chain, min_suffix_count=2
+valid view/raw bytes: 1.086996
+valid marker keep rate: 0.559449
+interpretation: selective train-only markers materially reduce view inflation
+versus the all-soft train view and are worth a train-only Unigram intrinsic
+probe
 ```

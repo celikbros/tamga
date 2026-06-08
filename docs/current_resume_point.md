@@ -1,6 +1,6 @@
 # Current Resume Point
 
-Date: 2026-06-02
+Date: 2026-06-08
 
 ## Current State
 
@@ -10,15 +10,14 @@ audit work to choose the v2.0 direction.
 Current next step:
 
 ```text
-Write the finite protected-aware v2.0 tokenizer design/spec before more
-candidate probing. Advisors converged on an Option 1 + Option 3 hybrid:
-hard protected-span pretokenization, learned BPE/Unigram inside finite
-boundaries, a finite protected-subword/byte fallback path, optional frequent
-protected user-defined symbols, and morphology as a soft prior.
+Continue v2.0 train-only morphology shaping. The finite protected-aware path is
+frozen as the protected-span mechanism, but in-stream all-soft markers are too
+token-expensive. The next candidate should use markerized train views only for
+learned vocabulary shaping, then strip markers at normal encode time.
 
-Do not add another ad-hoc candidate until this spec is written. The next real
-candidate must make protection operational without relying on arbitrary
-open-vocabulary protected tokens or placeholder payload side channels.
+Do not run more tiny-LM rows until token-pressure and visible intrinsic gates
+pass. The next gate is a train-only marker view + train-only Unigram intrinsic
+probe, not another BPB run.
 ```
 
 Most recent decision artifacts:
@@ -74,6 +73,7 @@ scripts/evaluate_v2_protected_encoder.py
 scripts/evaluate_v2_finite_protected_sp64_intrinsic.py
 scripts/evaluate_v2_finite_protected_soft_marker_intrinsic.py
 scripts/measure_v2_finite_protected_soft_marker_pressure.py
+scripts/materialize_v2_train_only_marker_views.py
 ```
 
 Current finding:
@@ -186,6 +186,12 @@ marker-stripped challenge F1: 0.7703
 marker-stripped protected stress: 25/25
 decision: in-stream marker cost is a major bottleneck; prioritize train-only
 vocab shaping / constrained-Unigram style experiments before any more tiny-LM
+train-only marker materializer: scripts/materialize_v2_train_only_marker_views.py
+suffix-chain2 valid-only smoke: artifacts/v2_0_train_only_marker_views_suffix_chain2_smoke.md
+suffix-chain2 valid view/raw bytes: 1.086996
+suffix-chain2 valid marker keep rate: 0.559449
+decision: implementation smoke is healthy; next materialize train/valid/test
+and train a train-only Unigram model before intrinsic evaluation
 ```
 
 Completed:
