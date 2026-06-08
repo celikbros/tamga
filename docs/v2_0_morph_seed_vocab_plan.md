@@ -179,6 +179,26 @@ python scripts\select_v2_morph_seed_policy.py
 
 This also does not train a tokenizer.
 
+Observed policy result:
+
+```text
+report: artifacts/v2_0_morph_seed_policy_selection.md
+findings: docs/v2_0_morph_seed_policy_findings.md
+selected unique: 107
+selected occurrence share: 0.962466
+seed_bias: 100 suffixes / 0.951715 occurrence share
+safe_uds_candidate_later: 7 suffixes / 0.010751 occurrence share
+holdout: 137 suffixes / 0.037534 occurrence share
+```
+
+Decision:
+
+```text
+first prototype should use seed_bias as a learned-vocab prior
+do not force all selected suffixes as user-defined symbols
+do not promote safe_uds_candidate_later automatically in the first run
+```
+
 ## Gates
 
 Before any tiny-LM run, a morph-seed candidate must pass:

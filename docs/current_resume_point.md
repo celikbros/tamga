@@ -244,6 +244,12 @@ candidate analysis user-run command:
   python scripts\analyze_v2_morph_seed_candidates.py --progress 1000
 next user-run command:
   python scripts\select_v2_morph_seed_policy.py
+morph seed policy result: artifacts/v2_0_morph_seed_policy_selection.md
+morph seed policy findings: docs/v2_0_morph_seed_policy_findings.md
+selected unique: 107
+selected occurrence share: 0.962466
+decision: first prototype should use seed_bias as a learned-vocab prior, not
+broad user-defined symbols
 ```
 
 Completed:
