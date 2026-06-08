@@ -721,6 +721,11 @@ config: configs/v2_0_tiny_lm_marker_calibration.toml
 plan: docs/v2_0_tiny_lm_marker_calibration_plan.md
 encoder kind: finite_protected_marker_stripped
 smoke report: artifacts/v2_0_tiny_lm_marker_calibration_suffix_chain2_dry_run.md
-decision: first run the full dry-run for all enabled candidates, then review
-token pressure before training any BPB rows
+full dry-run report: artifacts/v2_0_tiny_lm_marker_calibration_dry_run.md
+dry-run valid/test tokens/raw byte:
+  sp64: 0.159020 / 0.159620
+  finite_protected_sp64_floor: 0.182112 / 0.183362
+  suffix_chain2: 0.184500 / 0.185337
+  all_soft: 0.196313 / 0.196954
+decision: dry-run passed; run short per-tokenizer BPB calibration rows next
 ```

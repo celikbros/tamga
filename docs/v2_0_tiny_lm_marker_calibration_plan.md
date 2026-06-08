@@ -65,6 +65,31 @@ test protected byte fallback tokens: 249
 The slight difference from the intrinsic diagnostic token-pressure reports is
 expected because the tiny-LM encoding includes EOS tokens.
 
+## Full Dry-Run Result
+
+Full encode/token-pressure dry-run:
+
+```text
+report: artifacts/v2_0_tiny_lm_marker_calibration_dry_run.md
+private stats: artifacts/private/v2_0_tiny_lm_marker_calibration_dry_run/encoded_stats.jsonl
+```
+
+| Tokenizer | Valid tokens/raw byte | Test tokens/raw byte | Protected fallback source tokens valid/test |
+| --- | ---: | ---: | ---: |
+| sp_unigram_64000_train_only | 0.159020 | 0.159620 | 0 / 0 |
+| finite_protected_sp64_floor | 0.182112 | 0.183362 | 194 / 249 |
+| suffix_chain2_marker_stripped | 0.184500 | 0.185337 | 194 / 249 |
+| all_soft_marker_stripped | 0.196313 | 0.196954 | 194 / 249 |
+
+This confirms the intended calibration bracket:
+
+```text
+SP64 is the compression floor but breaks protected spans.
+finite_protected_sp64_floor is the protected floor.
+suffix_chain2 is the cheap train-only morphology point.
+all_soft_marker_stripped is the higher-F1/higher-pressure morphology point.
+```
+
 ## User-Run Dry-Run Command
 
 This command performs full encode/token-pressure accounting for all enabled
@@ -88,8 +113,18 @@ private encoded stats written under artifacts/private/
 
 ## After Dry-Run
 
-Do not run training until the dry-run report is reviewed.
+Dry-run has passed.
 
-If token pressure matches expectations, run short per-tokenizer BPB probes
-rather than launching all candidates at once. This keeps failures isolated and
-makes progress visible.
+Run short per-tokenizer BPB probes rather than launching all candidates at once.
+This keeps failures isolated and makes progress visible.
+
+Recommended order:
+
+```text
+1. sp_unigram_64000_train_only
+2. finite_protected_sp64_floor
+3. suffix_chain2_marker_stripped
+4. all_soft_marker_stripped
+```
+
+Use the same `--max-steps` for all four so this is a calibrated ranking check.

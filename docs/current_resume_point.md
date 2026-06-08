@@ -216,7 +216,14 @@ tiny-LM marker calibration config: configs/v2_0_tiny_lm_marker_calibration.toml
 tiny-LM marker calibration plan: docs/v2_0_tiny_lm_marker_calibration_plan.md
 new tiny-LM kind: finite_protected_marker_stripped
 suffix-chain2 tiny-LM dry-run smoke: artifacts/v2_0_tiny_lm_marker_calibration_suffix_chain2_dry_run.md
-decision: full dry-run should be user-run because encode takes multiple minutes
+full tiny-LM marker dry-run: artifacts/v2_0_tiny_lm_marker_calibration_dry_run.md
+full dry-run valid/test tokens/raw byte:
+  sp64: 0.159020 / 0.159620
+  finite_protected_sp64_floor: 0.182112 / 0.183362
+  suffix_chain2: 0.184500 / 0.185337
+  all_soft: 0.196313 / 0.196954
+decision: dry-run passed; next run short per-tokenizer BPB probes in the fixed
+calibration order, not all at once
 ```
 
 Completed:
