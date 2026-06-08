@@ -61,6 +61,7 @@ class ProbeConfig:
     output_dir: Path
     report_out: Path
     seed: int
+    encode_progress: int
     model: ModelConfig
     tokenizers: list[TokenizerConfig]
 
@@ -159,7 +160,13 @@ def load_probe_config(path: str | Path) -> ProbeConfig:
             continue
         name = _string_field(item, "name", context="tokenizer")
         kind = _string_field(item, "kind", context=f"tokenizer {name}")
-        if kind not in {"custom", "sentencepiece", "utf8_byte", "finite_protected_soft_marker"}:
+        if kind not in {
+            "custom",
+            "sentencepiece",
+            "utf8_byte",
+            "finite_protected_soft_marker",
+            "finite_protected_marker_stripped",
+        }:
             raise ValueError(f"unsupported tokenizer kind for {name}: {kind}")
         tokenizers.append(
             TokenizerConfig(
@@ -183,6 +190,7 @@ def load_probe_config(path: str | Path) -> ProbeConfig:
         output_dir=Path(settings.get("output_dir", "artifacts/private/v1_8_tiny_lm_bpb_probe")),
         report_out=Path(settings.get("report_out", "artifacts/v1_8_tiny_lm_bpb_probe.md")),
         seed=_int_field(settings, "seed", context="settings"),
+        encode_progress=int(settings.get("encode_progress", 0)),
         model=ModelConfig(
             seq_len=_int_field(model_raw, "seq_len", context="model"),
             batch_size=_int_field(model_raw, "batch_size", context="model"),
@@ -268,16 +276,30 @@ def encode_utf8_byte_split(lines: list[str], byte_count: int, split: str) -> Enc
     return EncodedSplit(split, ids, byte_count, len(lines))
 
 
-def encode_sentencepiece_split(model_path: Path, lines: list[str], byte_count: int, split: str) -> EncodedSplit:
+def encode_sentencepiece_split(
+    model_path: Path,
+    lines: list[str],
+    byte_count: int,
+    split: str,
+    *,
+    tokenizer_name: str = "",
+    progress: int = 0,
+) -> EncodedSplit:
     import sentencepiece as spm  # type: ignore[import-not-found]
 
     processor = spm.SentencePieceProcessor(model_file=str(model_path))
     eos = processor.eos_id()
     ids: list[int] = []
-    for line in lines:
+    for line_number, line in enumerate(lines, start=1):
         ids.extend(int(piece_id) for piece_id in processor.encode(line, out_type=int))
         if eos >= 0:
             ids.append(int(eos))
+        if progress > 0 and line_number % progress == 0:
+            print(
+                f"encoding {tokenizer_name or model_path.stem} split={split}: "
+                f"{line_number:,} lines tokens={len(ids):,}",
+                flush=True,
+            )
     return EncodedSplit(split, ids, byte_count, len(lines))
 
 
@@ -333,6 +355,7 @@ def encode_finite_protected_soft_marker_line_ids(
     processor,
     selected_pieces: list[str],
     protected_piece_offset: int,
+    insert_soft_markers: bool = True,
 ) -> tuple[list[int], int]:
     piece_to_id = {
         piece: protected_piece_offset + index
@@ -378,7 +401,7 @@ def encode_finite_protected_soft_marker_line_ids(
             continue
 
         if piece.boundary_before == "soft":
-            segment += SOFT_MARKER + piece.surface
+            segment += (SOFT_MARKER if insert_soft_markers else "") + piece.surface
             continue
 
         if piece.boundary_before == "hard":
@@ -399,6 +422,9 @@ def encode_finite_protected_soft_marker_split(
     lines: list[str],
     byte_count: int,
     split: str,
+    insert_soft_markers: bool = True,
+    tokenizer_name: str = "",
+    progress: int = 0,
 ) -> tuple[int, EncodedSplit]:
     processor = load_sp_processor(model_path)
     selected = selected_piece_strings(selected_pieces_path)
@@ -406,17 +432,25 @@ def encode_finite_protected_soft_marker_split(
     eos = _processor_eos_id(processor)
     ids: list[int] = []
     protected_byte_tokens = 0
-    for line in lines:
+    for line_number, line in enumerate(lines, start=1):
         line_ids, byte_tokens = encode_finite_protected_soft_marker_line_ids(
             line,
             processor=processor,
             selected_pieces=selected,
             protected_piece_offset=piece_size,
+            insert_soft_markers=insert_soft_markers,
         )
         ids.extend(line_ids)
         protected_byte_tokens += byte_tokens
         if eos >= 0:
             ids.append(eos)
+        if progress > 0 and line_number % progress == 0:
+            print(
+                f"encoding {tokenizer_name or model_path.stem} split={split}: "
+                f"{line_number:,} lines tokens={len(ids):,} "
+                f"protected_byte_tokens={protected_byte_tokens:,}",
+                flush=True,
+            )
     vocab_size = piece_size + len(selected) + BYTE_VOCAB_SIZE
     return (
         vocab_size,
@@ -424,7 +458,12 @@ def encode_finite_protected_soft_marker_split(
     )
 
 
-def encode_tokenizer(config: TokenizerConfig, splits: dict[str, SplitText]) -> EncodedTokenizer:
+def encode_tokenizer(
+    config: TokenizerConfig,
+    splits: dict[str, SplitText],
+    *,
+    encode_progress: int = 0,
+) -> EncodedTokenizer:
     try:
         if config.kind == "custom":
             vocab = build_custom_vocab(
@@ -449,11 +488,18 @@ def encode_tokenizer(config: TokenizerConfig, splits: dict[str, SplitText]) -> E
 
             processor = spm.SentencePieceProcessor(model_file=str(config.path))
             encoded = {
-                name: encode_sentencepiece_split(config.path, split.lines, split.bytes, name)
+                name: encode_sentencepiece_split(
+                    config.path,
+                    split.lines,
+                    split.bytes,
+                    name,
+                    tokenizer_name=config.name,
+                    progress=encode_progress,
+                )
                 for name, split in splits.items()
             }
             return EncodedTokenizer(config, int(processor.GetPieceSize()), "ok", splits=encoded)
-        if config.kind == "finite_protected_soft_marker":
+        if config.kind in {"finite_protected_soft_marker", "finite_protected_marker_stripped"}:
             if config.path is None or not config.path.exists():
                 return EncodedTokenizer(config, 0, "skipped", reason=f"missing model: {config.path}")
             if config.selected_pieces is None or not config.selected_pieces.exists():
@@ -472,6 +518,9 @@ def encode_tokenizer(config: TokenizerConfig, splits: dict[str, SplitText]) -> E
                     lines=split.lines,
                     byte_count=split.bytes,
                     split=name,
+                    insert_soft_markers=config.kind == "finite_protected_soft_marker",
+                    tokenizer_name=config.name,
+                    progress=encode_progress,
                 )
             return EncodedTokenizer(config, vocab_size, "ok", splits=encoded)
     except Exception as exc:
@@ -484,7 +533,11 @@ def encode_all(config: ProbeConfig) -> list[EncodedTokenizer]:
     encoded: list[EncodedTokenizer] = []
     for tokenizer in config.tokenizers:
         print(f"Encoding tokenizer={tokenizer.name} kind={tokenizer.kind}", flush=True)
-        result = encode_tokenizer(tokenizer, splits)
+        result = encode_tokenizer(
+            tokenizer,
+            splits,
+            encode_progress=config.encode_progress,
+        )
         encoded.append(result)
         if result.status == "ok":
             train = result.splits["train"]
@@ -776,6 +829,7 @@ def format_report(
             "- Compare only byte-normalized validation/test loss, not token perplexity.",
             "- Custom uses a temporary train-only vocabulary plus UTF-8 byte fallback for unseen source tokens.",
             "- Finite protected candidates use finite protected pieces plus UTF-8 byte fallback for protected spans.",
+            "- Marker-stripped finite protected candidates do not insert morphology markers at normal encode time.",
             "- This script does not make the tokenizer LLM-ready.",
             "- A negative result should be read with the protocol caveats for the active experiment.",
         ]
@@ -822,6 +876,7 @@ def main(argv: list[str] | None = None) -> int:
         help="Restrict to one or more tokenizer names.",
     )
     parser.add_argument("--max-steps", type=int, help="Override configured max_steps.")
+    parser.add_argument("--encode-progress", type=int, help="Print encode progress every N lines.")
     parser.add_argument("--report-out", help="Override configured public report path.")
     parser.add_argument("--output-dir", help="Override configured private output directory.")
     args = parser.parse_args(argv)
@@ -834,6 +889,10 @@ def main(argv: list[str] | None = None) -> int:
             config,
             model=replace(config.model, max_steps=args.max_steps),
         )
+    if args.encode_progress is not None:
+        if args.encode_progress < 0:
+            raise ValueError("--encode-progress must be non-negative")
+        config = replace(config, encode_progress=args.encode_progress)
     if args.report_out:
         config = replace(config, report_out=Path(args.report_out))
     if args.output_dir:
@@ -846,6 +905,7 @@ def main(argv: list[str] | None = None) -> int:
             output_dir=config.output_dir,
             report_out=config.report_out,
             seed=config.seed,
+            encode_progress=config.encode_progress,
             model=config.model,
             tokenizers=[tokenizer for tokenizer in config.tokenizers if tokenizer.name in selected],
         )

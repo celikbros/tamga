@@ -212,6 +212,11 @@ frontier CI decision: train-only marker F1 intervals overlap heavily; do not
 rank all-soft/suffix-chain2/high-value by tiny point differences
 decision: stop marker-dose tuning; next choose between calibrated BPB on
 bracketing candidates or a genuinely different seed-vocab/morph-piece mechanism
+tiny-LM marker calibration config: configs/v2_0_tiny_lm_marker_calibration.toml
+tiny-LM marker calibration plan: docs/v2_0_tiny_lm_marker_calibration_plan.md
+new tiny-LM kind: finite_protected_marker_stripped
+suffix-chain2 tiny-LM dry-run smoke: artifacts/v2_0_tiny_lm_marker_calibration_suffix_chain2_dry_run.md
+decision: full dry-run should be user-run because encode takes multiple minutes
 ```
 
 Completed:

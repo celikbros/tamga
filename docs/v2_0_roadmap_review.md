@@ -713,3 +713,14 @@ train-only marker F1 intervals overlap heavily
 decision: the current marker policies form a noisy pressure/F1 frontier;
 do not keep changing marker dose as the next lever
 ```
+
+Tiny-LM calibration preparation:
+
+```text
+config: configs/v2_0_tiny_lm_marker_calibration.toml
+plan: docs/v2_0_tiny_lm_marker_calibration_plan.md
+encoder kind: finite_protected_marker_stripped
+smoke report: artifacts/v2_0_tiny_lm_marker_calibration_suffix_chain2_dry_run.md
+decision: first run the full dry-run for all enabled candidates, then review
+token pressure before training any BPB rows
+```

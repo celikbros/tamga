@@ -1,0 +1,53 @@
+[settings]
+split_dir = "artifacts/private/v1_8_local_lm_probe/celik_tr_primary_multilingual_mix_lm_probe_pilot_20k/filtered_split"
+output_dir = "artifacts/private/v2_0_tiny_lm_marker_calibration"
+report_out = "artifacts/v2_0_tiny_lm_marker_calibration.md"
+seed = 20260608
+encode_progress = 1000
+
+[model]
+seq_len = 128
+batch_size = 4
+max_steps = 300
+eval_interval = 100
+learning_rate = 0.0003
+d_model = 256
+n_layers = 4
+n_heads = 4
+ff_mult = 4
+dropout = 0.1
+device = "auto"
+
+[[tokenizers]]
+name = "sp_unigram_64000_train_only"
+kind = "sentencepiece"
+path = "artifacts/private/v1_8_train_only_sentencepiece/sp_unigram_64000_train_only.model"
+enabled = true
+
+[[tokenizers]]
+name = "finite_protected_sp64_floor"
+kind = "finite_protected_marker_stripped"
+path = "artifacts/private/v1_8_train_only_sentencepiece/sp_unigram_64000_train_only.model"
+selected_pieces = "artifacts/private/v2_0_protected_aware/protected_piece_vocab.train.tsv"
+enabled = true
+
+[[tokenizers]]
+name = "suffix_chain2_marker_stripped"
+kind = "finite_protected_marker_stripped"
+path = "artifacts/private/v2_0_candidate_sentencepiece/protected_hard_train_only_suffix_chain2_unigram_64000.model"
+selected_pieces = "artifacts/private/v2_0_protected_aware/protected_piece_vocab.train.tsv"
+enabled = true
+
+[[tokenizers]]
+name = "all_soft_marker_stripped"
+kind = "finite_protected_marker_stripped"
+path = "artifacts/private/v2_0_candidate_sentencepiece/protected_hard_soft_marker_raw_sp64_unigram_64000.model"
+selected_pieces = "artifacts/private/v2_0_protected_aware/protected_piece_vocab.train.tsv"
+enabled = true
+
+[[tokenizers]]
+name = "high_value_suffix_marker_stripped"
+kind = "finite_protected_marker_stripped"
+path = "artifacts/private/v2_0_candidate_sentencepiece/protected_hard_train_only_high_value_suffix_unigram_64000.model"
+selected_pieces = "artifacts/private/v2_0_protected_aware/protected_piece_vocab.train.tsv"
+enabled = false

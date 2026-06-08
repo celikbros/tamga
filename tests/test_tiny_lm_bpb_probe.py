@@ -25,6 +25,15 @@ class FakeIdProcessor:
         return [10 + len(surface)]
 
 
+class RecordingProcessor:
+    def __init__(self):
+        self.surfaces: list[str] = []
+
+    def EncodeAsIds(self, surface: str) -> list[int]:
+        self.surfaces.append(surface)
+        return [10 + len(surface)]
+
+
 def test_utf8_byte_encoding_is_fixed_vocab(tmp_path: Path):
     split_dir = tmp_path / "split"
     _write_split(split_dir)
@@ -68,6 +77,23 @@ def test_finite_protected_soft_marker_line_ids_preserve_protected_piece_path():
     assert 1001 in ids
     assert byte_tokens == 0
     assert ids
+
+
+def test_finite_protected_marker_stripped_line_ids_do_not_insert_marker():
+    processor = RecordingProcessor()
+
+    ids, byte_tokens = encode_finite_protected_soft_marker_line_ids(
+        "Kitaplardan geldim.",
+        processor=processor,
+        selected_pieces=[],
+        protected_piece_offset=1000,
+        insert_soft_markers=False,
+    )
+
+    assert ids
+    assert byte_tokens == 0
+    assert processor.surfaces
+    assert all("\ue000" not in surface for surface in processor.surfaces)
 
 
 def test_config_and_dry_report(tmp_path: Path):
@@ -151,5 +177,50 @@ selected_pieces = "{selected_path.as_posix()}"
     config = load_probe_config(config_path)
 
     assert config.tokenizers[0].kind == "finite_protected_soft_marker"
+    assert config.tokenizers[0].path == model_path
+    assert config.tokenizers[0].selected_pieces == selected_path
+
+
+def test_config_accepts_finite_protected_marker_stripped(tmp_path: Path):
+    split_dir = tmp_path / "split"
+    _write_split(split_dir)
+    model_path = tmp_path / "soft.model"
+    selected_path = tmp_path / "pieces.tsv"
+    model_path.write_text("fake", encoding="utf-8")
+    selected_path.write_text("piece\tcount\tcategory\treason\tbytes\troutes\n", encoding="utf-8")
+    config_path = tmp_path / "probe.toml"
+    config_path.write_text(
+        f"""
+[settings]
+split_dir = "{split_dir.as_posix()}"
+output_dir = "{(tmp_path / 'private').as_posix()}"
+report_out = "{(tmp_path / 'report.md').as_posix()}"
+seed = 1
+
+[model]
+seq_len = 8
+batch_size = 2
+max_steps = 1
+eval_interval = 1
+learning_rate = 0.001
+d_model = 16
+n_layers = 1
+n_heads = 1
+ff_mult = 2
+dropout = 0.0
+device = "cpu"
+
+[[tokenizers]]
+name = "finite_marker_stripped"
+kind = "finite_protected_marker_stripped"
+path = "{model_path.as_posix()}"
+selected_pieces = "{selected_path.as_posix()}"
+""",
+        encoding="utf-8",
+    )
+
+    config = load_probe_config(config_path)
+
+    assert config.tokenizers[0].kind == "finite_protected_marker_stripped"
     assert config.tokenizers[0].path == model_path
     assert config.tokenizers[0].selected_pieces == selected_path
