@@ -141,6 +141,44 @@ python scripts\analyze_v2_morph_seed_candidates.py --progress 1000
 
 This does not train a tokenizer.
 
+## Second Implementation Step
+
+Script:
+
+```text
+scripts/select_v2_morph_seed_policy.py
+```
+
+Purpose:
+
+```text
+turn the suffix candidate analysis into a challenge-blind policy
+keep ambiguous/short suffixes as seed-bias candidates, not forced UDS
+hold out protected-tail suffixes for finite protected routing review
+identify a small safe_uds_candidate_later pool without promoting it yet
+```
+
+Default input:
+
+```text
+artifacts/private/v2_0_morph_seed_vocab/morph_seed_candidates.train.tsv
+```
+
+Default outputs:
+
+```text
+artifacts/private/v2_0_morph_seed_vocab/morph_seed_policy.train.tsv
+artifacts/v2_0_morph_seed_policy_selection.md
+```
+
+User-run command:
+
+```powershell
+python scripts\select_v2_morph_seed_policy.py
+```
+
+This also does not train a tokenizer.
+
 ## Gates
 
 Before any tiny-LM run, a morph-seed candidate must pass:
@@ -187,4 +225,3 @@ The next implementation decision is how to inject the selected morph pieces:
 
 The analysis report should decide which of these is safe enough for the first
 prototype.
-

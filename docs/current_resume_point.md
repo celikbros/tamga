@@ -78,6 +78,7 @@ scripts/evaluate_v2_finite_protected_soft_marker_intrinsic.py
 scripts/measure_v2_finite_protected_soft_marker_pressure.py
 scripts/materialize_v2_train_only_marker_views.py
 scripts/analyze_v2_morph_seed_candidates.py
+scripts/select_v2_morph_seed_policy.py
 ```
 
 Current finding:
@@ -238,8 +239,11 @@ next: selected morph seed vocabulary / curated morph pieces / constrained
 Unigram or MorphBPE-style mechanism
 morph seed plan: docs/v2_0_morph_seed_vocab_plan.md
 morph seed candidate analyzer: scripts/analyze_v2_morph_seed_candidates.py
-next user-run command:
+morph seed policy selector: scripts/select_v2_morph_seed_policy.py
+candidate analysis user-run command:
   python scripts\analyze_v2_morph_seed_candidates.py --progress 1000
+next user-run command:
+  python scripts\select_v2_morph_seed_policy.py
 ```
 
 Completed:

@@ -752,6 +752,7 @@ Morph seed vocabulary branch:
 ```text
 plan: docs/v2_0_morph_seed_vocab_plan.md
 analyzer: scripts/analyze_v2_morph_seed_candidates.py
+policy selector: scripts/select_v2_morph_seed_policy.py
 default report: artifacts/v2_0_morph_seed_candidate_analysis.md
 default private TSV: artifacts/private/v2_0_morph_seed_vocab/morph_seed_candidates.train.tsv
 purpose: identify train-only suffix/morph candidates before any UDS/seed policy
