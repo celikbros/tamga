@@ -95,3 +95,12 @@ python scripts\run_v2_candidate_sentencepiece_probe.py configs\v2_0_morph_seed_b
 
 This is still not a tiny-LM run. It only checks token pressure on raw
 valid/test text.
+
+Observed result:
+
+```text
+findings: docs/v2_0_morph_seed_bias_findings.md
+augmentation bytes/base byte: 0.000022
+valid/test tokens/raw byte: 0.158312 / 0.158901
+decision: token-pressure gate passed
+```

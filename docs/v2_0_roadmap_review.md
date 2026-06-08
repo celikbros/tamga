@@ -761,4 +761,9 @@ policy findings: docs/v2_0_morph_seed_policy_findings.md
 decision: use seed_bias first; do not force broad UDS
 augmentation script: scripts/materialize_v2_morph_seed_augmented_view.py
 SP config: configs/v2_0_morph_seed_bias_sentencepiece.toml
+augmentation report: artifacts/v2_0_morph_seed_augmented_view.md
+SP probe report: artifacts/v2_0_morph_seed_bias_sentencepiece_probe.md
+findings: docs/v2_0_morph_seed_bias_findings.md
+valid/test tokens/raw byte: 0.158312 / 0.158901
+decision: token-pressure gate passed; next finite-protected intrinsic eval
 ```

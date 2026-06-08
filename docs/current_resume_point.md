@@ -253,10 +253,14 @@ decision: first prototype should use seed_bias as a learned-vocab prior, not
 broad user-defined symbols
 morph seed augmented-view script: scripts/materialize_v2_morph_seed_augmented_view.py
 morph seed SP config: configs/v2_0_morph_seed_bias_sentencepiece.toml
+morph seed bias findings: docs/v2_0_morph_seed_bias_findings.md
+augmentation report: artifacts/v2_0_morph_seed_augmented_view.md
+SP probe report: artifacts/v2_0_morph_seed_bias_sentencepiece_probe.md
+augmentation bytes/base byte: 0.000022
+morph_seed_bias valid/test tokens/raw byte: 0.158312 / 0.158901
+decision: token-pressure gate passed; run finite-protected intrinsic eval next
 next user-run command:
-  python scripts\materialize_v2_morph_seed_augmented_view.py
-then:
-  python scripts\run_v2_candidate_sentencepiece_probe.py configs\v2_0_morph_seed_bias_sentencepiece.toml --force
+  python scripts\evaluate_v2_finite_protected_sp64_intrinsic.py --sp64-model artifacts\private\v2_0_morph_seed_vocab\morph_seed_bias_unigram_64000.model --report-out artifacts\v2_0_morph_seed_bias_finite_protected_intrinsic_eval.md
 ```
 
 Completed:
