@@ -31,8 +31,10 @@ Most recent decision artifacts:
 - [v2.0 protected-aware tokenizer spec](v2_0_protected_aware_tokenizer_spec.md)
 - [v2.0 tiny-LM finite protected soft-marker findings](v2_0_tiny_lm_finite_protected_soft_marker_findings.md)
 - [v2.0 marker-stripped soft-marker findings](v2_0_marker_stripped_soft_marker_findings.md)
+- [v2.0 train-only marker findings](v2_0_train_only_marker_findings.md)
 - [v2.0 selective soft-marker plan](v2_0_selective_soft_marker_plan.md)
 - [advisor request: v2.0 selective soft-marker direction](advisor_request_v2_0_selective_soft_marker.md)
+- [advisor request: v2.0 train-only marker frontier](advisor_request_v2_0_train_only_marker_frontier.md)
 
 v1.8 key result:
 
@@ -190,8 +192,20 @@ train-only marker materializer: scripts/materialize_v2_train_only_marker_views.p
 suffix-chain2 valid-only smoke: artifacts/v2_0_train_only_marker_views_suffix_chain2_smoke.md
 suffix-chain2 valid view/raw bytes: 1.086996
 suffix-chain2 valid marker keep rate: 0.559449
-decision: implementation smoke is healthy; next materialize train/valid/test
-and train a train-only Unigram model before intrinsic evaluation
+full suffix-chain2 view report: artifacts/v2_0_train_only_marker_views_suffix_chain2.md
+suffix-chain2 SP probe: artifacts/v2_0_train_only_suffix_chain2_sentencepiece_probe.md
+suffix-chain2 marker-stripped diagnostic: artifacts/v2_0_train_only_suffix_chain2_marker_stripped_diagnostic.md
+suffix-chain2 valid/test tokens/raw byte: 0.183799 / 0.184619
+suffix-chain2 challenge F1: 0.7632
+high-value suffix view report: artifacts/v2_0_train_only_marker_views_high_value_suffix.md
+high-value suffix SP probe: artifacts/v2_0_train_only_high_value_suffix_sentencepiece_probe.md
+high-value suffix diagnostic: artifacts/v2_0_train_only_high_value_suffix_marker_stripped_diagnostic.md
+high-value valid/test tokens/raw byte: 0.190346 / 0.191068
+high-value challenge F1: 0.7665
+frontier report: artifacts/v2_0_train_only_marker_frontier.md
+findings: docs/v2_0_train_only_marker_findings.md
+decision: train-only shaping is promising, but current simple policies do not
+yet pass the preferred visible intrinsic gate; do not run tiny-LM yet
 ```
 
 Completed:

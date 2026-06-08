@@ -686,3 +686,18 @@ interpretation: selective train-only markers materially reduce view inflation
 versus the all-soft train view and are worth a train-only Unigram intrinsic
 probe
 ```
+
+Train-only marker frontier:
+
+```text
+findings: docs/v2_0_train_only_marker_findings.md
+frontier: artifacts/v2_0_train_only_marker_frontier.md
+all-soft train-only marker-stripped test tokens/raw byte: 0.196236
+all-soft train-only challenge F1: 0.7703
+suffix-chain2 test tokens/raw byte: 0.184619
+suffix-chain2 challenge F1: 0.7632
+high-value suffix test tokens/raw byte: 0.191068
+high-value suffix challenge F1: 0.7665
+decision: no tiny-LM yet; current train-only marker policies improve pressure
+but do not pass the preferred visible intrinsic gate
+```
