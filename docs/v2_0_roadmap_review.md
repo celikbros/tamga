@@ -701,3 +701,15 @@ high-value suffix challenge F1: 0.7665
 decision: no tiny-LM yet; current train-only marker policies improve pressure
 but do not pass the preferred visible intrinsic gate
 ```
+
+Follow-up controls:
+
+```text
+marker vocab audit: artifacts/v2_0_sentencepiece_marker_vocab_audit.md
+all marker-trained models learned only one marker-containing vocab piece:
+the standalone U+E000 marker
+frontier CI: artifacts/v2_0_train_only_marker_frontier_ci.md
+train-only marker F1 intervals overlap heavily
+decision: the current marker policies form a noisy pressure/F1 frontier;
+do not keep changing marker dose as the next lever
+```

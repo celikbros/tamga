@@ -204,8 +204,14 @@ high-value valid/test tokens/raw byte: 0.190346 / 0.191068
 high-value challenge F1: 0.7665
 frontier report: artifacts/v2_0_train_only_marker_frontier.md
 findings: docs/v2_0_train_only_marker_findings.md
-decision: train-only shaping is promising, but current simple policies do not
-yet pass the preferred visible intrinsic gate; do not run tiny-LM yet
+marker vocab audit: artifacts/v2_0_sentencepiece_marker_vocab_audit.md
+marker audit decision: no marker+surface vocab artifact found; each train-only
+marker model learned only the standalone U+E000 marker
+frontier CI report: artifacts/v2_0_train_only_marker_frontier_ci.md
+frontier CI decision: train-only marker F1 intervals overlap heavily; do not
+rank all-soft/suffix-chain2/high-value by tiny point differences
+decision: stop marker-dose tuning; next choose between calibrated BPB on
+bracketing candidates or a genuinely different seed-vocab/morph-piece mechanism
 ```
 
 Completed:
