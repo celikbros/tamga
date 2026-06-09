@@ -815,6 +815,11 @@ SP config: configs/v2_0_expanded_uds22_sentencepiece.toml
 selected symbols: 22
 selection: recommendation=uds_or_seed_candidate, min_count>=100,
 surface_len>=3, hard_share<=0.01, collision<=0.001
-next: run token-pressure probe, then finite-protected intrinsic eval only if
-pressure stays acceptable
+SP pressure report: artifacts/v2_0_expanded_uds22_sentencepiece_probe.md
+findings: docs/v2_0_expanded_uds22_findings.md
+valid/test tokens/raw byte: 0.183675 / 0.184059
+decision: failed token-pressure gate; no finite-protected intrinsic eval
+decision: stop UDS expansion; keep safe UDS7 as the best cheap structural prior
+next: move to constrained/MorphBPE-style objective or another learned mechanism
+that treats morphology as a soft preference instead of hard UDS forcing
 ```

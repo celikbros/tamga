@@ -291,10 +291,14 @@ expanded UDS22 materializer: scripts/materialize_v2_expanded_uds_symbols.py
 expanded UDS22 symbols report: artifacts/v2_0_expanded_uds22_symbols.md
 expanded UDS22 SP config: configs/v2_0_expanded_uds22_sentencepiece.toml
 expanded UDS22 selected symbols: 22
-next user-run command:
-  python scripts\run_v2_candidate_sentencepiece_probe.py configs\v2_0_expanded_uds22_sentencepiece.toml --force
-if token pressure passes:
-  python scripts\evaluate_v2_finite_protected_sp64_intrinsic.py --sp64-model artifacts\private\v2_0_expanded_uds22\expanded_uds22_unigram_64000.model --reference-label expanded_uds22_unigram_64000 --finite-label finite_protected_expanded_uds22 --report-out artifacts\v2_0_expanded_uds22_finite_protected_intrinsic_eval.md
+expanded UDS22 SP report: artifacts/v2_0_expanded_uds22_sentencepiece_probe.md
+expanded UDS22 findings: docs/v2_0_expanded_uds22_findings.md
+expanded UDS22 valid/test tokens/raw byte: 0.183675 / 0.184059
+decision: expanded UDS22 failed token-pressure gate; no intrinsic eval
+decision: stop UDS expansion; keep safe UDS7 as best cheap structural prior
+next:
+  move to constrained/MorphBPE-style objective or another learned mechanism
+  that uses morphology as a soft preference rather than hard UDS forcing
 ```
 
 Completed:
