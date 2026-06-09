@@ -272,10 +272,15 @@ strong valid/test tokens/raw byte: 0.158315 / 0.158913
 strong challenge F1, finite protected: 0.6918
 decision: stop simple morph-seed appendix branch; keep finite protected routing
 and move to a more structural mechanism
-next design options:
-  small audited UDS experiment from safe_uds_candidate_later
-  true seed-vocabulary injection if SentencePiece can support it cleanly
-  custom constrained Unigram/MorphBPE objective
+safe UDS plan: docs/v2_0_safe_uds_plan.md
+safe UDS materializer: scripts/materialize_v2_safe_uds_symbols.py
+safe UDS symbols report: artifacts/v2_0_safe_uds_symbols.md
+safe UDS SP config: configs/v2_0_safe_uds_sentencepiece.toml
+safe UDS selected symbols: 7
+next user-run command:
+  python scripts\run_v2_candidate_sentencepiece_probe.py configs\v2_0_safe_uds_sentencepiece.toml --force
+if token pressure passes:
+  python scripts\evaluate_v2_finite_protected_sp64_intrinsic.py --sp64-model artifacts\private\v2_0_safe_uds\safe_uds_unigram_64000.model --reference-label safe_uds_unigram_64000 --finite-label finite_protected_safe_uds --report-out artifacts\v2_0_safe_uds_finite_protected_intrinsic_eval.md
 ```
 
 Completed:

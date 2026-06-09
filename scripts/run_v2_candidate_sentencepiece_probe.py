@@ -31,6 +31,7 @@ class CandidateSPConfig:
     remove_extra_whitespaces: bool
     train_extremely_large_corpus: bool
     max_sentence_length: int
+    user_defined_symbols: list[str]
 
     @property
     def model_path(self) -> Path:
@@ -69,6 +70,35 @@ def _string_field(settings: dict[str, Any], field: str) -> str:
     return value
 
 
+def _string_list_field(settings: dict[str, Any], field: str) -> list[str]:
+    value = settings.get(field, [])
+    if value in (None, ""):
+        return []
+    if not isinstance(value, list) or not all(isinstance(item, str) for item in value):
+        raise ValueError(f"[settings] requires string list field {field!r}")
+    return [item for item in value if item]
+
+
+def _load_symbol_file(path: str | Path) -> list[str]:
+    symbols: list[str] = []
+    with Path(path).open("r", encoding="utf-8") as handle:
+        for raw_line in handle:
+            symbol = raw_line.strip()
+            if symbol and not symbol.startswith("#"):
+                symbols.append(symbol)
+    return symbols
+
+
+def _configured_user_defined_symbols(settings: dict[str, Any]) -> list[str]:
+    symbols = _string_list_field(settings, "user_defined_symbols")
+    symbols_path = settings.get("user_defined_symbols_path")
+    if isinstance(symbols_path, str) and symbols_path:
+        symbols.extend(_load_symbol_file(symbols_path))
+    elif symbols_path not in (None, ""):
+        raise ValueError("[settings] requires string field 'user_defined_symbols_path'")
+    return list(dict.fromkeys(symbols))
+
+
 def load_config(path: str | Path) -> CandidateSPConfig:
     config_path = Path(path)
     raw = _load_toml(config_path)
@@ -92,6 +122,7 @@ def load_config(path: str | Path) -> CandidateSPConfig:
         remove_extra_whitespaces=bool(settings.get("remove_extra_whitespaces", False)),
         train_extremely_large_corpus=bool(settings.get("train_extremely_large_corpus", False)),
         max_sentence_length=int(settings.get("max_sentence_length", 16384)),
+        user_defined_symbols=_configured_user_defined_symbols(settings),
     )
 
 
@@ -125,6 +156,7 @@ def train_model(config: CandidateSPConfig, *, force: bool) -> None:
         remove_extra_whitespaces=config.remove_extra_whitespaces,
         train_extremely_large_corpus=config.train_extremely_large_corpus,
         max_sentence_length=config.max_sentence_length,
+        user_defined_symbols=config.user_defined_symbols,
     )
     print(f"wrote_model: {config.model_path}")
     print(f"wrote_vocab: {config.vocab_path}")
@@ -196,6 +228,11 @@ def evaluate_model(config: CandidateSPConfig) -> list[ViewStats]:
 
 
 def format_report(config: CandidateSPConfig, rows: list[ViewStats]) -> str:
+    symbol_note = (
+        "Configured user-defined symbols are enforced by SentencePiece during training and encode."
+        if config.user_defined_symbols
+        else "Candidate metadata, when present, is diagnostic and is not enforced as SentencePiece user-defined symbols."
+    )
     lines = [
         "# v2.0 Candidate SentencePiece Probe",
         "",
@@ -204,9 +241,8 @@ def format_report(config: CandidateSPConfig, rows: list[ViewStats]) -> str:
         f"Model: `{config.model_path.as_posix()}`",
         "",
         "This is an intrinsic learned-tokenizer probe, not an LLM result.",
-        "SentencePiece trains on the serialized train view. Candidate metadata,",
-        "when present, is diagnostic and is not enforced as SentencePiece",
-        "user-defined symbols in this first probe.",
+        "SentencePiece trains on the configured train view.",
+        symbol_note,
         "",
         "## Model Settings",
         "",
@@ -217,6 +253,7 @@ def format_report(config: CandidateSPConfig, rows: list[ViewStats]) -> str:
         f"| split_by_whitespace | {config.split_by_whitespace} |",
         f"| remove_extra_whitespaces | {config.remove_extra_whitespaces} |",
         f"| max_sentence_length | {config.max_sentence_length} |",
+        f"| user_defined_symbols | {len(config.user_defined_symbols)} |",
         "",
         "## Token Pressure",
         "",

@@ -780,3 +780,18 @@ decision: stop simple morph-seed appendix branch; compression-safe but not
 morphology-effective
 next: keep finite protected routing and move to a more structural mechanism
 ```
+
+Safe UDS branch:
+
+```text
+plan: docs/v2_0_safe_uds_plan.md
+symbol materializer: scripts/materialize_v2_safe_uds_symbols.py
+symbols report: artifacts/v2_0_safe_uds_symbols.md
+symbols output: artifacts/private/v2_0_morph_seed_vocab/safe_uds_symbols.train.txt
+SP config: configs/v2_0_safe_uds_sentencepiece.toml
+selected symbols: 7
+purpose: test only the audited safe_uds_candidate_later pool as
+SentencePiece user_defined_symbols
+next: run token-pressure probe, then finite-protected intrinsic eval only if
+pressure stays acceptable
+```
