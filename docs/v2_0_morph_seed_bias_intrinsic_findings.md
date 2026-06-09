@@ -51,35 +51,40 @@ Do not abandon the seed-bias branch yet. Instead, run one stronger bounded
 augmentation that still keeps the train view below the 1.02 output/base-byte
 gate.
 
-## Next Strong Seed-Bias Probe
+## Strong Seed-Bias Follow-Up
 
-Materialize a stronger augmentation:
+We ran one stronger bounded augmentation:
 
-```powershell
-python scripts\materialize_v2_morph_seed_augmented_view.py `
-  --repeat-divisor 10 `
-  --max-repeat-per-entry 2048 `
-  --include-safe-uds-later `
-  --out artifacts\private\v2_0_morph_seed_vocab\morph_seed_bias_strong_augmented_train.txt `
-  --report-out artifacts\v2_0_morph_seed_bias_strong_augmented_view.md
+```text
+augmentation report: artifacts/v2_0_morph_seed_bias_strong_augmented_view.md
+SP probe report: artifacts/v2_0_morph_seed_bias_strong_sentencepiece_probe.md
+intrinsic report: artifacts/v2_0_morph_seed_bias_strong_finite_protected_intrinsic_eval.md
 ```
 
-Train/evaluate the strong Unigram probe:
+The stronger appendix stayed within the train-view gate:
 
-```powershell
-python scripts\run_v2_candidate_sentencepiece_probe.py configs\v2_0_morph_seed_bias_strong_sentencepiece.toml --force
+```text
+augmentation bytes/base byte: 0.011047
+output bytes/base byte: 1.011047
+valid/test tokens/raw byte: 0.158315 / 0.158913
 ```
 
-Only if token pressure remains acceptable should we run finite-protected
-intrinsic eval on the strong model.
+But it still did not improve the visible morphology signal:
 
-Use explicit labels so the report does not describe the supplied morph-seed
-model as the default SP64 baseline:
-
-```powershell
-python scripts\evaluate_v2_finite_protected_sp64_intrinsic.py `
-  --sp64-model artifacts\private\v2_0_morph_seed_vocab\morph_seed_bias_strong_unigram_64000.model `
-  --reference-label morph_seed_bias_strong_unigram_64000 `
-  --finite-label finite_protected_morph_seed_bias_strong `
-  --report-out artifacts\v2_0_morph_seed_bias_strong_finite_protected_intrinsic_eval.md
+```text
+challenge F1, bare strong morph-seed model: 0.7356
+challenge F1, finite protected + strong morph-seed: 0.6918
+protected stress, finite protected + strong morph-seed: 25/25
 ```
+
+The difference from the weak appendix is too small to justify tiny-LM.
+
+## Updated Decision
+
+Stop the simple morph-seed appendix branch for now.
+
+It is compression-safe, but it does not transfer the custom morphology teacher
+signal into the learned Unigram vocabulary. The next mechanism should be more
+structural than repeated seed appendix lines: a small audited UDS experiment,
+true seed vocabulary injection if SentencePiece supports it for our setup, or a
+custom constrained/MorphBPE objective.

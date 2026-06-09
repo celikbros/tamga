@@ -769,7 +769,14 @@ decision: token-pressure gate passed; next finite-protected intrinsic eval
 intrinsic report: artifacts/v2_0_morph_seed_bias_finite_protected_intrinsic_eval.md
 intrinsic findings: docs/v2_0_morph_seed_bias_intrinsic_findings.md
 challenge F1 with finite protection: 0.6913
-decision: weak appendix did not move morphology F1; try one stronger bounded
-seed-bias augmentation before stopping this branch
+decision: weak appendix did not move morphology F1
 strong config: configs/v2_0_morph_seed_bias_strong_sentencepiece.toml
+strong augmentation report: artifacts/v2_0_morph_seed_bias_strong_augmented_view.md
+strong SP probe report: artifacts/v2_0_morph_seed_bias_strong_sentencepiece_probe.md
+strong intrinsic report: artifacts/v2_0_morph_seed_bias_strong_finite_protected_intrinsic_eval.md
+strong valid/test tokens/raw byte: 0.158315 / 0.158913
+strong challenge F1 with finite protection: 0.6918
+decision: stop simple morph-seed appendix branch; compression-safe but not
+morphology-effective
+next: keep finite protected routing and move to a more structural mechanism
 ```

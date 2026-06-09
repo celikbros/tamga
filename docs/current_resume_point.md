@@ -264,10 +264,18 @@ morph seed bias intrinsic findings: docs/v2_0_morph_seed_bias_intrinsic_findings
 challenge F1, finite protected + morph_seed_bias: 0.6913
 protected stress: 25/25
 decision: no tiny-LM; weak appendix did not move morphology F1
-next user-run command:
-  python scripts\materialize_v2_morph_seed_augmented_view.py --repeat-divisor 10 --max-repeat-per-entry 2048 --include-safe-uds-later --out artifacts\private\v2_0_morph_seed_vocab\morph_seed_bias_strong_augmented_train.txt --report-out artifacts\v2_0_morph_seed_bias_strong_augmented_view.md
-then:
-  python scripts\run_v2_candidate_sentencepiece_probe.py configs\v2_0_morph_seed_bias_strong_sentencepiece.toml --force
+strong seed-bias reports:
+  artifacts/v2_0_morph_seed_bias_strong_augmented_view.md
+  artifacts/v2_0_morph_seed_bias_strong_sentencepiece_probe.md
+  artifacts/v2_0_morph_seed_bias_strong_finite_protected_intrinsic_eval.md
+strong valid/test tokens/raw byte: 0.158315 / 0.158913
+strong challenge F1, finite protected: 0.6918
+decision: stop simple morph-seed appendix branch; keep finite protected routing
+and move to a more structural mechanism
+next design options:
+  small audited UDS experiment from safe_uds_candidate_later
+  true seed-vocabulary injection if SentencePiece can support it cleanly
+  custom constrained Unigram/MorphBPE objective
 ```
 
 Completed:

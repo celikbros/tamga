@@ -100,5 +100,12 @@ decision: no tiny-LM; weak appendix was effectively too small
 Next:
 
 ```text
-run one stronger bounded seed-bias augmentation
+ran one stronger bounded seed-bias augmentation
+strong augmentation report: artifacts/v2_0_morph_seed_bias_strong_augmented_view.md
+strong SP probe report: artifacts/v2_0_morph_seed_bias_strong_sentencepiece_probe.md
+strong intrinsic report: artifacts/v2_0_morph_seed_bias_strong_finite_protected_intrinsic_eval.md
+strong valid/test tokens/raw byte: 0.158315 / 0.158913
+strong challenge F1, finite protected: 0.6918
+decision: stop simple morph-seed appendix branch; compression-safe but not
+morphology-effective
 ```
