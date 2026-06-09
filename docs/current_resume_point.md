@@ -286,9 +286,15 @@ safe UDS challenge F1, finite protected: 0.7081
 safe UDS protected stress, finite protected: 25/25
 decision: safe UDS is the current best cheap structural morphology prior, but
 not enough for tiny-LM or LLM handoff
-next design options:
-  cautiously expand audited UDS beyond the 7-symbol pool
-  or move to constrained/MorphBPE objective
+expanded UDS22 plan: docs/v2_0_expanded_uds22_plan.md
+expanded UDS22 materializer: scripts/materialize_v2_expanded_uds_symbols.py
+expanded UDS22 symbols report: artifacts/v2_0_expanded_uds22_symbols.md
+expanded UDS22 SP config: configs/v2_0_expanded_uds22_sentencepiece.toml
+expanded UDS22 selected symbols: 22
+next user-run command:
+  python scripts\run_v2_candidate_sentencepiece_probe.py configs\v2_0_expanded_uds22_sentencepiece.toml --force
+if token pressure passes:
+  python scripts\evaluate_v2_finite_protected_sp64_intrinsic.py --sp64-model artifacts\private\v2_0_expanded_uds22\expanded_uds22_unigram_64000.model --reference-label expanded_uds22_unigram_64000 --finite-label finite_protected_expanded_uds22 --report-out artifacts\v2_0_expanded_uds22_finite_protected_intrinsic_eval.md
 ```
 
 Completed:

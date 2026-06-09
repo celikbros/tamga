@@ -1,0 +1,17 @@
+[settings]
+candidate_name = "expanded_uds22_unigram_64000"
+train_view = "artifacts/private/v1_8_local_lm_probe/celik_tr_primary_multilingual_mix_lm_probe_pilot_20k/filtered_split/train.txt"
+valid_view = "artifacts/private/v1_8_local_lm_probe/celik_tr_primary_multilingual_mix_lm_probe_pilot_20k/filtered_split/valid.txt"
+test_view = "artifacts/private/v1_8_local_lm_probe/celik_tr_primary_multilingual_mix_lm_probe_pilot_20k/filtered_split/test.txt"
+model_prefix = "artifacts/private/v2_0_expanded_uds22/expanded_uds22_unigram_64000"
+model_type = "unigram"
+vocab_size = 64000
+report_out = "artifacts/v2_0_expanded_uds22_sentencepiece_probe.md"
+normalization_rule_name = "identity"
+character_coverage = 1.0
+hard_vocab_limit = false
+split_by_whitespace = true
+remove_extra_whitespaces = false
+train_extremely_large_corpus = false
+max_sentence_length = 16384
+user_defined_symbols_path = "artifacts/private/v2_0_morph_seed_vocab/expanded_uds22_symbols.train.txt"

@@ -803,3 +803,18 @@ decision: safe UDS is the current best cheap structural morphology prior, but
 not enough for tiny-LM or LLM handoff
 next: cautiously expand audited UDS or move to constrained/MorphBPE objective
 ```
+
+Expanded UDS22 branch:
+
+```text
+plan: docs/v2_0_expanded_uds22_plan.md
+symbol materializer: scripts/materialize_v2_expanded_uds_symbols.py
+symbols report: artifacts/v2_0_expanded_uds22_symbols.md
+symbols output: artifacts/private/v2_0_morph_seed_vocab/expanded_uds22_symbols.train.txt
+SP config: configs/v2_0_expanded_uds22_sentencepiece.toml
+selected symbols: 22
+selection: recommendation=uds_or_seed_candidate, min_count>=100,
+surface_len>=3, hard_share<=0.01, collision<=0.001
+next: run token-pressure probe, then finite-protected intrinsic eval only if
+pressure stays acceptable
+```
