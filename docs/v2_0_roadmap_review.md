@@ -792,6 +792,14 @@ SP config: configs/v2_0_safe_uds_sentencepiece.toml
 selected symbols: 7
 purpose: test only the audited safe_uds_candidate_later pool as
 SentencePiece user_defined_symbols
-next: run token-pressure probe, then finite-protected intrinsic eval only if
-pressure stays acceptable
+SP pressure report: artifacts/v2_0_safe_uds_sentencepiece_probe.md
+intrinsic report: artifacts/v2_0_safe_uds_finite_protected_intrinsic_eval.md
+findings: docs/v2_0_safe_uds_findings.md
+valid/test tokens/raw byte: 0.159109 / 0.159684
+challenge F1, bare: 0.7556
+challenge F1, finite protected: 0.7081
+protected stress, finite protected: 25/25
+decision: safe UDS is the current best cheap structural morphology prior, but
+not enough for tiny-LM or LLM handoff
+next: cautiously expand audited UDS or move to constrained/MorphBPE objective
 ```

@@ -277,10 +277,18 @@ safe UDS materializer: scripts/materialize_v2_safe_uds_symbols.py
 safe UDS symbols report: artifacts/v2_0_safe_uds_symbols.md
 safe UDS SP config: configs/v2_0_safe_uds_sentencepiece.toml
 safe UDS selected symbols: 7
-next user-run command:
-  python scripts\run_v2_candidate_sentencepiece_probe.py configs\v2_0_safe_uds_sentencepiece.toml --force
-if token pressure passes:
-  python scripts\evaluate_v2_finite_protected_sp64_intrinsic.py --sp64-model artifacts\private\v2_0_safe_uds\safe_uds_unigram_64000.model --reference-label safe_uds_unigram_64000 --finite-label finite_protected_safe_uds --report-out artifacts\v2_0_safe_uds_finite_protected_intrinsic_eval.md
+safe UDS SP report: artifacts/v2_0_safe_uds_sentencepiece_probe.md
+safe UDS intrinsic report: artifacts/v2_0_safe_uds_finite_protected_intrinsic_eval.md
+safe UDS findings: docs/v2_0_safe_uds_findings.md
+safe UDS valid/test tokens/raw byte: 0.159109 / 0.159684
+safe UDS challenge F1, bare: 0.7556
+safe UDS challenge F1, finite protected: 0.7081
+safe UDS protected stress, finite protected: 25/25
+decision: safe UDS is the current best cheap structural morphology prior, but
+not enough for tiny-LM or LLM handoff
+next design options:
+  cautiously expand audited UDS beyond the 7-symbol pool
+  or move to constrained/MorphBPE objective
 ```
 
 Completed:
