@@ -823,3 +823,19 @@ decision: stop UDS expansion; keep safe UDS7 as the best cheap structural prior
 next: move to constrained/MorphBPE-style objective or another learned mechanism
 that treats morphology as a soft preference instead of hard UDS forcing
 ```
+
+Fable5 advisor triage:
+
+```text
+triage: docs/advisor_response_fable5_triage.md
+main critique: constrained/MorphBPE is plausible but premature
+first issue: finite protected wrapper costs ~14-15% tokens/raw byte and must be
+decomposed before new morphology trainer work
+second issue: 300-step BPB may be too early to detect morphology generalization
+third issue: separate vocabulary coverage (H1) from decode preference (H2)
+updated next:
+  1. wrapper cost audit
+  2. vocab coverage analysis for teacher morph surfaces in SP64/safe UDS7
+  3. decode-time boundary-biased Unigram/Viterbi lambda sweep
+  4. build constrained/MorphBPE only if these diagnostics justify it
+```

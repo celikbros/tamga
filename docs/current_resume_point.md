@@ -296,9 +296,16 @@ expanded UDS22 findings: docs/v2_0_expanded_uds22_findings.md
 expanded UDS22 valid/test tokens/raw byte: 0.183675 / 0.184059
 decision: expanded UDS22 failed token-pressure gate; no intrinsic eval
 decision: stop UDS expansion; keep safe UDS7 as best cheap structural prior
-next:
-  move to constrained/MorphBPE-style objective or another learned mechanism
-  that uses morphology as a soft preference rather than hard UDS forcing
+Fable5 advisor triage: docs/advisor_response_fable5_triage.md
+updated decision:
+  do not build constrained/MorphBPE yet
+  first audit finite protected wrapper cost
+  then run vocab coverage analysis
+  then test decode-time boundary-biased Unigram/Viterbi lambda sweep
+next implementation:
+  wrapper cost audit script
+  SP64/safe-UDS vocab coverage script
+  boundary-biased Viterbi sweep only after coverage tells us it is meaningful
 ```
 
 Completed:
