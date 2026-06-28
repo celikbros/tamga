@@ -6,7 +6,7 @@ Tokenizer behavior: not changed
 
 ## Scope
 
-`tr-centric-tokenizer` is Turkish-centered and multilingual-aware. The current
+`Tamga` is Turkish-centered and multilingual-aware. The current
 v1.x prototype is not a general multilingual tokenizer.
 
 The long-term direction is:

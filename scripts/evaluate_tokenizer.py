@@ -188,7 +188,7 @@ def main(argv: list[str] | None = None) -> int:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
 
-    parser = argparse.ArgumentParser(description="Evaluate tr-tokenizer on a TSV file.")
+    parser = argparse.ArgumentParser(description="Evaluate Tamga on a TSV file.")
     parser.add_argument("tsv_path", help="Path to text<TAB>expected_tokens_json data")
     args = parser.parse_args(argv)
 

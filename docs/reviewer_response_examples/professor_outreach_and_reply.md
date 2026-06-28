@@ -9,7 +9,7 @@ Konu: Turkce merkezli tokenizer projesi icin kisa multilingual/Turk dilleri revi
 
 Merhaba Hocam,
 
-tr-centric-tokenizer adli Turkce merkezli, morfoloji-duyarli bir tokenizer
+Tamga adli Turkce merkezli, morfoloji-duyarli bir tokenizer
 arastirma prototipi uzerinde calisiyoruz.
 
 Mevcut v1.x sistem Turkce deterministic morfoloji cekirdegine odaklaniyor.

@@ -1,12 +1,12 @@
 # Danismanlar Icin Proje Durum Raporu
 
 Tarih: 2026-05-08  
-Repo: `https://github.com/alicelik77/tr-centric-tokenizer`  
+Repo: `https://github.com/celikbros/tamga`
 Guncel surum: `v1.2.0`
 
 ## 1. Kisa Ozet
 
-`tr-centric-tokenizer`, Turkce merkezli morphology-aware tokenizer arastirma
+`Tamga`, Turkce merkezli morphology-aware tokenizer arastirma
 prototipidir. Projenin ilk hedefi, Turkce gibi eklemeli dillerde standart
 subword tokenization yaklasimlarinin kacirdigi morfolojik sinirlari daha bilincli
 koruyan deterministik bir cekirdek kurmaktir.

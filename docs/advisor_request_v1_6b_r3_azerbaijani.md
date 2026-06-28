@@ -1,7 +1,7 @@
 # Danismanlara Soru Paketi: v1.6b Batch 5 / R3 Azerbaijani Routing Guard
 
 Tarih: 2026-05-30  
-Repo: `https://github.com/alicelik77/tr-centric-tokenizer`  
+Repo: `https://github.com/celikbros/tamga`
 Son commit: `b8d9ab1 Add non-Turkish Latin word guard`
 
 ## Kisa Durum

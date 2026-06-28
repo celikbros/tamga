@@ -8,7 +8,7 @@ public and contains no hidden eval examples.
 ```text
 Merhaba,
 
-tr-centric-tokenizer projesi için küçük bir hidden/heldout evaluation seti
+Tamga projesi için küçük bir hidden/heldout evaluation seti
 hazırlamak istiyoruz.
 
 Amaç: tokenizer'a yeni kural eklemeden önce, sistemin daha önce görmediği

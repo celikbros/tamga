@@ -6,7 +6,7 @@ first hidden/heldout evaluation set.
 ## Purpose
 
 The goal is to create a private 40-example hidden eval set for
-`tr-centric-tokenizer`. The set should test whether the tokenizer generalizes
+`Tamga`. The set should test whether the tokenizer generalizes
 beyond examples already visible in the repository.
 
 The implementer should not inspect the hidden examples while writing tokenizer

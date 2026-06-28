@@ -2,7 +2,7 @@
 
 Status: closed technical hardening phase
 Date: 2026-05-29
-Repository: `https://github.com/alicelik77/tr-centric-tokenizer`
+Repository: `https://github.com/celikbros/tamga`
 
 ## Summary
 

@@ -5,12 +5,12 @@ Tarih: 2026-05-30
 Repo:
 
 ```text
-https://github.com/alicelik77/tr-centric-tokenizer
+https://github.com/celikbros/tamga
 ```
 
 ## 1. Kisa Ozet
 
-`tr-centric-tokenizer`, Turkce merkezli morphology-aware tokenizer arastirma
+`Tamga`, Turkce merkezli morphology-aware tokenizer arastirma
 prototipidir.
 
 Ana hedefimiz:

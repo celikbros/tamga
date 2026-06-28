@@ -12,8 +12,8 @@ def main(argv: list[str] | None = None) -> int:
         sys.stdout.reconfigure(encoding="utf-8")
 
     parser = argparse.ArgumentParser(
-        prog="tr-tokenizer",
-        description="Deterministic Turkish tokenizer prototype.",
+        prog="tamga",
+        description="Tamga Turkish-first lossless tokenizer.",
     )
     parser.add_argument("text", nargs="*", help="Tokenize edilecek metin")
     parser.add_argument(

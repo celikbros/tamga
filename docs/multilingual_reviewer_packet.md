@@ -6,7 +6,7 @@ Scope: multilingual/Turkic architecture review, not tokenizer implementation
 
 ## Purpose
 
-`tr-centric-tokenizer` is currently a Turkish-centered morphology-aware tokenizer
+`Tamga` is currently a Turkish-centered morphology-aware tokenizer
 prototype. The long-term goal is multilingual-aware and Turkic-aware, but v1.x
 does not yet implement a general multilingual tokenizer.
 

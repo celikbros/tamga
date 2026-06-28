@@ -1,14 +1,19 @@
-# tr-centric-tokenizer
+# Tamga
 
-A Turkish-centered morphology-aware tokenizer research prototype.
+Turkish-first, lossless LLM tokenizer and production corpus toolchain.
 
-Bu proje production tokenizer degildir. Amac, Turkce eklemeli yapida morfolojik
-sinirlari koruyan deterministik bir cekirdek tasarlamak, bunu gold eval setleri
-ve toy BPE baseline'lariyla olculebilir hale getirmektir.
+Tamga adini eski Turk kulturundeki isaret, muhurlu simge ve kimlik izi
+anlamindan alir. Tokenizer, metni modelin kullanacagi geri donuslu isaretlere
+donusturur.
 
-Kapsam ileride Turkce deterministic tokenizer, Turkce merkezli cok dilli
-tokenizer, Turk dilleri tokenizer cluster, MorphBPE fallback, BPE baseline
-comparison ve LLM tokenizer research basliklarina genisleyebilir.
+v3.8 tokenizer paketi CELIK-GARDAS Faz 4 pretraining icin production-final
+olarak kabul edilmistir. Final corpus ve model artifact'lari private handoff
+paketinde tutulur; bu repository arastirma gecmisini, kaynak kodu, testleri ve
+production corpus araclarini icerir.
+
+Geriye uyumluluk icin Python namespace'i `tr_tokenizer` olarak kalir. Yeni CLI
+adi `tamga`; eski `tr-tokenizer` ve `tr-centric-tokenizer` komutlari alias olarak
+korunur.
 
 Danismanlar icin ayrintili durum raporu:
 [docs/advisor_brief.md](docs/advisor_brief.md)
@@ -55,6 +60,8 @@ python -m pip install -e ".[dev]"
 
 python -m pytest
 python -m tr_tokenizer "Türkiye'den kedilerden geldim."
+# Editable install sonrasinda:
+tamga "Türkiye'den kedilerden geldim."
 ```
 
 Ornek:

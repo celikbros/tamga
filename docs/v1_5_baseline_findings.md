@@ -19,7 +19,7 @@ v1.5 added comparison against stronger tokenizer baselines:
 The main result is:
 
 ```text
-On the controlled Turkish morphology evals, tr-centric-tokenizer preserves
+On the controlled Turkish morphology evals, Tamga preserves
 Turkish gold morpheme boundaries much better than the compared subword
 tokenizers, while using comparable or fewer tokens per word.
 ```

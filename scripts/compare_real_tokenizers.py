@@ -360,7 +360,7 @@ def main(argv: list[str] | None = None) -> int:
         sys.stdout.reconfigure(encoding="utf-8")
 
     parser = argparse.ArgumentParser(
-        description="Compare tr-centric-tokenizer with optional real tokenizer baselines.",
+        description="Compare Tamga with optional real tokenizer baselines.",
     )
     parser.add_argument("gold_tsv")
     parser.add_argument(

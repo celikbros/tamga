@@ -26,7 +26,7 @@ This audit is read-only. No files in `C:\CELIK_AI` were modified or deleted.
 
 The user noted that a previous LLM project used local corpus and tokenizer
 artifacts. The purpose here is to decide whether those artifacts help
-`tr-centric-tokenizer` v1.7 measurement work.
+`Tamga` v1.7 measurement work.
 
 ## Dataset Inventory
 

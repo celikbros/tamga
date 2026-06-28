@@ -14,7 +14,7 @@ not final tokenizer selection
 
 This packet summarizes what the tokenizer team can hand to the LLM team now.
 
-The immediate goal is not to claim that `tr-centric-tokenizer` is the final LLM
+The immediate goal is not to claim that `Tamga` is the final LLM
 tokenizer. The immediate goal is:
 
 ```text

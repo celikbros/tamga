@@ -9,7 +9,7 @@ Tokenizer behavior: not changed
 v0.8 and v0.9 used a pure-Python toy BPE baseline. That was useful for building
 comparison infrastructure, but it is not enough for an LLM-tokenizer claim.
 
-v1.5 should compare `tr-centric-tokenizer` against real tokenizer families:
+v1.5 should compare `Tamga` against real tokenizer families:
 
 - Qwen byte-level BPE tokenizer
 - LLaMA/Mistral-style SentencePiece or byte-fallback tokenizers

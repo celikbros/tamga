@@ -11,7 +11,7 @@ Subject: Turkish-centered tokenizer project: short multilingual/Turkic review re
 
 Dear [Name],
 
-I am working on tr-centric-tokenizer, a Turkish-centered morphology-aware
+I am working on Tamga, a Turkish-centered morphology-aware
 tokenizer research prototype.
 
 The current v1.x system focuses on Turkish deterministic morphology. Before we
@@ -57,7 +57,7 @@ Konu: Türkçe merkezli tokenizer projesi için kısa multilingual/Türk dilleri
 
 Merhaba [Hocam/Name],
 
-tr-centric-tokenizer adlı Türkçe merkezli, morfoloji-duyarlı bir tokenizer
+Tamga adlı Türkçe merkezli, morfoloji-duyarlı bir tokenizer
 araştırma prototipi üzerinde çalışıyoruz.
 
 Mevcut v1.x sistem Türkçe deterministic morfoloji çekirdeğine odaklanıyor.

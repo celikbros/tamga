@@ -5,7 +5,7 @@ Date: 2026-05-31
 ## Purpose
 
 This protocol defines the missing tokenizer baselines needed before stronger
-claims about `tr-centric-tokenizer`.
+claims about `Tamga`.
 
 Current comparisons are useful but incomplete:
 
