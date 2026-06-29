@@ -1,0 +1,95 @@
+{
+  "schema_version": "tokenizer-config-v3.8-final-sp64k-1",
+  "status": "production_final_frozen",
+  "tokenizer_name": "sp64k_final_protected_passthrough_sidecar_controls128",
+  "description": "Tamga v3.8 frozen tokenizer contract for the Turkish-primary CELIK-GARDAS Faz 4 run.",
+  "model": {
+    "type": "sentencepiece_unigram",
+    "sp_model_path": "C:/CELIK-GARDASH/models/tokenizer_v3_8/sp_unigram_64000_faz2_tr.model",
+    "sp_vocab_path": "C:/CELIK-GARDASH/models/tokenizer_v3_8/sp_unigram_64000_faz2_tr.vocab",
+    "sp_vocab_size": 64000,
+    "normal_text_flow": "sentencepiece",
+    "normalizer": "identity",
+    "training_source": "1,000,000 shuffled sentences sampled from the frozen Faz 2 corpus",
+    "model_sha256": "5f54645a76c8cc6346f4283884b2adb219eb44118e6024b765d965239f62e77a",
+    "vocab_sha256": "18b951bf201a8f5fc6bed15965263ebde13ee85ec36b4594eb42cf3636ef10a2"
+  },
+  "id_space": {
+    "sp_id_start": 0,
+    "sp_id_end_exclusive": 64000,
+    "byte_fallback_start": 64000,
+    "byte_fallback_size": 256,
+    "byte_fallback_end_exclusive": 64256,
+    "control_token_start": 64256,
+    "control_token_reserved_size": 128,
+    "control_token_end_exclusive": 64384,
+    "current_effective_vocab_size": 64384
+  },
+  "sentencepiece_meta_tokens": {
+    "unk": { "piece": "<unk>", "id": 0 },
+    "bos": { "piece": "<s>", "id": 1, "alias": "<bos>" },
+    "eos": { "piece": "</s>", "id": 2, "alias": "<eos>" }
+  },
+  "special_token_registry": {
+    "status": "frozen",
+    "policy": "Control tokens are wrapper-level ids after byte fallback. Raw text tokenization never activates them.",
+    "aliases": { "<bos>": 1, "<eos>": 2 },
+    "assigned": {
+      "<pad>": 64256,
+      "<system>": 64257,
+      "<user>": 64258,
+      "<assistant>": 64259,
+      "<thinking>": 64260,
+      "</thinking>": 64261,
+      "<answer>": 64262,
+      "</answer>": 64263,
+      "<tool_call>": 64264,
+      "<tool_result>": 64265
+    },
+    "reserved_unassigned_range": {
+      "start": 64266,
+      "end_exclusive": 64384
+    }
+  },
+  "sidecar": {
+    "schema_version": "v2.2-sidecar-jsonl-1",
+    "contract": "byte_offset_passthrough_sidecar",
+    "token_boundary_alignment": false,
+    "route_labels": [
+      "numeric_like",
+      "url",
+      "technical_comparator",
+      "file_like",
+      "apostrophe_surface",
+      "non_turkish_latin_word",
+      "greek_word",
+      "uzbek_apostrophe_word",
+      "cyrillic_word",
+      "arabic_word",
+      "percent_encoded",
+      "azerbaijani_word"
+    ],
+    "required_route_invariants": [
+      "percent_encoded",
+      "azerbaijani_word",
+      "url",
+      "technical_comparator"
+    ]
+  },
+  "training_preprocessing": {
+    "recommended_hot_path": "binary_tokens_plus_optional_binary_loss_mask",
+    "jsonl_sidecar_hot_path": "not_recommended",
+    "token_dtype": "uint32_le",
+    "loss_mask_dtype": "uint8",
+    "default_line_separator": "eos_id_2",
+    "control_token_injection": "outside_raw_text_tokenization"
+  },
+  "evidence": {
+    "full_corpus_lines": 6027968,
+    "full_corpus_tokens": 2499949602,
+    "tokens_per_raw_byte": 0.184311,
+    "sp_alignment_mismatches": 0,
+    "max_token_id": 64244,
+    "llm_package_status": "accepted"
+  }
+}

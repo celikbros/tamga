@@ -1,0 +1,16 @@
+[settings]
+candidate_name = "v3_1_sp_unigram_64000_real_mix_eval_on_v3_4_stratified_480mb"
+train_view = "artifacts/private/v3_4_stratified_480mb_ablation_split/train.txt"
+valid_view = "artifacts/private/v3_4_stratified_480mb_ablation_split/valid.txt"
+test_view = "artifacts/private/v3_4_stratified_480mb_ablation_split/test.txt"
+model_prefix = "artifacts/private/v3_1_vocab_ablation_sentencepiece/sp_unigram_64000_real_mix"
+model_type = "unigram"
+vocab_size = 64000
+report_out = "artifacts/v3_4_eval_v3_1_sp64k_on_stratified_480mb.md"
+normalization_rule_name = "identity"
+character_coverage = 1.0
+hard_vocab_limit = false
+split_by_whitespace = true
+remove_extra_whitespaces = false
+train_extremely_large_corpus = false
+max_sentence_length = 16384

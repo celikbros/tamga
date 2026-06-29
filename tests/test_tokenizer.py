@@ -2,6 +2,16 @@ from tr_tokenizer import TurkishTokenizer, decode, encode
 from tr_tokenizer.tokenizer import WORD_START
 
 
+def test_literal_word_start_marker_roundtrips_as_surface_character():
+    text = "forum ▁ dekor"
+
+    tokens = encode(text, preserve_whitespace=True)
+
+    assert "▁" in tokens
+    assert decode(tokens) == text
+    assert decode(["▁"]) == "▁"
+
+
 def test_encode_splits_apostrophe_and_known_suffixes():
     tokenizer = TurkishTokenizer()
 
@@ -15,6 +25,34 @@ def test_encode_splits_apostrophe_and_known_suffixes():
         "▁gel",
         "+di",
         "+m",
+        ".",
+    ]
+
+
+def test_encode_splits_buffered_turkish_apostrophe_suffixes():
+    assert encode(
+        "\u00dcniversitesi'nde B\u00f6lgesi'ndeki Anadolu'yla "
+        "Yay\u0131nevi'nce Mahkemesi'ne M\u00fctarekesi'nden."
+    ) == [
+        f"{WORD_START}\u00dcniversitesi",
+        "'",
+        "+nde",
+        f"{WORD_START}B\u00f6lgesi",
+        "'",
+        "+nde",
+        "+ki",
+        f"{WORD_START}Anadolu",
+        "'",
+        "+yla",
+        f"{WORD_START}Yay\u0131nevi",
+        "'",
+        "+nce",
+        f"{WORD_START}Mahkemesi",
+        "'",
+        "+ne",
+        f"{WORD_START}M\u00fctarekesi",
+        "'",
+        "+nden",
         ".",
     ]
 

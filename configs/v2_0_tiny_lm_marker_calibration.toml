@@ -32,6 +32,40 @@ selected_pieces = "artifacts/private/v2_0_protected_aware/protected_piece_vocab.
 enabled = true
 
 [[tokenizers]]
+name = "finite_protected_sp64_numeric_sp_floor"
+kind = "finite_protected_marker_stripped_numeric_sp"
+path = "artifacts/private/v1_8_train_only_sentencepiece/sp_unigram_64000_train_only.model"
+selected_pieces = "artifacts/private/v2_0_protected_aware/protected_piece_vocab.train.tsv"
+enabled = true
+
+[[tokenizers]]
+name = "boundary_biased_lambda0_numeric_sp"
+kind = "boundary_biased_unigram_numeric_sp"
+path = "artifacts/private/v1_8_train_only_sentencepiece/sp_unigram_64000_train_only.model"
+vocab_path = "artifacts/private/v1_8_train_only_sentencepiece/sp_unigram_64000_train_only.vocab"
+selected_pieces = "artifacts/private/v2_0_protected_aware/protected_piece_vocab.train.tsv"
+boundary_lambda = 0.0
+enabled = true
+
+[[tokenizers]]
+name = "boundary_biased_lambda4_numeric_sp"
+kind = "boundary_biased_unigram_numeric_sp"
+path = "artifacts/private/v1_8_train_only_sentencepiece/sp_unigram_64000_train_only.model"
+vocab_path = "artifacts/private/v1_8_train_only_sentencepiece/sp_unigram_64000_train_only.vocab"
+selected_pieces = "artifacts/private/v2_0_protected_aware/protected_piece_vocab.train.tsv"
+boundary_lambda = 4.0
+enabled = true
+
+[[tokenizers]]
+name = "boundary_biased_lambda8_numeric_sp"
+kind = "boundary_biased_unigram_numeric_sp"
+path = "artifacts/private/v1_8_train_only_sentencepiece/sp_unigram_64000_train_only.model"
+vocab_path = "artifacts/private/v1_8_train_only_sentencepiece/sp_unigram_64000_train_only.vocab"
+selected_pieces = "artifacts/private/v2_0_protected_aware/protected_piece_vocab.train.tsv"
+boundary_lambda = 8.0
+enabled = true
+
+[[tokenizers]]
 name = "suffix_chain2_marker_stripped"
 kind = "finite_protected_marker_stripped"
 path = "artifacts/private/v2_0_candidate_sentencepiece/protected_hard_train_only_suffix_chain2_unigram_64000.model"

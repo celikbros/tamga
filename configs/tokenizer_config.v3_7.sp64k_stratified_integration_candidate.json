@@ -1,0 +1,131 @@
+{
+  "schema_version": "tokenizer-config-v3.7-integration-candidate-1",
+  "status": "integration_candidate_not_training_final",
+  "tokenizer_name": "sp64k_stratified_protected_passthrough_sidecar_controls128",
+  "description": "64K stratified v3.x tokenizer candidate for LLM dataloader and integration smoke tests. Selected after v3.6 fixed-byte BPB screen; still not a full production tokenizer.",
+  "model": {
+    "type": "sentencepiece_unigram",
+    "sp_model_path": "C:/CELIK-GARDASH/models/tokenizer_v3_4/sp_unigram_64000_stratified_480mb.model",
+    "sp_vocab_path": "C:/CELIK-GARDASH/models/tokenizer_v3_4/sp_unigram_64000_stratified_480mb.vocab",
+    "sp_vocab_size": 64000,
+    "normal_text_flow": "sentencepiece",
+    "trained_on_full_gardash_corpus": false,
+    "training_sample": "v3.4 stratified 480MB sample"
+  },
+  "id_space": {
+    "sp_id_start": 0,
+    "sp_id_end_exclusive": 64000,
+    "byte_fallback_start": 64000,
+    "byte_fallback_size": 256,
+    "byte_fallback_end_exclusive": 64256,
+    "control_token_start": 64256,
+    "control_token_reserved_size": 128,
+    "control_token_end_exclusive": 64384,
+    "current_effective_vocab_size": 64384
+  },
+  "sentencepiece_meta_tokens": {
+    "unk": {
+      "piece": "<unk>",
+      "id": 0
+    },
+    "bos": {
+      "piece": "<s>",
+      "id": 1,
+      "alias": "<bos>"
+    },
+    "eos": {
+      "piece": "</s>",
+      "id": 2,
+      "alias": "<eos>"
+    },
+    "pad": {
+      "piece": null,
+      "id": -1,
+      "status": "not_defined_in_current_sp_model; wrapper control id is defined in special_token_registry.assigned"
+    }
+  },
+  "special_token_registry": {
+    "status": "frozen",
+    "policy": "Control tokens are wrapper-level ids after byte fallback. Do not call this production-final until the LLM stack accepts this layout.",
+    "known_conflict": "<pad> is intentionally not id 0 because SP <unk> is id 0; do not remap <unk> in the wrapper.",
+    "aliases": {
+      "<bos>": 1,
+      "<eos>": 2
+    },
+    "assigned": {
+      "<pad>": 64256,
+      "<system>": 64257,
+      "<user>": 64258,
+      "<assistant>": 64259,
+      "<thinking>": 64260,
+      "</thinking>": 64261,
+      "<answer>": 64262,
+      "</answer>": 64263,
+      "<tool_call>": 64264,
+      "<tool_result>": 64265
+    },
+    "reserved_unassigned_range": {
+      "start": 64266,
+      "end_exclusive": 64384
+    }
+  },
+  "sidecar": {
+    "schema_version": "v2.2-sidecar-jsonl-1",
+    "contract": "byte_offset_passthrough_sidecar",
+    "token_boundary_alignment": false,
+    "route_labels": [
+      "numeric_like",
+      "url",
+      "technical_comparator",
+      "file_like",
+      "apostrophe_surface",
+      "non_turkish_latin_word",
+      "greek_word",
+      "arabic_word",
+      "percent_encoded",
+      "cyrillic_word",
+      "uzbek_apostrophe_word",
+      "azerbaijani_word"
+    ],
+    "sp_passthrough_routes": [
+      "numeric_like",
+      "url",
+      "technical_comparator",
+      "file_like",
+      "apostrophe_surface",
+      "non_turkish_latin_word",
+      "greek_word",
+      "uzbek_apostrophe_word",
+      "cyrillic_word",
+      "arabic_word",
+      "percent_encoded",
+      "azerbaijani_word"
+    ],
+    "required_route_invariants": [
+      "percent_encoded",
+      "azerbaijani_word",
+      "url",
+      "technical_comparator"
+    ]
+  },
+  "training_preprocessing": {
+    "recommended_hot_path": "binary_tokens_plus_optional_binary_loss_mask",
+    "jsonl_sidecar_hot_path": "not_recommended",
+    "token_dtype": "uint32_le",
+    "loss_mask_dtype": "uint8",
+    "default_line_separator": "eos_id_2",
+    "control_token_injection": "outside_raw_text_tokenization"
+  },
+  "evidence": {
+    "v3_5_sidecar_smoke": "PASS on first 5K lines of the v3.4 stratified sample",
+    "v3_6_fixed_byte_bpb": "64K beat 48K at approximately 20M raw bytes: test BPB 2.340260 vs 2.386732",
+    "v3_6_token_pressure": "64K test tokens/raw byte 0.185791 vs 48K 0.192455"
+  },
+  "open_gates_before_training_final": [
+    "LLM stack accepts pad id 64256 and unk id 0",
+    "LLM dataloader smoke passes with uint32 tokens and uint8 loss mask",
+    "full-corpus tokenizer training decision is made or explicitly waived",
+    "production implementation plan is chosen for Python reference vs Rust/C++ port",
+    "final candidate is revalidated on the selected pretraining corpus slice"
+  ]
+}

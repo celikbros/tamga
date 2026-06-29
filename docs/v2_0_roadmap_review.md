@@ -17,6 +17,43 @@ main engineering problem is no longer "can we split Turkish suffixes?" It is:
 can we keep morphology/protection signal while reducing lossless LM token pressure?
 ```
 
+Latest diagnostic update:
+
+```text
+finite_protected_sp64_numeric_sp_floor is the active protected null baseline
+morph-vocab coverage shows SP64 already contains most high-value morph surfaces
+boundary-biased Unigram decode is promising but attribution is unresolved
+because lambda 0 already differs from official SentencePiece / the protected
+floor
+lambda 4 currently raises Challenge F1 from 0.6913 to 0.7701 at near-floor token
+pressure, but this mixes decoder/pipeline effect with morphology penalty effect
+tiny-LM shows lambda 4 is BPB-positive vs SP64 and protected floor in the
+300-step screen:
+  lambda 0 test BPB: 4.769027
+  lambda 4 test BPB: 4.721480
+  SP64 test BPB: 4.860352
+  protected floor test BPB: 4.911037
+lambda 0 explains most of the protected-floor -> lambda4 BPB gain; lambda4
+still improves over lambda0 by -0.047547 test BPB and +0.0279 Challenge F1
+lambda 8 is high-F1 and still slightly BPB-positive vs SP64, but less efficient
+than lambda 4
+next branch is blocked on correctness/generalization controls: decoder
+alignment audit, roundtrip/stateless decode, separated morphology/protected
+metrics, and longer/seeded lambda0-vs-lambda4 BPB
+```
+
+Follow-up advisor consensus after lambda 0 decomposition and roundtrip smoke:
+
+```text
+boundary-biased runtime decode is diagnostic-only until exact roundtrip passes
+0/20 roundtrip on lambda0/lambda4 blocks all longer BPB
+lambda4 must not be promoted or handed off
+the next high-value work is roundtrip failure classification and wrapper-tax
+reduction on clean no-protected lines
+if the runtime fix is not local/trivial, move the morphology prior into a
+boundary-weighted Unigram / constrained training objective instead
+```
+
 ## Advisor Decision
 
 Recent advisor feedback converges on an Option 1 + Option 3 hybrid:
@@ -204,7 +241,7 @@ the candidate is a useful compression control, not an acceptable tokenizer
 ## Current Candidate Need
 
 ```text
-unnamed next hybrid candidate
+lossless protected wrapper and diagnostic morphology-prior path
 ```
 
 Required behavior:
@@ -215,6 +252,7 @@ make protected spans operational, not just metadata
 recover at least part of custom morphology boundary advantage
 avoid serializing custom token labels into the training view
 avoid arbitrary open-vocabulary tokens as fixed model IDs
+prove decode(encode(text)) == text before any LLM-facing BPB claim
 ```
 
 ## Candidate 3: Rejected Before Tiny-LM
@@ -838,4 +876,161 @@ updated next:
   2. vocab coverage analysis for teacher morph surfaces in SP64/safe UDS7
   3. decode-time boundary-biased Unigram/Viterbi lambda sweep
   4. build constrained/MorphBPE only if these diagnostics justify it
+```
+
+Finite protected wrapper cost audit:
+
+```text
+report: artifacts/v2_0_finite_protected_wrapper_cost_audit.md
+findings: docs/v2_0_finite_protected_wrapper_cost_findings.md
+
+SP64 test tokens/raw byte: 0.159620
+finite protected test tokens/raw byte: 0.183362
+relative delta: 14.87%
+protected bytes share: 2.67%
+
+largest protected-vs-SP route deltas:
+  numeric_like: +137807 tokens
+  file_like: +120580 tokens
+  non_turkish_latin_word: +94661 tokens
+  apostrophe_surface: +51203 tokens
+
+private top-delta examples show Turkish rows with legacy encoding artifacts
+such as ý/þ/ð/Ý, so part of the non_turkish_latin_word cost is likely a
+data-quality/over-trigger issue.
+
+decision: the next step is protected-route optimization before morphology
+trainer work.
+```
+
+Non-Turkish Latin route quality audit:
+
+```text
+report: artifacts/v2_0_non_turkish_latin_route_quality_audit.md
+findings: docs/v2_0_non_turkish_latin_route_quality_findings.md
+
+route occurrences: 18984
+turkish_loan_diacritic: 17333 / 91.30%
+other_non_turkish_latin: 960 / 5.06%
+legacy_turkish_encoding_artifact: 691 / 3.64%
+
+decision: reroute Turkish loan-diacritic words back to normal learned text
+flow before constrained/MorphBPE or Viterbi work.
+```
+
+Turkish loan-diacritic pass-through:
+
+```text
+findings: docs/v2_0_turkish_loan_diacritic_pass_findings.md
+route-quality after report:
+  artifacts/v2_0_non_turkish_latin_route_quality_audit_after_loan_pass.md
+wrapper-cost after report:
+  artifacts/v2_0_finite_protected_wrapper_cost_audit_after_loan_pass.md
+intrinsic after report:
+  artifacts/v2_0_finite_protected_sp64_intrinsic_eval_after_loan_pass.md
+
+non_turkish_latin_word occurrences: 18984 -> 1644
+test finite protected tokens/raw byte: 0.183362 -> 0.180564
+relative delta over SP64: 14.87% -> 13.12%
+protected stress: 25/25
+challenge F1: 0.6913
+
+decision: keep the pass-through; next optimize numeric_like, file_like, and
+apostrophe_surface route costs.
+```
+
+Protected route cost reduction:
+
+```text
+findings: docs/v2_0_protected_route_cost_reduction_findings.md
+class audit:
+  artifacts/v2_0_protected_route_cost_class_audit_after_file_glue_pass.md
+wrapper-cost after report:
+  artifacts/v2_0_finite_protected_wrapper_cost_audit_after_file_glue_pass.md
+intrinsic after report:
+  artifacts/v2_0_finite_protected_sp64_intrinsic_eval_after_file_glue_pass.md
+
+apostrophe buffered suffix pass:
+  examples: Üniversitesi'nde style Turkish buffered suffixes
+  apostrophe_surface delta: +54055 -> +20662
+
+file-like glued sentence pass:
+  examples: değerlendirildi.Bulgular, amaçlanmıştır.Gereç
+  file_like delta: +120800 -> +72043
+
+test finite protected tokens/raw byte:
+  0.183362 before route fixes
+  0.180564 after loan-diacritic pass
+  0.179465 after apostrophe pass
+  0.177726 after file-glue pass
+
+relative delta over SP64:
+  14.87% -> 11.34%
+
+protected stress remains: 25/25
+challenge F1 remains: 0.6913
+
+decision: route-cost optimization is paying off without harming protected
+stress. Continue with numeric_like protected encoder/route policy before
+constrained/MorphBPE.
+```
+
+Numeric protected encoder what-if:
+
+```text
+findings: docs/v2_0_numeric_protected_encoder_whatif_findings.md
+audit report: artifacts/v2_0_numeric_protected_encoder_whatif.md
+dry-run report: artifacts/v2_0_tiny_lm_marker_calibration_numeric_sp_dry_run.md
+300-step report: artifacts/v2_0_tiny_lm_marker_calibration_numeric_sp_300steps.md
+new experimental kind: finite_protected_marker_stripped_numeric_sp
+new candidate: finite_protected_sp64_numeric_sp_floor
+
+test tokens/raw byte:
+  finite protected after route fixes: 0.177726
+  finite protected + numeric SP passthrough: 0.172734
+  digit2 finite numeric codec what-if: 0.175069
+
+300-step tiny-LM:
+  numeric-SP protected floor test BPB: 4.911037
+  current finite protected floor test BPB: 4.939361
+  historical finite protected floor test BPB: 4.976850
+  SP64 test BPB: 4.860352
+
+decision: numeric route redesign recovers meaningful token pressure.
+Promote finite_protected_sp64_numeric_sp_floor as the active protected floor
+for the next v2.0 experiments. Do not treat it as the final production numeric
+codec yet; it is the best experimental protected null baseline. Resume
+vocabulary coverage and decode-time boundary-bias diagnostics before any
+constrained/MorphBPE trainer work.
+```
+
+Morph vocabulary coverage:
+
+```text
+findings: docs/v2_0_morph_vocab_coverage_findings.md
+report: artifacts/v2_0_morph_vocab_coverage.md
+private rows: artifacts/private/v2_0_morph_vocab_coverage.rows.jsonl
+
+scope:
+  action == seed_bias
+  100 selected morph/suffix surfaces
+  881151 weighted occurrences
+
+exact-piece occurrence share:
+  SP64: 0.963019
+  safe UDS7: 0.962751
+
+standalone-single occurrence share:
+  SP64: 0.534474
+  safe UDS7: 0.455065
+
+interpretation:
+  high-value morph surfaces mostly already exist in the SP64 vocabulary.
+  safe UDS7 does not solve the broad morph-transfer problem.
+  the next bottleneck is decode preference, not surface availability.
+
+decision:
+  do not expand UDS or seed appendix as the next move.
+  implement a decode-time boundary-biased Unigram/Viterbi lambda sweep before
+  building a constrained/MorphBPE trainer.
 ```

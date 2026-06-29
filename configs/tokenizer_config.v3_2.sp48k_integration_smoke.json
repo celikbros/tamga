@@ -1,0 +1,125 @@
+{
+  "schema_version": "tokenizer-config-v3.2-integration-smoke-1",
+  "status": "integration_smoke_candidate",
+  "tokenizer_name": "sp48k_protected_passthrough_sidecar_controls128",
+  "description": "48K Gardash tokenizer candidate for LLM dataloader and integration smoke tests. Not training final.",
+  "model": {
+    "type": "sentencepiece_unigram",
+    "sp_model_path": "artifacts/private/v3_1_vocab_ablation_sentencepiece/sp_unigram_48000_real_mix.model",
+    "sp_vocab_path": "artifacts/private/v3_1_vocab_ablation_sentencepiece/sp_unigram_48000_real_mix.vocab",
+    "sp_vocab_size": 48000,
+    "normal_text_flow": "sentencepiece",
+    "trained_on_full_gardash_corpus": false
+  },
+  "id_space": {
+    "sp_id_start": 0,
+    "sp_id_end_exclusive": 48000,
+    "byte_fallback_start": 48000,
+    "byte_fallback_size": 256,
+    "byte_fallback_end_exclusive": 48256,
+    "control_token_start": 48256,
+    "control_token_reserved_size": 128,
+    "control_token_end_exclusive": 48384,
+    "current_effective_vocab_size": 48384
+  },
+  "sentencepiece_meta_tokens": {
+    "unk": {
+      "piece": "<unk>",
+      "id": 0
+    },
+    "bos": {
+      "piece": "<s>",
+      "id": 1,
+      "alias": "<bos>"
+    },
+    "eos": {
+      "piece": "</s>",
+      "id": 2,
+      "alias": "<eos>"
+    },
+    "pad": {
+      "piece": null,
+      "id": -1,
+      "status": "not_defined_in_current_sp_model; wrapper control id is defined in special_token_registry.assigned"
+    }
+  },
+  "special_token_registry": {
+    "status": "frozen",
+    "policy": "Control tokens are wrapper-level ids after byte fallback. Do not call this training-final until the LLM stack accepts this layout.",
+    "known_conflict": "<pad> is intentionally not id 0 because SP <unk> is id 0; do not remap <unk> in the wrapper.",
+    "aliases": {
+      "<bos>": 1,
+      "<eos>": 2
+    },
+    "assigned": {
+      "<pad>": 48256,
+      "<system>": 48257,
+      "<user>": 48258,
+      "<assistant>": 48259,
+      "<thinking>": 48260,
+      "</thinking>": 48261,
+      "<answer>": 48262,
+      "</answer>": 48263,
+      "<tool_call>": 48264,
+      "<tool_result>": 48265
+    },
+    "reserved_unassigned_range": {
+      "start": 48266,
+      "end_exclusive": 48384
+    }
+  },
+  "sidecar": {
+    "schema_version": "v2.2-sidecar-jsonl-1",
+    "contract": "byte_offset_passthrough_sidecar",
+    "token_boundary_alignment": false,
+    "route_labels": [
+      "numeric_like",
+      "url",
+      "technical_comparator",
+      "file_like",
+      "apostrophe_surface",
+      "non_turkish_latin_word",
+      "greek_word",
+      "arabic_word",
+      "percent_encoded",
+      "cyrillic_word",
+      "uzbek_apostrophe_word",
+      "azerbaijani_word"
+    ],
+    "sp_passthrough_routes": [
+      "numeric_like",
+      "url",
+      "technical_comparator",
+      "file_like",
+      "apostrophe_surface",
+      "non_turkish_latin_word",
+      "greek_word",
+      "uzbek_apostrophe_word",
+      "cyrillic_word",
+      "arabic_word",
+      "percent_encoded",
+      "azerbaijani_word"
+    ],
+    "required_route_invariants": [
+      "percent_encoded",
+      "azerbaijani_word",
+      "url",
+      "technical_comparator"
+    ]
+  },
+  "training_preprocessing": {
+    "recommended_hot_path": "binary_tokens_plus_optional_binary_loss_mask",
+    "jsonl_sidecar_hot_path": "not_recommended",
+    "token_dtype": "uint32_le",
+    "loss_mask_dtype": "uint8",
+    "default_line_separator": "eos_id_2",
+    "control_token_injection": "outside_raw_text_tokenization"
+  },
+  "open_gates_before_training_final": [
+    "LLM stack accepts pad id 48256 and unk id 0",
+    "LLM dataloader smoke passes with uint32 tokens and uint8 loss mask",
+    "full-corpus tokenizer training decision is made",
+    "selected vocab size is confirmed beyond the 44MB real-mix ablation",
+    "final tokenizer artifact is retrained or explicitly waived by architecture"
+  ]
+}

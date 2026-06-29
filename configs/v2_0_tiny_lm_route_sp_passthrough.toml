@@ -1,0 +1,94 @@
+[settings]
+split_dir = "artifacts/private/v1_8_local_lm_probe/celik_tr_primary_multilingual_mix_lm_probe_pilot_20k/filtered_split"
+output_dir = "artifacts/private/v2_0_tiny_lm_route_sp_passthrough"
+report_out = "artifacts/v2_0_tiny_lm_route_sp_passthrough.md"
+seed = 20260612
+encode_progress = 5000
+
+[model]
+seq_len = 128
+batch_size = 4
+max_steps = 300
+eval_interval = 100
+learning_rate = 0.0003
+d_model = 256
+n_layers = 4
+n_heads = 4
+ff_mult = 4
+dropout = 0.1
+device = "auto"
+
+[[tokenizers]]
+name = "sp_unigram_64000_train_only"
+kind = "sentencepiece"
+path = "artifacts/private/v1_8_train_only_sentencepiece/sp_unigram_64000_train_only.model"
+enabled = true
+
+[[tokenizers]]
+name = "finite_protected_sp64_numeric_sp_floor"
+kind = "finite_protected_marker_stripped_numeric_sp"
+path = "artifacts/private/v1_8_train_only_sentencepiece/sp_unigram_64000_train_only.model"
+selected_pieces = "artifacts/private/v2_0_protected_aware/protected_piece_vocab.train.tsv"
+enabled = true
+
+[[tokenizers]]
+name = "finite_protected_sp64_highcost_sp_routes"
+kind = "finite_protected_marker_stripped_numeric_sp"
+path = "artifacts/private/v1_8_train_only_sentencepiece/sp_unigram_64000_train_only.model"
+selected_pieces = "artifacts/private/v2_0_protected_aware/protected_piece_vocab.train.tsv"
+sp_passthrough_routes = [
+  "file_like",
+  "apostrophe_surface",
+  "non_turkish_latin_word",
+]
+enabled = true
+
+[[tokenizers]]
+name = "finite_protected_sp64_all_sp_routes"
+kind = "finite_protected_marker_stripped_numeric_sp"
+path = "artifacts/private/v1_8_train_only_sentencepiece/sp_unigram_64000_train_only.model"
+selected_pieces = "artifacts/private/v2_0_protected_aware/protected_piece_vocab.train.tsv"
+sp_passthrough_routes = [
+  "file_like",
+  "apostrophe_surface",
+  "non_turkish_latin_word",
+  "greek_word",
+  "uzbek_apostrophe_word",
+  "cyrillic_word",
+  "arabic_word",
+]
+enabled = true
+
+[[tokenizers]]
+name = "finite_protected_sp64_all_sp_routes_isolated"
+kind = "finite_protected_marker_stripped_numeric_sp"
+path = "artifacts/private/v1_8_train_only_sentencepiece/sp_unigram_64000_train_only.model"
+selected_pieces = "artifacts/private/v2_0_protected_aware/protected_piece_vocab.train.tsv"
+sp_passthrough_routes = [
+  "file_like",
+  "apostrophe_surface",
+  "non_turkish_latin_word",
+  "greek_word",
+  "uzbek_apostrophe_word",
+  "cyrillic_word",
+  "arabic_word",
+]
+isolate_sp_passthrough_routes = true
+enabled = true
+
+[[tokenizers]]
+name = "finite_protected_sp64_all_sp_routes_edge_safe"
+kind = "finite_protected_marker_stripped_numeric_sp"
+path = "artifacts/private/v1_8_train_only_sentencepiece/sp_unigram_64000_train_only.model"
+selected_pieces = "artifacts/private/v2_0_protected_aware/protected_piece_vocab.train.tsv"
+sp_passthrough_routes = [
+  "file_like",
+  "apostrophe_surface",
+  "non_turkish_latin_word",
+  "greek_word",
+  "uzbek_apostrophe_word",
+  "cyrillic_word",
+  "arabic_word",
+]
+byte_fallback_crossing_pieces = true
+enabled = true

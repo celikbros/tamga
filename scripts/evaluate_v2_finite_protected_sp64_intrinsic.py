@@ -104,6 +104,69 @@ def load_sp_processor(model_path: Path):
     return processor
 
 
+def processor_piece_size(processor) -> int:
+    if hasattr(processor, "GetPieceSize"):
+        return int(processor.GetPieceSize())
+    return int(processor.PieceSize())
+
+
+def processor_encode_ids(processor, surface: str) -> list[int]:
+    if not surface:
+        return []
+    if hasattr(processor, "EncodeAsIds"):
+        return [int(item) for item in processor.EncodeAsIds(surface)]
+    return [int(item) for item in processor.encode(surface, out_type=int)]
+
+
+def processor_decode_ids(processor, ids: list[int]) -> str:
+    if not ids:
+        return ""
+    if hasattr(processor, "DecodeIds"):
+        return str(processor.DecodeIds(ids))
+    return str(processor.decode(ids))
+
+
+def processor_encode_ids_lossless_or_byte_fallback(
+    processor,
+    surface: str,
+    *,
+    byte_offset: int,
+) -> tuple[list[int], int]:
+    ids = processor_encode_ids(processor, surface)
+    if processor_decode_ids(processor, ids) == surface:
+        return ids, 0
+
+    output: list[int] = []
+    byte_fallback_tokens = 0
+    buffer = ""
+
+    def flush_buffer() -> None:
+        nonlocal buffer, byte_fallback_tokens
+        if not buffer:
+            return
+        buffer_ids = processor_encode_ids(processor, buffer)
+        if processor_decode_ids(processor, buffer_ids) == buffer:
+            output.extend(buffer_ids)
+        else:
+            encoded = buffer.encode("utf-8")
+            output.extend(byte_offset + byte for byte in encoded)
+            byte_fallback_tokens += len(encoded)
+        buffer = ""
+
+    for char in surface:
+        char_ids = processor_encode_ids(processor, char)
+        if processor_decode_ids(processor, char_ids) == char:
+            buffer += char
+            continue
+        flush_buffer()
+        encoded = char.encode("utf-8")
+        output.extend(byte_offset + byte for byte in encoded)
+        byte_fallback_tokens += len(encoded)
+
+    flush_buffer()
+    return output, byte_fallback_tokens
+
+
 def selected_piece_strings(selected_path: Path) -> list[str]:
     pieces = [piece.piece for piece in load_selected_pieces(selected_path)]
     return sorted((piece for piece in pieces if piece), key=lambda item: (-len(item), item))
@@ -162,76 +225,85 @@ def append_sp_encoded_segment(
     return model_count
 
 
+def append_sp_logical_tokens(
+    *,
+    logical_tokens: list[str],
+    surface: str,
+    processor,
+) -> None:
+    for piece in processor.EncodeAsPieces(surface):
+        is_word_start = any(piece.startswith(prefix) for prefix in SP_WORD_STARTS)
+        piece_surface = strip_sp_word_start(piece)
+        if piece_surface:
+            append_word_surface(
+                logical_tokens,
+                piece_surface,
+                word_start=is_word_start,
+            )
+
+
 def encode_finite_protected_sp64(
     text: str,
     *,
     processor,
     selected_pieces: list[str],
+    numeric_sp_passthrough: bool = False,
+    sp_passthrough_routes: set[str] | frozenset[str] | None = None,
 ) -> PrototypeEncoding:
     pieces = analyze_line(text, TurkishTokenizer(preserve_whitespace=True))
     logical_tokens: list[str] = []
-    segment = ""
-    starts_after_space = True
-    pending_space = True
+    logical_segment = ""
+    model_segment = ""
     model_token_count = 0
     protected_piece_tokens = 0
     protected_byte_tokens = 0
+    byte_offset = processor_piece_size(processor) + len(selected_pieces)
+    passthrough_routes = set(sp_passthrough_routes or set())
+    if numeric_sp_passthrough:
+        passthrough_routes.add("numeric_like")
 
-    def flush() -> None:
-        nonlocal segment, model_token_count
-        if segment:
-            model_token_count += append_sp_encoded_segment(
+    def flush_logical() -> None:
+        nonlocal logical_segment
+        if logical_segment:
+            append_sp_logical_tokens(
                 logical_tokens=logical_tokens,
-                surface=segment,
-                starts_after_space=starts_after_space,
+                surface=logical_segment,
                 processor=processor,
             )
-            segment = ""
+            logical_segment = ""
+
+    def flush_model() -> None:
+        nonlocal model_segment, model_token_count, protected_byte_tokens
+        if model_segment:
+            segment_ids, byte_tokens = processor_encode_ids_lossless_or_byte_fallback(
+                processor,
+                model_segment,
+                byte_offset=byte_offset,
+            )
+            model_token_count += len(segment_ids)
+            protected_byte_tokens += byte_tokens
+            model_segment = ""
 
     for piece in pieces:
-        if piece.kind == "whitespace":
-            flush()
-            pending_space = True
-            continue
-
         if piece.kind.startswith("protected:"):
-            flush()
-            append_word_surface(logical_tokens, piece.surface, word_start=pending_space)
+            route = piece.kind.removeprefix("protected:")
+            flush_logical()
+            append_word_surface(logical_tokens, piece.surface, word_start=True)
+            if route in passthrough_routes:
+                model_segment += piece.surface
+                continue
+            flush_model()
             piece_count, byte_count = encode_protected_surface(piece.surface, selected_pieces)
             protected_piece_tokens += piece_count
             protected_byte_tokens += byte_count
             model_token_count += piece_count + byte_count
-            pending_space = False
             continue
 
-        if piece.kind == "apostrophe":
-            flush()
-            logical_tokens.append(piece.surface)
-            model_token_count += 1
-            pending_space = False
-            continue
+        logical_segment += piece.surface
+        model_segment += piece.surface
 
-        if piece.kind == "suffix" and piece.boundary_before == "hard":
-            flush()
-            append_suffix_surface(logical_tokens, piece.surface)
-            model_token_count += 1
-            pending_space = False
-            continue
-
-        if piece.boundary_before == "soft":
-            segment += piece.surface
-            continue
-
-        if piece.boundary_before == "hard":
-            flush()
-            segment = piece.surface
-            starts_after_space = pending_space
-            pending_space = False
-            continue
-
-        segment += piece.surface
-
-    flush()
+    flush_logical()
+    flush_model()
     return PrototypeEncoding(
         logical_tokens=logical_tokens,
         model_token_count=model_token_count,
@@ -269,6 +341,8 @@ def evaluate_cases_for_models(
     selected_pieces: list[str],
     reference_label: str = "sp_unigram_64000_train_only",
     finite_label: str = "finite_protected_sp64",
+    numeric_sp_passthrough: bool = False,
+    sp_passthrough_routes: set[str] | frozenset[str] | None = None,
 ) -> dict[str, list[ModelCaseResult]]:
     specs = [
         RealBaselineSpec(name="custom_tr_morph", kind="custom"),
@@ -307,6 +381,8 @@ def evaluate_cases_for_models(
             case.text,
             processor=processor,
             selected_pieces=selected_pieces,
+            numeric_sp_passthrough=numeric_sp_passthrough,
+            sp_passthrough_routes=sp_passthrough_routes,
         )
         output[finite_label].append(
             ModelCaseResult(
@@ -406,6 +482,8 @@ def evaluate_protected(
     selected_pieces: list[str],
     reference_label: str = "sp_unigram_64000_train_only",
     finite_label: str = "finite_protected_sp64",
+    numeric_sp_passthrough: bool = False,
+    sp_passthrough_routes: set[str] | frozenset[str] | None = None,
 ) -> list[ProtectedSummary]:
     custom = TurkishTokenizer()
     sp_spec = RealBaselineSpec(
@@ -424,6 +502,8 @@ def evaluate_protected(
                 case.text,
                 processor=processor,
                 selected_pieces=selected_pieces,
+                numeric_sp_passthrough=numeric_sp_passthrough,
+                sp_passthrough_routes=sp_passthrough_routes,
             )
             for case in cases
         },
@@ -577,12 +657,24 @@ def main(argv: list[str] | None = None) -> int:
         default="finite_protected_sp64",
         help="Label for the finite protected wrapper row in reports.",
     )
+    parser.add_argument(
+        "--numeric-sp-passthrough",
+        action="store_true",
+        help="Encode numeric-like protected spans with SP while preserving their logical span.",
+    )
+    parser.add_argument(
+        "--sp-passthrough-route",
+        action="append",
+        default=[],
+        help="Protected route to encode with SP while preserving logical span; repeatable.",
+    )
     args = parser.parse_args(argv)
 
     sp64_model = Path(args.sp64_model)
     selected_path = Path(args.selected_pieces)
     processor = load_sp_processor(sp64_model)
     selected = selected_piece_strings(selected_path)
+    sp_passthrough_routes = set(args.sp_passthrough_route)
 
     gold_results = evaluate_cases_for_models(
         load_cases(args.gold),
@@ -591,6 +683,8 @@ def main(argv: list[str] | None = None) -> int:
         selected_pieces=selected,
         reference_label=args.reference_label,
         finite_label=args.finite_label,
+        numeric_sp_passthrough=args.numeric_sp_passthrough,
+        sp_passthrough_routes=sp_passthrough_routes,
     )
     challenge_results = evaluate_cases_for_models(
         load_cases(args.challenge),
@@ -599,6 +693,8 @@ def main(argv: list[str] | None = None) -> int:
         selected_pieces=selected,
         reference_label=args.reference_label,
         finite_label=args.finite_label,
+        numeric_sp_passthrough=args.numeric_sp_passthrough,
+        sp_passthrough_routes=sp_passthrough_routes,
     )
     multilingual_results = evaluate_cases_for_models(
         load_cases(args.multilingual),
@@ -607,6 +703,8 @@ def main(argv: list[str] | None = None) -> int:
         selected_pieces=selected,
         reference_label=args.reference_label,
         finite_label=args.finite_label,
+        numeric_sp_passthrough=args.numeric_sp_passthrough,
+        sp_passthrough_routes=sp_passthrough_routes,
     )
     protected_rows = evaluate_protected(
         load_stress_cases(args.stress),
@@ -615,6 +713,8 @@ def main(argv: list[str] | None = None) -> int:
         selected_pieces=selected,
         reference_label=args.reference_label,
         finite_label=args.finite_label,
+        numeric_sp_passthrough=args.numeric_sp_passthrough,
+        sp_passthrough_routes=sp_passthrough_routes,
     )
 
     report = format_report(

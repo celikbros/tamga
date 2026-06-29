@@ -1,0 +1,118 @@
+{
+  "schema_version": "tokenizer-config-v3.1-draft-1",
+  "status": "candidate_not_training_final",
+  "tokenizer_name": "sp48k_protected_passthrough_sidecar",
+  "description": "48K parameter-efficient Gardaş tokenizer candidate for internal v3.1 evaluation.",
+  "model": {
+    "type": "sentencepiece_unigram",
+    "sp_model_path": "artifacts/private/v3_1_vocab_ablation_sentencepiece/sp_unigram_48000_real_mix.model",
+    "sp_vocab_path": "artifacts/private/v3_1_vocab_ablation_sentencepiece/sp_unigram_48000_real_mix.vocab",
+    "sp_vocab_size": 48000,
+    "normal_text_flow": "sentencepiece",
+    "trained_on_full_gardash_corpus": false
+  },
+  "id_space": {
+    "sp_id_start": 0,
+    "sp_id_end_exclusive": 48000,
+    "byte_fallback_start": 48000,
+    "byte_fallback_size": 256,
+    "byte_fallback_end_exclusive": 48256,
+    "current_effective_vocab_size": 48256
+  },
+  "sentencepiece_meta_tokens": {
+    "unk": {
+      "piece": "<unk>",
+      "id": 0
+    },
+    "bos": {
+      "piece": "<s>",
+      "id": 1
+    },
+    "eos": {
+      "piece": "</s>",
+      "id": 2
+    },
+    "pad": {
+      "piece": null,
+      "id": -1,
+      "status": "not_defined_in_current_sp_model"
+    }
+  },
+  "special_token_registry": {
+    "status": "unfrozen",
+    "policy": "Do not start main LLM training until this registry is frozen.",
+    "current_defined": [
+      "<unk>",
+      "<s>",
+      "</s>"
+    ],
+    "requested_unassigned": [
+      "<pad>",
+      "<eos>",
+      "<bos>",
+      "<system>",
+      "<user>",
+      "<assistant>",
+      "<thinking>",
+      "</thinking>",
+      "<answer>",
+      "</answer>",
+      "<tool_call>",
+      "<tool_result>"
+    ],
+    "known_conflict": "<pad> cannot be assigned id 0 without conflicting with current <unk> id 0."
+  },
+  "sidecar": {
+    "schema_version": "v2.2-sidecar-jsonl-1",
+    "contract": "byte_offset_passthrough_sidecar",
+    "token_boundary_alignment": false,
+    "route_labels": [
+      "numeric_like",
+      "url",
+      "technical_comparator",
+      "file_like",
+      "apostrophe_surface",
+      "non_turkish_latin_word",
+      "greek_word",
+      "arabic_word",
+      "percent_encoded",
+      "cyrillic_word",
+      "uzbek_apostrophe_word",
+      "azerbaijani_word"
+    ],
+    "sp_passthrough_routes": [
+      "numeric_like",
+      "url",
+      "technical_comparator",
+      "file_like",
+      "apostrophe_surface",
+      "non_turkish_latin_word",
+      "greek_word",
+      "uzbek_apostrophe_word",
+      "cyrillic_word",
+      "arabic_word",
+      "percent_encoded",
+      "azerbaijani_word"
+    ],
+    "required_route_invariants": [
+      "percent_encoded",
+      "azerbaijani_word",
+      "url",
+      "technical_comparator"
+    ]
+  },
+  "training_preprocessing": {
+    "recommended_hot_path": "binary_tokens_plus_optional_binary_loss_mask",
+    "jsonl_sidecar_hot_path": "not_recommended",
+    "token_dtype": "uint32_le",
+    "loss_mask_dtype": "uint8",
+    "default_line_separator": "eos_id_2"
+  },
+  "open_gates_before_training": [
+    "freeze_special_token_registry",
+    "confirm_48k_vs_64k_on_larger_or_full_corpus",
+    "produce_official_fertility_report_for_selected_vocab",
+    "produce_corpus_tokenization_pipeline_manifest",
+    "run_dataloader_smoke_against_binary_tokens_and_masks"
+  ]
+}

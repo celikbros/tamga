@@ -32,6 +32,7 @@ class CandidateSPConfig:
     train_extremely_large_corpus: bool
     max_sentence_length: int
     user_defined_symbols: list[str]
+    pretokenization_delimiter: str
 
     @property
     def model_path(self) -> Path:
@@ -123,6 +124,7 @@ def load_config(path: str | Path) -> CandidateSPConfig:
         train_extremely_large_corpus=bool(settings.get("train_extremely_large_corpus", False)),
         max_sentence_length=int(settings.get("max_sentence_length", 16384)),
         user_defined_symbols=_configured_user_defined_symbols(settings),
+        pretokenization_delimiter=str(settings.get("pretokenization_delimiter", "")),
     )
 
 
@@ -157,6 +159,7 @@ def train_model(config: CandidateSPConfig, *, force: bool) -> None:
         train_extremely_large_corpus=config.train_extremely_large_corpus,
         max_sentence_length=config.max_sentence_length,
         user_defined_symbols=config.user_defined_symbols,
+        pretokenization_delimiter=config.pretokenization_delimiter,
     )
     print(f"wrote_model: {config.model_path}")
     print(f"wrote_vocab: {config.vocab_path}")
@@ -254,6 +257,7 @@ def format_report(config: CandidateSPConfig, rows: list[ViewStats]) -> str:
         f"| remove_extra_whitespaces | {config.remove_extra_whitespaces} |",
         f"| max_sentence_length | {config.max_sentence_length} |",
         f"| user_defined_symbols | {len(config.user_defined_symbols)} |",
+        f"| pretokenization_delimiter | {repr(config.pretokenization_delimiter)} |",
         "",
         "## Token Pressure",
         "",

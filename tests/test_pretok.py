@@ -1,4 +1,4 @@
-from tr_tokenizer.pretok import pre_tokenize
+from tr_tokenizer.pretok import is_non_turkish_latin_word, pre_tokenize
 
 
 def test_pre_tokenize_splits_words_apostrophe_suffixes_and_punctuation():
@@ -12,6 +12,33 @@ def test_pre_tokenize_splits_words_apostrophe_suffixes_and_punctuation():
         "Ankara",
         "'",
         "+ya",
+        ".",
+    ]
+
+
+def test_pre_tokenize_splits_buffered_turkish_apostrophe_suffixes():
+    assert pre_tokenize(
+        "\u00dcniversitesi'nde B\u00f6lgesi'ndeki Anadolu'yla "
+        "Yay\u0131nevi'nce Mahkemesi'ne M\u00fctarekesi'nden."
+    ) == [
+        "\u00dcniversitesi",
+        "'",
+        "+nde",
+        "B\u00f6lgesi",
+        "'",
+        "+ndeki",
+        "Anadolu",
+        "'",
+        "+yla",
+        "Yay\u0131nevi",
+        "'",
+        "+nce",
+        "Mahkemesi",
+        "'",
+        "+ne",
+        "M\u00fctarekesi",
+        "'",
+        "+nden",
         ".",
     ]
 
@@ -58,6 +85,21 @@ def test_pre_tokenize_keeps_non_turkish_latin_words_intact():
     ]
 
 
+def test_pre_tokenize_treats_turkish_loan_diacritics_as_turkish_text():
+    assert pre_tokenize("h\u00e2l\u00e2 imk\u00e2n Mill\u00ee ma'l\u00fbmat.") == [
+        "h\u00e2l\u00e2",
+        "imk\u00e2n",
+        "Mill\u00ee",
+        "ma'l\u00fbmat",
+        ".",
+    ]
+    assert not is_non_turkish_latin_word("h\u00e2l\u00e2")
+    assert not is_non_turkish_latin_word("imk\u00e2n")
+    assert not is_non_turkish_latin_word("Mill\u00ee")
+    assert is_non_turkish_latin_word("Stra\u00dfe")
+    assert is_non_turkish_latin_word("ni\u00f1o")
+
+
 def test_pre_tokenize_keeps_numbers_and_punctuation():
     assert pre_tokenize("3'ün 12,5!") == ["3", "'", "+ün", "12,5", "!"]
 
@@ -66,6 +108,31 @@ def test_pre_tokenize_keeps_file_like_tokens_intact():
     assert pre_tokenize("README.md config_v2.json.") == [
         "README.md",
         "config_v2.json",
+        ".",
+    ]
+    assert pre_tokenize("Prof.Dr geldi. System.Console README.md") == [
+        "Prof.Dr",
+        "geldi",
+        ".",
+        "System.Console",
+        "README.md",
+    ]
+
+
+def test_pre_tokenize_splits_glued_sentence_file_like_false_positives():
+    assert pre_tokenize(
+        "de\u011ferlendirildi.Bulgular a\u00e7\u0131kland\u0131. "
+        "ama\u00e7lanm\u0131\u015ft\u0131r.Gere\u00e7 tamam."
+    ) == [
+        "de\u011ferlendirildi",
+        ".",
+        "Bulgular",
+        "a\u00e7\u0131kland\u0131",
+        ".",
+        "ama\u00e7lanm\u0131\u015ft\u0131r",
+        ".",
+        "Gere\u00e7",
+        "tamam",
         ".",
     ]
 
@@ -121,6 +188,21 @@ def test_pre_tokenize_v11_keeps_guarded_number_and_file_forms():
         "+da",
         "2024/05/01",
     ]
+
+
+def test_pre_tokenize_keeps_percent_encoded_suffix_forms_intact():
+    assert pre_tokenize("%20'si %3A'de %C3%BC'yi") == [
+        "%20",
+        "'",
+        "+si",
+        "%3A",
+        "'",
+        "+de",
+        "%C3%BC",
+        "'",
+        "+yi",
+    ]
+    assert pre_tokenize("%25'lik") == ["%", "25", "'", "+lik"]
 
 
 def test_pre_tokenize_keeps_urls_intact_and_splits_sentence_punctuation():

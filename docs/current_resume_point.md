@@ -1,6 +1,937 @@
 # Current Resume Point
 
-Date: 2026-06-08
+Date: 2026-06-28
+
+## Latest Actual State: Tamga v3.8 Production-Final
+
+Tamga v3.8 is accepted and frozen for the Turkish-primary CELIK-GARDAS Faz 4
+pretraining run.
+
+```text
+tokenizer: sp64k_final_protected_passthrough_sidecar_controls128
+effective vocabulary size: 64,384
+full-corpus lines: 6,027,968
+full-corpus tokens: 2,499,949,602
+tokens/raw byte: 0.184311
+SP alignment mismatches: 0
+status: ACCEPTED / FROZEN
+owner of the next critical path: LLM team
+```
+
+Canonical current documents:
+
+```text
+docs/v3_8_production_final_closure.md
+docs/v3_8_phase2_acceptance_status.md
+docs/tamga_brand_contract.md
+docs/tamga_v3_8_release_and_maintenance_roadmap.md
+```
+
+The tokenizer algorithmic line is closed for this corpus and model run. Reopen
+it only for a reproduced regression, security/reconstruction defect, or an
+explicit new corpus scope. Multilingual or code-heavy expansion requires a new
+version and compatibility decision; it must not mutate v3.8.
+
+The remaining local task at this resume point is repository release curation:
+publish the public source, tests, configs, aggregate evidence, and v3.8.0 tag
+without private corpora, private models, or full token binaries.
+
+## Historical State: v2.1 Protected Sidecar Contract
+
+The current v2.1 practical protected-span baseline is:
+
+```text
+sp64_protected_passthrough_sidecar
+```
+
+Decision:
+
+```text
+Use logical byte-span sidecar metadata and avoid global token-boundary
+pre-splitting as the baseline.
+```
+
+Why:
+
+```text
+passthrough sidecar is lossless and exact-roundtrip
+test tokens/raw byte: 0.159660
+pre-split sidecar test tokens/raw byte: 0.165755
+global pre-split tax: +0.006095 tokens/raw byte, about +3.8%
+passthrough keeps model-token stream decoupled from detector changes
+PII/redaction can use byte offsets plus conservative boundary-token over-mask
+```
+
+Advisor split:
+
+```text
+B/passthrough: GeminiFlashExt, Qwen37Plus, Fable5
+A/pre-split: GeminiPro, Grok43
+final project reading: choose B unless exact-copy/constrained decoding over
+protected token spans becomes a committed base-model requirement
+```
+
+Final handoff package:
+
+```text
+docs/v2_1_final_handoff_package.md
+status:
+  v2.1 can be frozen around sp64_protected_passthrough_sidecar
+  global pre-split remains optional only under explicit downstream requirement
+  next work is packaging/regression or separate v2.2 morphology research
+```
+
+Important artifacts:
+
+```text
+docs/v2_1_final_handoff_package.md
+docs/v2_1_regression_checklist.md
+docs/v2_1_closure_gauntlet_findings.md
+docs/v2_1_passthrough_sidecar_handoff_contract.md
+docs/advisor_feedback_v2_1_sidecar_contract_triage.md
+docs/v2_1_presplit_sidecar_findings.md
+docs/llm_team_question_v2_1_sidecar_contract.md
+artifacts/v2_1_tiny_lm_passthrough_sidecar_dry_run.md
+artifacts/v2_1_passthrough_sidecar_roundtrip_valid.md
+artifacts/v2_1_passthrough_sidecar_roundtrip_test.md
+artifacts/v2_1_sidecar_detector_adversarial_battery.md
+artifacts/v2_1_sidecar_route_density_audit_valid_test.md
+artifacts/v2_1_sidecar_route_density_audit_train_valid_test.md
+artifacts/v2_1_sidecar_operation_simulation_train_valid_test.md
+artifacts/v2_1_real_mix_text_sample_materialization_smoke.md
+artifacts/v2_1_real_mix_text_sample_materialization_60k.md
+artifacts/v2_1_sidecar_operation_simulation_real_mix_smoke.md
+artifacts/v2_1_sidecar_operation_simulation_real_mix.md
+artifacts/v2_1_sidecar_route_density_real_mix_with_pressure.md
+artifacts/v2_1_tiny_lm_passthrough_sidecar_20mbytes.md
+artifacts/v2_1_sidecar_detector_adversarial_battery_regression.md
+artifacts/v2_1_passthrough_sidecar_roundtrip_valid_regression.md
+artifacts/v2_1_passthrough_sidecar_roundtrip_test_regression.md
+```
+
+Regression lock:
+
+```text
+docs/v2_1_regression_checklist.md
+latest result:
+  targeted unit tests: 44 passed
+  detector battery: 61 cases, 62 expected spans, F1 1.000000
+  valid roundtrip: 1994/1994
+  test roundtrip: 1998/1998
+  dry-run test tokens/raw byte: 0.159660
+  real-mix pre-split tax: +0.006088 tokens/raw byte, relative 0.036279
+  20M passthrough test BPB: 1.947129
+important route invariant:
+  percent_encoded and azerbaijani_word must remain in the sidecar passthrough
+  route lists
+```
+
+Detector battery:
+
+```text
+61 cases
+62 expected spans
+precision/recall/F1: 1.000000
+```
+
+Pilot route density on full v1.8 train/valid/test:
+
+```text
+protected spans: 95162
+protected bytes/raw byte: 0.016414
+protected line share: 0.743047
+dominant routes:
+  numeric_like: 80938 occurrences, 0.009804 bytes/raw byte
+  file_like: 8005 occurrences, 0.004528 bytes/raw byte
+  apostrophe_surface: 3662 occurrences, 0.001336 bytes/raw byte
+reading:
+  protected material is frequent by line but small by byte share in this pilot;
+  train, valid, and test are in the same protected-density band;
+  future alignment work should be selective by route class, not global by
+  default.
+```
+
+Downstream conservative masking simulation:
+
+```text
+artifact: artifacts/v2_1_sidecar_operation_simulation_train_valid_test.md
+policy simulated:
+  protected byte span -> all overlapping SP tokens -> conservative over-mask
+full train/valid/test:
+  extra mask bytes/raw byte: 0.004100
+  extra/protected byte: 0.249802
+  edge-aligned span rate: 0.073916
+  crossing span rate: 0.926084
+  max extra bytes/span: 9
+route extra-mask drivers:
+  numeric_like: 106852 extra bytes
+  file_like: 7790 extra bytes
+  apostrophe_surface: 3201 extra bytes
+reading:
+  passthrough is not token-boundary aligned and should not be sold as exact
+  token-index protection, but conservative masking is cheap on this pilot:
+  about 0.41% extra raw bytes masked.
+```
+
+Real-mix sampling helper:
+
+```text
+script: scripts/materialize_v2_1_real_mix_text_sample.py
+purpose:
+  materialize JSONL corpus `text` fields into raw .txt sample files before
+  route-density or operation-simulation audits
+smoke:
+  source: data/train/private/celik_ai/trt_news_corpus.jsonl first 100 rows
+  output: artifacts/private/v2_1_real_mix/real_mix_smoke.txt
+  operation simulation extra mask bytes/raw byte: 0.003509
+  reading: end-to-end JSONL sample -> raw text -> operation audit path works
+real-mix 60k sample:
+  output: artifacts/private/v2_1_real_mix/real_mix_60k_sample.txt
+  report: artifacts/v2_1_real_mix_text_sample_materialization_60k.md
+  scanned/written lines: 40388 / 40388
+  output bytes: 44392189
+  source mix:
+    trt_news: 388 lines
+    academic: 20000 lines
+    ttk: 20000 lines
+  next:
+    run sidecar operation simulation on this sample
+real-mix operation simulation:
+  report: artifacts/v2_1_sidecar_operation_simulation_real_mix.md
+  raw bytes: 44351801
+  protected spans: 149999
+  protected bytes/raw byte: 0.015398
+  extra mask bytes/raw byte: 0.003983
+  extra/protected byte: 0.258681
+  edge-aligned span rate: 0.077861
+  crossing span rate: 0.922139
+  max extra bytes/span: 9
+  dominant extra-mask routes:
+    numeric_like: 160582 extra bytes
+    file_like: 9588 extra bytes
+    apostrophe_surface: 6477 extra bytes
+  reading:
+    real-mix confirms pilot; conservative masking cost remains about 0.4%
+    extra raw bytes, so global pre-split is still not justified by
+    masking/redaction cost alone.
+real-mix token-pressure audit:
+  report: artifacts/v2_1_sidecar_route_density_real_mix_with_pressure.md
+  SP tokens/raw byte: 0.167769
+  passthrough tokens/raw byte: 0.167822
+  pre-split tokens/raw byte: 0.173911
+  pre-split tax: +0.006088 tokens/raw byte
+  pre-split relative tax: 0.036279
+  reading:
+    global pre-split tax is stable on the stronger mixed-domain sample;
+    route-selective alignment should be tested before any future global
+    pre-split.
+20M tiny-LM passthrough row:
+  report: artifacts/v2_1_tiny_lm_passthrough_sidecar_20mbytes.md
+  steps: 6042
+  approx bytes seen: 19998919
+  final valid BPB: 1.935810
+  test BPB: 1.947129
+  valid/test bits per token: 12.1730 / 12.1955
+  reading:
+    v2.1 selected contract now has a fixed-byte LM-loss reference row.
+```
+
+Pre-split remains available as optional variant:
+
+```text
+sp64_protected_presplit_sidecar
+exact roundtrip valid/test: 1994/1994 and 1998/1998
+protected edge alignment: 1.000000
+use only if token-boundary protected spans are a real downstream requirement
+```
+
+Next sequence:
+
+```text
+1. Do not run pre-split 20M now.
+2. Passthrough sidecar 20M fixed-byte row is complete.
+3. Real-mix protected-route density with token pressure is complete.
+4. If exact-copy/constrained decoding becomes committed, test selective
+   pre-split by route class before global pre-split.
+5. Otherwise, close v2.1 and move new research to v2.2.
+```
+
+## Latest Actual State: v2.2 Handoff Hardening
+
+The project target has been reframed:
+
+```text
+v2.1 = closed internal protected-sidecar baseline
+v2.2 = handoff hardening
+v3.0 = reserved first LLM-team experimental handoff candidate, only after v2.x is complete
+```
+
+New v2.2 smoke audit:
+
+```text
+script: scripts/audit_v2_2_llm_handoff_smoke.py
+tests: tests/test_v2_2_llm_handoff_smoke.py
+hardening gate: docs/v2_2_llm_handoff_hardening_gate.md
+roadmap: docs/v2_2_to_v3_0_roadmap.md
+schema candidate: docs/v2_2_sidecar_jsonl_schema.md
+LLM README draft: docs/v2_2_llm_team_integration_readme.md
+```
+
+What the smoke checks:
+
+```text
+exact encode/decode reconstruction
+valid token id ranges
+sidecar byte/char offsets slicing back to surfaces
+required passthrough route invariants
+fallback source token rate
+conservative protected-span masking overhead
+LM batch-window formation
+```
+
+Current v2.2 smoke results:
+
+```text
+targeted tests:
+  tests/test_v2_2_llm_handoff_smoke.py
+  tests/test_v2_1_sidecar_operation_simulation.py
+  tests/test_tiny_lm_bpb_probe.py
+  result: 28 passed
+
+valid/test 250-line smoke:
+  report: artifacts/v2_2_llm_handoff_smoke_valid_test_250.md
+  exact: 500/500
+  fallback rate: 0.000018
+  sidecar failures: 0
+  extra mask bytes/raw byte: 0.002666
+  LM windows: 221
+  overall: PASS
+
+real-mix 5k smoke:
+  report: artifacts/v2_2_llm_handoff_smoke_real_mix_5k.md
+  exact: 5000/5000
+  fallback source tokens: 701
+  fallback rate: 0.000731
+  protected spans: 16683
+  sidecar failures: 0
+  extra mask bytes/raw byte: 0.003117
+  LM windows: 1883
+  overall: PASS
+
+full real-mix smoke:
+  report: artifacts/v2_2_llm_handoff_smoke_real_mix_full.md
+  exact: 40388/40388
+  failures: 0
+  fallback source tokens: 3395
+  fallback rate: 0.000456
+  protected spans: 149999
+  sidecar failures: 0
+  extra mask bytes/raw byte: 0.003983
+  LM windows: 14616
+  overall: PASS
+  closed regression:
+    azerbaijani_word must be included in the sidecar passthrough route lists
+```
+
+v2.2 closure:
+
+```text
+v2.2 is effectively closed as the handoff smoke gate:
+  valid/test smoke PASS
+  real-mix 5k smoke PASS
+  full real-mix smoke PASS
+  targeted unit tests PASS
+
+Next:
+  v2.3 schema freeze
+  v2.4 LLM consumer simulation
+  v2.5 wider robustness only if needed
+  do not declare v3.0 yet
+```
+
+## Latest Actual State: v2.3 Sidecar Schema Freeze
+
+v2.3 freezes the current sidecar JSONL schema:
+
+```text
+schema_version: v2.2-sidecar-jsonl-1
+tokenizer: sp64_protected_passthrough_sidecar
+schema doc: docs/v2_2_sidecar_jsonl_schema.md
+freeze doc: docs/v2_3_sidecar_schema_freeze.md
+validator: scripts/audit_v2_3_sidecar_schema_contract.py
+tests: tests/test_v2_3_sidecar_schema_contract.py
+```
+
+Full real-mix schema audit:
+
+```text
+report: artifacts/v2_3_sidecar_schema_contract_audit_real_mix_full.md
+records: 40388
+spans: 149999
+total failures: 0
+status: PASS
+```
+
+Current next sequence:
+
+```text
+1. v2.4 LLM consumer simulation is now closed.
+2. Decide whether v2.5 wider robustness is required.
+3. Finalize LLM-team README and package after v2.5 decision.
+4. Only then consider v3.0.
+```
+
+## Latest Actual State: v2.4 LLM Consumer Simulation
+
+v2.4 validates the frozen sidecar for downstream consumer operations:
+
+```text
+script: scripts/audit_v2_4_llm_consumer_simulation.py
+tests: tests/test_v2_4_llm_consumer_simulation.py
+findings: docs/v2_4_llm_consumer_simulation_findings.md
+report: artifacts/v2_4_llm_consumer_simulation_real_mix_full.md
+```
+
+Full real-mix consumer simulation:
+
+```text
+lines: 40388
+protected spans: 149999
+copy failures: 0
+redaction failures: 0
+token-mask failures: 0
+total failures: 0
+extra mask bytes/raw byte: 0.003983
+status: PASS
+```
+
+Current next sequence:
+
+```text
+1. v2.5 wider robustness closeout is complete.
+2. v3.0 experimental handoff package is prepared.
+3. Next step is human review / LLM-team handoff, not more tokenizer sweeps.
+```
+
+## Latest Actual State: v2.5 Closeout and v3.0 Package
+
+v2.5:
+
+```text
+closeout doc: docs/v2_5_wider_robustness_closeout.md
+decision: no extra robustness run required before experimental handoff
+```
+
+v3.0:
+
+```text
+package doc: docs/v3_0_experimental_handoff_package.md
+status: experimental LLM-team handoff package prepared
+not claimed: final production tokenizer
+```
+
+Current next sequence:
+
+```text
+1. Review docs/v3_0_experimental_handoff_package.md.
+2. Hand to LLM team for integration smoke if accepted.
+3. Open a new branch only if the LLM team requires token-boundary spans,
+   throughput benchmarks, or actual dataloader integration changes.
+```
+
+## Latest Actual State: Context-Free Unigram/Pruning Bound
+
+The latest Fable5-guided branch has clarified the context-free Unigram/pruning
+path:
+
+```text
+score-only Unigram / EM is weak
+teacher-distilled score bound is still below the desired frontier
+eval-side crossing concentration was an artifact
+train-side attribution shows low-support/context-dependent residual damage
+simple high-rate pruning is now a closing negative result, not a path forward
+```
+
+New findings:
+
+```text
+docs/v2_0_distilled_score_bound_findings.md
+docs/v2_0_pruned_sp_probe_findings.md
+docs/advisor_feedback_v2_0_distilled_score_bound_triage.md
+docs/v2_0_context_free_frontier_and_next_steps.md
+docs/advisor_update_v2_0_distilled_score_bound.md
+```
+
+Teacher-distilled 16k bound:
+
+```text
+bare Challenge F1: 0.7509 at 2.3525 tokens/word
+finite Challenge F1: 0.7219 at 2.4413 tokens/word
+deployed crossing: 139/305, rate 0.455738
+high-rate attribution: about 95% from >=0.70-rate pieces
+```
+
+Targeted pruning probes:
+
+```text
+all >=0.70 high-crossing pieces:
+  selected pieces: 4329
+  bare F1: 0.7447
+  finite F1: 0.6582
+  decision: too blunt; do not promote
+
+non_word_start >=0.70 high-crossing pieces:
+  selected pieces: 403
+  bare F1: 0.7486
+  finite F1: 0.6875
+  crossed boundaries: 151/305
+  decision: best small inventory probe, but still not enough
+```
+
+Closing pruning sweep:
+
+```text
+rate=1.00/count20:
+  bare/finite Challenge F1: 0.7351 / 0.6755
+  crossed boundaries: 170/305
+
+rate>=0.90/count20:
+  bare/finite Challenge F1: 0.7482 / 0.6871
+  crossed boundaries: 155/305
+
+rate>=0.70/count50:
+  bare/finite Challenge F1: 0.7497 / 0.6897
+  crossed boundaries: 153/305
+
+decision:
+  no pruning row materially beats pruned_ge070_nonword
+```
+
+Teacher-distilled 16k Gold:
+
+```text
+SP64 bare/finite F1: 0.7551 / 0.7314
+teacher-distilled 16k bare/finite F1: 0.8042 / 0.8129
+interpretation: gold and challenge measure different regimes; use both
+```
+
+Wrapper-tax contrast on Challenge:
+
+```text
+SP64 tax: -0.0596
+pruned_ge070_all tax: -0.0865
+pruned_ge070_nonword tax: -0.0611
+teacher-distilled 16k tax: -0.0290
+interpretation: wrapper tax is model-dependent and route-specific
+```
+
+Current recommendation:
+
+```text
+Do not continue score-only EM/teacher-distillation.
+Do not continue high-rate pruning sweeps.
+Do not start MorphBPE yet.
+Build the consolidated four-model frontier table.
+If budget allows, run one fixed-byte tiny-LM calibration across the ladder.
+In parallel, audit/redesign numeric/file/apostrophe finite-wrapper routes.
+```
+
+Prepared tiny-LM ladder config:
+
+```text
+configs/v2_0_tiny_lm_context_free_ladder.toml
+```
+
+Dry-run note:
+
+```text
+Dry-run completed via user run:
+  artifacts/v2_0_tiny_lm_context_free_ladder_dry_run.md
+  artifacts/private/v2_0_tiny_lm_context_free_ladder_dry_run/encoded_stats.jsonl
+
+2M-byte fixed-step counts:
+  finite_protected_sp64_numeric_sp_floor: 622
+  finite_protected_pruned_ge070_nonword: 630
+  finite_protected_teacher_distilled_16000: 675
+  finite_protected_teacher_distilled_2000: 730
+
+Run commands are recorded in:
+  docs/v2_0_context_free_frontier_and_next_steps.md
+```
+
+## Latest Training-Time Objective Triage
+
+The newest advisor round changes the immediate order of work:
+
+```text
+do not start a full custom trainer yet
+first fix the wrapper / normalization contract and re-emit the protected floor
+```
+
+The broad direction remains:
+
+```text
+finite protected routing
++ learned tokenizer
++ Turkish morphology teacher as a soft training-time prior
+```
+
+But the active protected floor is not clean enough to anchor new objective
+claims while roundtrip is failing. Runtime boundary-biased decode stays demoted,
+and the toy boundary-weighted BPE smoke remains only a mechanical sanity check.
+
+New triage document:
+
+```text
+docs/advisor_feedback_v2_0_training_time_objective_choice_triage.md
+```
+
+Current next sequence:
+
+1. Define byte-exact vs normalized-exact contract.
+2. Repair/re-audit the protected wrapper. Done for finite protected floor via
+   route-only protected splitting.
+3. Re-emit baseline tables. Done for repaired strict and numeric-SP floors.
+4. Run Rung-0 diagnostic: unconstrained SP64 path vs morphology-compliant path.
+   Done on challenge and challenge+valid200.
+5. If promising, try stock SentencePiece partial-boundary training before
+   writing a heavier custom objective.
+
+Route-only finite protected repair:
+
+```text
+script changed: scripts/run_tiny_lm_bpb_probe.py
+test: tests/test_tiny_lm_bpb_probe.py -> 12 passed
+new audits:
+  artifacts/v2_0_roundtrip_wrapper_tax_audit_valid_after_route_only_byte_fallback.md
+  artifacts/v2_0_roundtrip_wrapper_tax_audit_test_after_route_only_byte_fallback.md
+finite protected numeric-SP floor valid exact:
+  before: 17/1994
+  after route-only: 1991/1994
+  after route-only + UTF-8 fallback: 1994/1994
+finite protected numeric-SP floor test exact:
+  after route-only + UTF-8 fallback: 1998/1998
+clean no-protected wrapper tax:
+  before: +7.6715 tokens/line
+  after: +0.0062 tokens/line valid, 0.0000 tokens/line test
+valid tokens/raw byte:
+  before: 0.171202
+  after: 0.162866
+test tokens/raw byte:
+  after: 0.163779
+remaining bare SP64 failures: rare unknown/character coverage cases; repaired
+finite floor handles them with UTF-8 byte fallback
+intrinsic reports:
+  artifacts/v2_0_finite_protected_sp64_intrinsic_eval_strict_repaired.md
+  artifacts/v2_0_finite_protected_sp64_intrinsic_eval_numeric_sp_repaired.md
+numeric-SP repaired floor:
+  Challenge F1: 0.6755
+  Protected stress: 25/25
+  Challenge avg model tokens/word: 2.2977
+interpretation:
+  the floor is a valid protection/lossless baseline again, but it is not a
+  morphology-improving tokenizer; morphology signal must come from the next
+  training-time objective branch
+Rung-0 SP64 morph-compliant path audit:
+  script: scripts/audit_v2_sp64_morph_compliant_paths.py
+  findings: docs/v2_0_sp64_morph_compliant_path_audit_findings.md
+  challenge crossing share: 0.747059
+  challenge avg token delta constrained-unconstrained: 1.0647
+  challenge+valid200 crossing share: 0.928189
+  challenge+valid200 avg token delta: 1.5614
+  decision: hard no-cross morphology is too costly; try stock SP partial
+    boundary pretokenization before custom trainer work
+partial-boundary infrastructure:
+  script: scripts/materialize_v2_partial_boundary_sp_view.py
+  candidate runner: scripts/run_v2_candidate_sentencepiece_probe.py
+  tests: 21 passed for partial-boundary/candidate/evaluator/tiny-lm helpers
+  rho=0.10 train view:
+    artifacts/private/v2_0_partial_boundary_sp/partial_boundary_rho010.train.txt
+  rho=0.10 config:
+    configs/v2_0_partial_boundary_rho010_sentencepiece.toml
+  rho=0.10 view report:
+    artifacts/v2_0_partial_boundary_rho010_view.md
+  rho=0.10 SP probe:
+    artifacts/v2_0_partial_boundary_rho010_sentencepiece_probe.md
+  rho=0.10 intrinsic eval:
+    artifacts/v2_0_partial_boundary_rho010_intrinsic_eval.md
+  rho=0.10 valid/test tokens/raw byte: 0.158404 / 0.159029
+  rho=0.10 bare Challenge F1: 0.7361
+  rho=0.10 finite-protected Challenge F1: 0.6750
+  rho=0.10 decision:
+    compression stayed near SP64, but morphology signal did not materially
+    transfer
+  rho=0.25 config:
+    configs/v2_0_partial_boundary_rho025_sentencepiece.toml
+  rho=0.25 view/raw bytes: 1.029451
+  rho=0.50 config:
+    configs/v2_0_partial_boundary_rho050_sentencepiece.toml
+  rho=0.50 view/raw bytes: 1.058956
+  rho=0.25 valid/test tokens/raw byte: 0.158458 / 0.159060
+  rho=0.25 bare Challenge F1: 0.7380
+  rho=0.25 finite-protected Challenge F1: 0.6782
+  rho=0.50 valid/test tokens/raw byte: 0.158676 / 0.159231
+  rho=0.50 bare Challenge F1: 0.7361
+  rho=0.50 finite-protected Challenge F1: 0.6777
+  decision:
+    close stock SentencePiece partial-boundary branch; compression is safe,
+    but morphology transfer is not material
+  findings:
+    docs/v2_0_partial_boundary_sp_findings.md
+post-hoc score-shift probe:
+  script: scripts/materialize_v2_score_shifted_sp_model.py
+  tests: tests/test_v2_score_shifted_sp_model.py -> 3 passed
+  lambda=0.5 materialization:
+    artifacts/v2_0_score_shift_lambda05_materialization.md
+  lambda=0.5 intrinsic eval:
+    artifacts/v2_0_score_shift_lambda05_intrinsic_eval.md
+  adjusted pieces: 4878
+  alignment failures: 0
+  lambda=0.5 bare Challenge F1: 0.7364
+  lambda=0.5 finite-protected Challenge F1: 0.6768
+  decision:
+    do not run tiny-LM; this shallow score-shift is too weak at lambda=0.5
+  advisor update:
+    docs/advisor_update_v2_0_after_sp_compatible_hacks.md
+Fable5 triage after SP-compatible hacks:
+  docs/advisor_feedback_v2_0_sp_compatible_hacks_triage.md
+SP64 vocab oracle ceiling:
+  script: scripts/audit_v2_sp_vocab_oracle_ceiling.py
+  report: artifacts/v2_0_sp_vocab_oracle_ceiling_challenge.md
+  lambda0 Challenge F1: 0.7422
+  no-cross Challenge F1: 0.8407
+  oracle-best-F1 Challenge F1: 0.8417
+  oracle-best-F1 avg tokens/word: 2.5457
+  decision:
+    SP64 vocabulary can express better morphology-compatible paths; run one
+    cached score-shift sweep before moving to a full custom trainer
+score-shift script update:
+  supports --stats-out / --stats-in
+  supports --penalty-mode rate|mass|hybrid
+  supports --min-crossing-count
+cached score-shift sweep:
+  findings: docs/v2_0_score_shift_sweep_findings.md
+  stats cache:
+    artifacts/private/v2_0_score_shifted_sp/sp64_crossing_stats.train.json
+  lambda sweep: 1, 2, 4, 8
+  lambda 1 bare/finite Challenge F1: 0.7351 / 0.6755
+  lambda 2 bare/finite Challenge F1: 0.7351 / 0.6755
+  lambda 4 bare/finite Challenge F1: 0.7351 / 0.6755
+  lambda 8 bare/finite Challenge F1: 0.7364 / 0.6768
+  decision:
+    close post-hoc score-shift; shallow score patching does not move the
+    deployed SP path toward the oracle ceiling
+  next:
+    boundary-weighted Unigram/EM objective, after bootstrap CI/noise-floor and
+    wrapper-tax decomposition
+methodology chores completed:
+  findings: docs/v2_0_methodology_chore_findings.md
+  CI script: scripts/report_v2_sp_model_ci.py
+  CI report: artifacts/v2_0_sp_model_ci_challenge_current_frontier.md
+  wrapper-tax script: scripts/audit_v2_finite_wrapper_eval_tax.py
+  wrapper-tax report: artifacts/v2_0_finite_wrapper_eval_tax_challenge.md
+  CI decision:
+    SP64 / partial-boundary / score-shift intervals overlap heavily; tiny
+    visible F1 deltas are noise
+  wrapper-tax decision:
+    finite-wrapper F1 loss is concentrated in numeric_like, file_like, and
+    apostrophe/hard_suffix routes
+  metric decision:
+    use bare F1 for normal-text objective development and track finite-wrapper
+    tax separately
+boundary-weighted Unigram/EM spec:
+  docs/v2_0_boundary_weighted_unigram_em_spec.md
+  first implementation target:
+    SP64 candidate vocab + per-word lattice + forward-backward with
+    exp(-lambda * crossings), starting on 2k/5k train-line smoke
+boundary-weighted Unigram/EM prototype:
+  script: scripts/materialize_v2_boundary_weighted_unigram_em.py
+  sweep runner: scripts/run_v2_boundary_weighted_unigram_em_sweep.py
+  runbook: docs/v2_0_boundary_weighted_unigram_em_runbook.md
+  findings: docs/v2_0_boundary_weighted_unigram_em_findings.md
+  advisor follow-up:
+    docs/advisor_followup_v2_0_boundary_weighted_unigram_em.md
+  tests:
+    tests/test_v2_boundary_weighted_unigram_em.py
+    tests/test_v2_boundary_weighted_unigram_em_sweep.py
+    latest targeted result: 9 passed
+  smoke report:
+    artifacts/v2_0_boundary_weighted_unigram_em_lambda1_iter1_100lines.md
+    artifacts/v2_0_boundary_weighted_unigram_em_lambda0_iter1_100lines.md
+  smoke model:
+    artifacts/private/v2_0_boundary_weighted_unigram_em/lambda1_iter1_100lines_unigram_64000.model
+  smoke result:
+    100 train lines, 25486 normal segments, 0 skipped segments,
+    15479 expected piece types, 15479 changed scores for both lambda0/lambda1
+  smoke CI/eval:
+    artifacts/v2_0_boundary_weighted_unigram_em_100lines_ci.md
+    artifacts/v2_0_boundary_weighted_unigram_em_lambda1_iter1_100lines_ci.md
+    lambda0 bare Challenge F1: 0.7392 [0.7067, 0.7664]
+    bare Challenge F1: 0.7404 [0.7081, 0.7664]
+    finite Challenge F1: 0.6809 [0.6429, 0.7176]
+  interpretation:
+    mechanical path is working; this is not yet a quality result. Next run
+    should be a controlled lambda0/lambda>0 comparison on 2k or 5k lines.
+  2k sweep:
+    artifacts/v2_0_boundary_weighted_unigram_em_2000lines_ci.md
+    lambda0/lambda1/lambda2/lambda4 bare F1 stayed flat:
+      0.7383 / 0.7396 / 0.7396 / 0.7391
+    skipped segments: 0
+  crossing diagnostic:
+    lambda0 avg expected crossings/segment: 0.282770
+    lambda4 avg expected crossings/segment: 0.256630
+    lambda16 avg expected crossings/segment: 0.018998
+  decision:
+    boundary penalty is mechanically active, but the current EM score branch
+    shows weak transfer. Do not run tiny-LM; ask advisors whether to add
+    aligned-piece reward/pruning or pivot to constrained MorphBPE.
+Fable5 decisive probes after EM:
+  deployed crossing script:
+    scripts/audit_v2_deployed_sp_crossings.py
+  teacher-distilled script:
+    scripts/materialize_v2_teacher_distilled_sp_model.py
+  findings:
+    docs/v2_0_distilled_score_bound_findings.md
+  advisor update:
+    docs/advisor_update_v2_0_distilled_score_bound.md
+  targeted tests:
+    tests/test_v2_deployed_sp_crossings.py
+    tests/test_v2_teacher_distilled_sp_model.py
+    latest targeted result: 4 passed
+  EM 2k deployed crossing:
+    SP64 crossed boundaries: 170/305
+    EM lambda0/lambda1/lambda2/lambda4 crossed boundaries: 157/305
+    decision: lambda does not survive as a useful deployed crossing curve
+  teacher-distilled 2k challenge:
+    SP64 bare F1/tokens-word: 0.7351 / 2.2010
+    distilled bare F1/tokens-word: 0.7447 / 2.5065
+    SP64 finite F1/tokens-word: 0.6755 / 2.2977
+    distilled finite F1/tokens-word: 0.7179 / 2.5927
+  teacher-distilled 2k deployed crossing:
+    challenge SP64: 170/305, rate 0.557377
+    challenge distilled: 119/305, rate 0.390164
+    high-rate attribution: about 95% of challenge crossings from >=0.70-rate pieces
+  decision:
+    score-only Unigram looks weak, but high-rate crossing attribution means
+    targeted inventory/pruning is not killed. Next choice is full 16k
+    distilled bound versus one high-rate pruning/inventory probe.
+```
+
+## Latest Advisor Correction
+
+Advisor review of the boundary-biased decode result found the key unresolved
+control:
+
+```text
+boundary_biased lambda 0 is not equivalent to official SentencePiece /
+the finite protected floor.
+```
+
+Therefore lambda 4 is not promoted as a v2.0 candidate. It is a promising
+diagnostic point whose attribution is blocked until the lambda 0 tiny-LM BPB
+row and decoder-alignment / roundtrip audits are complete.
+
+Lambda 0 control has now been run:
+
+```text
+report: artifacts/v2_0_tiny_lm_marker_calibration_boundary_lambda0_300steps.md
+decomposition: artifacts/v2_0_boundary_biased_lambda_decomposition.md
+```
+
+Decomposition table:
+
+```text
+finite protected numeric-SP floor -> lambda 0:
+  test BPB -0.142010, Challenge F1 +0.0509
+lambda 0 -> lambda 4:
+  test BPB -0.047547, Challenge F1 +0.0279
+lambda 4 -> lambda 8:
+  test BPB +0.129466, Challenge F1 +0.0524
+```
+
+Interpretation: most BPB gain comes from the decoder/pipeline path, but lambda
+4 still adds a smaller morphology-boundary gain over lambda 0 in the 300-step
+screen.
+
+Roundtrip smoke:
+
+```text
+SP64 bare: 20/20 exact
+boundary-biased lambda 0: 0/20 exact
+boundary-biased lambda 4: 0/20 exact
+reports:
+  artifacts/v2_0_boundary_encoder_roundtrip_audit_sp64_smoke.md
+  artifacts/v2_0_boundary_encoder_roundtrip_audit_smoke.md
+```
+
+This is now the blocker. Do not run longer BPB until boundary-biased encode
+becomes exact-roundtrip or is demoted to diagnostic-only evidence for a future
+training-time objective.
+
+Follow-up advisor review is now stricter:
+
+```text
+the runtime boundary-biased decoder branch is demoted from candidate status
+to diagnostic status until exact roundtrip is fixed
+longer/larger BPB is blocked
+the next useful engineering work is roundtrip/root-cause audit plus wrapper-tax
+audit on clean no-protected lines
+```
+
+New triage:
+
+```text
+docs/advisor_feedback_v2_0_lambda0_roundtrip_triage.md
+```
+
+New audit:
+
+```text
+script: scripts/audit_v2_roundtrip_wrapper_tax.py
+report: artifacts/v2_0_roundtrip_wrapper_tax_audit_valid.md
+findings: docs/v2_0_roundtrip_wrapper_tax_findings.md
+```
+
+New training-time objective smoke:
+
+```text
+implementation: src/tr_tokenizer/boundary_weighted_bpe.py
+runner: scripts/run_v2_boundary_weighted_bpe_probe.py
+findings: docs/v2_0_boundary_weighted_bpe_probe_findings.md
+smoke report: artifacts/v2_0_boundary_weighted_bpe_probe_smoke_small.md
+```
+
+New advisor request:
+
+```text
+docs/advisor_request_v2_0_training_time_objective_choice.md
+```
+
+Important additional finding from advisor review:
+
+```text
+even no-protected valid lines show a protected-wrapper tax:
+  finite/protected floor: about 171.97 tokens
+  official SP: about 164.30 tokens
+This likely reflects segment-wise encoding / dummy-prefix / boundary handling,
+and should be fixed or explained before more morphology-objective work.
+```
+
+The audit confirmed this. On the valid split:
+
+```text
+SP64 exact roundtrip: 1985/1994
+finite protected numeric-SP floor exact roundtrip: 17/1994
+boundary-biased lambda0 exact roundtrip: 0/1994
+boundary-biased lambda4 exact roundtrip: 0/1994
+clean no-protected wrapper tax:
+  official SP avg tokens: 164.2955
+  finite protected floor avg tokens: 171.9669
+```
+
+A quick whitespace-in-segment local fix was tested and reverted. It worsened
+token pressure and did not restore roundtrip. Treat this as structural enough
+to demote the runtime decoder path unless a cleaner wrapper redesign is chosen.
 
 ## Current State
 
@@ -10,13 +941,25 @@ audit work to choose the v2.0 direction.
 Current next step:
 
 ```text
-Stop v2.0 marker-dose tuning. The finite protected-aware path is frozen as the
-protected-span mechanism, but train-only morphology marker shaping did not pay
-back its token-pressure cost in the 300-step tiny-LM BPB calibration.
+Do not run more BPB and do not promote lambda 4.
 
-The next candidate should change the mechanism: selected morph seed vocabulary,
-curated high-value morph pieces, or a constrained Unigram/MorphBPE-style
-objective. Use finite_protected_sp64_floor as the true protected null baseline.
+Immediate next step:
+  1. classify boundary-biased roundtrip failures
+  2. audit/reduce protected-wrapper tax on clean no-protected lines
+  3. compute normal-text-only morphology F1
+  4. decide whether runtime decode gets a short fix attempt or is archived as
+     evidence for a boundary-weighted Unigram/constrained training objective
+Current recommendation: archive/demote runtime boundary-biased decode as a
+candidate path and move the morphology prior into a training-time objective.
+
+Boundary-weighted toy BPE smoke confirms the training-time objective mechanism
+is wired correctly: higher lambda reduces morph-boundary-crossing merges. The
+quality signal is still weak and the toy trainer is slow, so this is not a
+candidate tokenizer. It is an objective sanity check.
+
+Next decision: choose the first real training-time objective. Current leaning is
+boundary-weighted Unigram because it is closer to the SP64 baseline and to the
+lambda decoder evidence.
 ```
 
 Most recent decision artifacts:
@@ -36,6 +979,43 @@ Most recent decision artifacts:
 - [advisor request: v2.0 train-only marker frontier](advisor_request_v2_0_train_only_marker_frontier.md)
 - [v2.0 tiny-LM marker calibration results](../artifacts/v2_0_tiny_lm_marker_calibration_results.md)
 - [v2.0 morph seed vocabulary plan](v2_0_morph_seed_vocab_plan.md)
+- [v2.0 finite protected wrapper cost findings](v2_0_finite_protected_wrapper_cost_findings.md)
+- [v2.0 non-Turkish Latin route quality findings](v2_0_non_turkish_latin_route_quality_findings.md)
+- [v2.0 Turkish loan-diacritic pass-through findings](v2_0_turkish_loan_diacritic_pass_findings.md)
+- [v2.0 protected route cost reduction findings](v2_0_protected_route_cost_reduction_findings.md)
+- [v2.0 numeric protected encoder what-if findings](v2_0_numeric_protected_encoder_whatif_findings.md)
+- [v2.0 morph vocabulary coverage findings](v2_0_morph_vocab_coverage_findings.md)
+- [v2.0 boundary-biased Unigram findings](v2_0_boundary_biased_unigram_findings.md)
+- [advisor feedback: lambda0 roundtrip triage](advisor_feedback_v2_0_lambda0_roundtrip_triage.md)
+- [v2.0 roundtrip and wrapper tax findings](v2_0_roundtrip_wrapper_tax_findings.md)
+- [v2.0 boundary-weighted BPE probe findings](v2_0_boundary_weighted_bpe_probe_findings.md)
+- [advisor request: v2.0 training-time objective choice](advisor_request_v2_0_training_time_objective_choice.md)
+
+Current v2.0 diagnostic result:
+
+```text
+active protected floor: finite_protected_sp64_numeric_sp_floor
+floor valid/test tokens/raw byte without EOS: 0.171202 / 0.172015
+floor Challenge F1: 0.6913
+boundary-biased lambda 4 valid/test tokens/raw byte without EOS: 0.163313 / 0.163968
+boundary-biased lambda 4 Challenge F1: 0.7701
+boundary-biased lambda 8 valid/test tokens/raw byte without EOS: 0.178023 / 0.178580
+boundary-biased lambda 8 Challenge F1: 0.8225
+boundary-biased lambda 0 tiny-LM valid/test BPB: 4.726285 / 4.769027
+boundary-biased lambda 4 tiny-LM valid/test BPB: 4.686700 / 4.721480
+boundary-biased lambda 8 tiny-LM valid/test BPB: 4.816592 / 4.850946
+SP64 tiny-LM valid/test BPB: 4.827723 / 4.860352
+finite protected numeric-SP floor tiny-LM valid/test BPB: 4.875198 / 4.911037
+protected stress: 25/25 for all tested boundary-biased rows
+decision: do not return to marker-dose, seed appendix, or broad UDS
+decision: lambda 4 is a diagnostic row only, not a tokenizer candidate, because
+the boundary-biased runtime path currently fails exact roundtrip
+decision: lambda 8 is high-F1 and still BPB-positive vs SP64, but lambda 4 is
+the lower-pressure diagnostic point
+next: no longer BPB; classify roundtrip failures and wrapper tax first. If the
+fix is non-trivial, demote runtime decode and move the morphology signal into a
+training-time objective.
+```
 
 v1.8 key result:
 
@@ -297,14 +1277,72 @@ expanded UDS22 valid/test tokens/raw byte: 0.183675 / 0.184059
 decision: expanded UDS22 failed token-pressure gate; no intrinsic eval
 decision: stop UDS expansion; keep safe UDS7 as best cheap structural prior
 Fable5 advisor triage: docs/advisor_response_fable5_triage.md
+finite protected wrapper cost audit:
+  report: artifacts/v2_0_finite_protected_wrapper_cost_audit.md
+  findings: docs/v2_0_finite_protected_wrapper_cost_findings.md
+  test SP64 tokens/raw byte: 0.159620
+  test finite protected tokens/raw byte: 0.183362
+  test relative delta: 14.87%
+  test protected bytes share: 2.67%
+  highest route deltas:
+    numeric_like: +137807 protected-vs-SP tokens on same surfaces
+    file_like: +120580
+    non_turkish_latin_word: +94661
+    apostrophe_surface: +51203
+  private top-delta examples show Turkish rows with legacy encoding artifacts
+    such as ý/þ/ð/Ý, causing non_turkish_latin_word over-routing
+non-Turkish Latin route quality audit:
+  report: artifacts/v2_0_non_turkish_latin_route_quality_audit.md
+  findings: docs/v2_0_non_turkish_latin_route_quality_findings.md
+  route occurrences: 18984
+  turkish_loan_diacritic: 17333 occurrences / 91.30%
+  other_non_turkish_latin: 960 / 5.06%
+  legacy_turkish_encoding_artifact: 691 / 3.64%
+Turkish loan-diacritic pass-through:
+  findings: docs/v2_0_turkish_loan_diacritic_pass_findings.md
+  after route occurrences: 1644
+  test finite protected tokens/raw byte: 0.183362 -> 0.180564
+  relative delta over SP64: 14.87% -> 13.12%
+  protected stress after change: 25/25
+  challenge F1 after change: 0.6913
+protected route cost reduction:
+  findings: docs/v2_0_protected_route_cost_reduction_findings.md
+  latest report: artifacts/v2_0_finite_protected_wrapper_cost_audit_after_file_glue_pass.md
+  test finite protected tokens/raw byte: 0.180564 -> 0.177726
+  relative delta over SP64: 13.12% -> 11.34%
+  apostrophe_surface delta after route fixes: +20662
+  file_like delta after route fixes: +72043
+  numeric_like remains the largest route cost: +137885
+  protected stress after route fixes: 25/25
+  challenge F1 after route fixes: 0.6913
+numeric protected encoder what-if:
+  findings: docs/v2_0_numeric_protected_encoder_whatif_findings.md
+  report: artifacts/v2_0_numeric_protected_encoder_whatif.md
+  dry-run: artifacts/v2_0_tiny_lm_marker_calibration_numeric_sp_dry_run.md
+  300-step report: artifacts/v2_0_tiny_lm_marker_calibration_numeric_sp_300steps.md
+  finite protected after route fixes test tokens/raw byte: 0.177726
+  numeric-SP protected floor test tokens/raw byte: 0.172734
+  digit2 finite numeric codec what-if test tokens/raw byte: 0.175069
+  numeric-SP protected floor test BPB: 4.911037
+  current finite_protected_sp64_floor test BPB: 4.939361
+  old finite_protected_sp64_floor test BPB: 4.976850
+  decision: promote numeric-SP as the active protected floor for experiments,
+    while keeping final numeric codec design open
+morph vocabulary coverage:
+  findings: docs/v2_0_morph_vocab_coverage_findings.md
+  report: artifacts/v2_0_morph_vocab_coverage.md
+  SP64 exact-piece occurrence share: 0.963019
+  safe UDS7 exact-piece occurrence share: 0.962751
+  decision: morph surface vocabulary coverage is not the main bottleneck;
+    next test decode-time boundary preference
 updated decision:
   do not build constrained/MorphBPE yet
-  first audit finite protected wrapper cost
-  then run vocab coverage analysis
-  then test decode-time boundary-biased Unigram/Viterbi lambda sweep
+  finite protected wrapper cost has been reduced and numeric-SP promoted as
+    active protected floor
+  morph surface vocab coverage is high, so broad UDS/seed expansion is not the
+    next lever
+  next test decode-time boundary-biased Unigram/Viterbi lambda sweep
 next implementation:
-  wrapper cost audit script
-  SP64/safe-UDS vocab coverage script
   boundary-biased Viterbi sweep only after coverage tells us it is meaningful
 ```
 

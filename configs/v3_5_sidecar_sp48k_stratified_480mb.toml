@@ -1,0 +1,38 @@
+[settings]
+split_dir = "artifacts/private/v3_4_stratified_480mb_ablation_split"
+output_dir = "artifacts/private/v3_5_sidecar_sp48k_stratified_480mb"
+report_out = "artifacts/v3_5_sidecar_sp48k_stratified_480mb.md"
+seed = 20260619
+encode_progress = 5000
+
+[model]
+seq_len = 128
+batch_size = 4
+max_steps = 300
+eval_interval = 100
+learning_rate = 0.0003
+d_model = 256
+n_layers = 4
+n_heads = 4
+ff_mult = 4
+dropout = 0.1
+device = "auto"
+
+[[tokenizers]]
+name = "sp48k_stratified_480mb_protected_passthrough_sidecar"
+kind = "finite_protected_marker_stripped_numeric_sp"
+path = "artifacts/private/v3_4_vocab_ablation_sentencepiece/sp_unigram_48000_stratified_480mb.model"
+sp_passthrough_routes = [
+  "url",
+  "technical_comparator",
+  "file_like",
+  "apostrophe_surface",
+  "non_turkish_latin_word",
+  "greek_word",
+  "uzbek_apostrophe_word",
+  "cyrillic_word",
+  "arabic_word",
+  "percent_encoded",
+  "azerbaijani_word",
+]
+enabled = true

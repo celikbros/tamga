@@ -1,0 +1,36 @@
+[settings]
+split_dir = "C:/CELIK-GARDASH/datasets/tokenizer_v3_0/pilot_split"
+output_dir = "C:/CELIK-GARDASH/artifacts/tokenizer_v3_0/private"
+report_out = "C:/CELIK-GARDASH/artifacts/tokenizer_v3_0/v3_0_gardash_sidecar.md"
+seed = 20260614
+encode_progress = 5000
+
+[model]
+seq_len = 128
+batch_size = 4
+max_steps = 300
+eval_interval = 100
+learning_rate = 0.0003
+d_model = 256
+n_layers = 4
+n_heads = 4
+ff_mult = 4
+dropout = 0.1
+device = "auto"
+
+[[tokenizers]]
+name = "sp64_protected_passthrough_sidecar"
+kind = "finite_protected_marker_stripped_numeric_sp"
+path = "C:/CELIK-GARDASH/models/tokenizer_v3_0/sp_unigram_64000_train_only.model"
+sp_passthrough_routes = [
+  "file_like",
+  "apostrophe_surface",
+  "non_turkish_latin_word",
+  "greek_word",
+  "uzbek_apostrophe_word",
+  "cyrillic_word",
+  "arabic_word",
+  "percent_encoded",
+  "azerbaijani_word",
+]
+enabled = true

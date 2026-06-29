@@ -1,0 +1,42 @@
+# Tiny LM Bits-Per-Byte Probe
+
+Config: `configs/v3_5_sidecar_sp48k_stratified_480mb.toml`
+Split dir: `artifacts/private/v3_4_stratified_480mb_ablation_split`
+Dry run: `True`
+
+This is an early screening probe, not final LLM tokenizer evidence.
+
+## Model Config
+
+| Setting | Value |
+| --- | ---: |
+| seq_len | 128 |
+| batch_size | 4 |
+| max_steps | 300 |
+| eval_interval | 100 |
+| d_model | 256 |
+| n_layers | 4 |
+| n_heads | 4 |
+
+## Encoding Summary
+
+| Tokenizer | Status | Vocab | Split | Lines | Bytes | Tokens | Tokens/byte | Fallback source tokens | Fallback source rate | Notes |
+| --- | --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| sp48k_stratified_480mb_protected_passthrough_sidecar | ok | 48256 | train | 398469 | 396217280 | 75707519 | 0.191076 | 6131 | 0.000081 |  |
+| sp48k_stratified_480mb_protected_passthrough_sidecar | ok | 48256 | valid | 49809 | 49279753 | 9399388 | 0.190735 | 1418 | 0.000151 |  |
+| sp48k_stratified_480mb_protected_passthrough_sidecar | ok | 48256 | test | 49808 | 50024285 | 9627399 | 0.192455 | 1922 | 0.000200 |  |
+
+## Training Results
+
+| Tokenizer | Status | Vocab | Total params | Embedding params | Non-embedding params | Steps | Tokens seen | Approx bytes seen | Best valid BPB | Final valid BPB | Test BPB | Notes |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| dry_run | skipped | 0 | 0 | 0 | 0 | 0 | 0 | 0 |  |  |  | no training run |
+
+## Interpretation Guardrails
+
+- Compare only byte-normalized validation/test loss, not token perplexity.
+- Custom uses a temporary train-only vocabulary plus UTF-8 byte fallback for unseen source tokens.
+- Finite protected candidates use finite protected pieces plus UTF-8 byte fallback for protected spans.
+- Marker-stripped finite protected candidates do not insert morphology markers at normal encode time.
+- This script does not make the tokenizer LLM-ready.
+- A negative result should be read with the protocol caveats for the active experiment.

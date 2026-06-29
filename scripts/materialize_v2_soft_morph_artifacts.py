@@ -21,6 +21,7 @@ from tr_tokenizer.pretok import (  # noqa: E402
     is_greek_word,
     is_non_turkish_latin_word,
     is_numeric_like_token,
+    is_percent_encoded_token,
     is_technical_comparator_token,
     is_url_like_token,
     is_uzbek_apostrophe_word,
@@ -39,6 +40,7 @@ PROTECTED_KIND_CHECKS = (
     ("apostrophe_surface", is_apostrophe_surface_token),
     ("file_like", is_file_like_token),
     ("numeric_like", is_numeric_like_token),
+    ("percent_encoded", is_percent_encoded_token),
     ("technical_comparator", is_technical_comparator_token),
 )
 
@@ -75,7 +77,7 @@ class SoftMorphStats:
 
 
 def source_surface(token: str) -> str:
-    if token.startswith(WORD_START):
+    if token.startswith(WORD_START) and len(token) > len(WORD_START):
         return token[len(WORD_START) :]
     if token.startswith("+") and len(token) > 1:
         return token[1:]
@@ -111,7 +113,7 @@ def classify_token(token: str, previous_token: str | None) -> Piece:
             boundary_before="hard",
         )
 
-    if token.startswith(WORD_START):
+    if token.startswith(WORD_START) and len(token) > len(WORD_START):
         return Piece(token=token, surface=surface, kind="word_start", boundary_before="hard")
 
     return Piece(token=token, surface=surface, kind="punct_or_symbol", boundary_before="hard")

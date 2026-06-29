@@ -4,13 +4,17 @@ import re
 import unicodedata
 
 from .morphology import split_apostrophe_suffix_chain
-from .normalizer import normalize_text
+from .normalizer import normalize_text, turkish_lower
 
 TURKISH_LETTERS = "A-Za-zÇĞİÖŞÜçğıöşü"
 TURKISH_ALPHABET = set(
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
     "ÇĞİÖŞÜçğıöşü"
 )
+
+TURKISH_LOAN_DIACRITICS = "\u00c2\u00e2\u00ce\u00ee\u00db\u00fb\u00d4\u00f4\u00ca\u00ea"
+TURKISH_LETTERS = f"{TURKISH_LETTERS}{TURKISH_LOAN_DIACRITICS}"
+TURKISH_ALPHABET.update(TURKISH_LOAN_DIACRITICS)
 
 _FILE_CHARS = rf"0-9{TURKISH_LETTERS}"
 _FILE_LIKE = (
@@ -30,6 +34,7 @@ _TECHNICAL_COMPARATOR = (
     rf"(?:>=|<=|==|~=|!=){_VERSION}"
 )
 _URL = r"https?://[^\s<>()\"']+"
+_PERCENT_ENCODED = r"(?:%20|%(?=[0-9A-Fa-f]*[A-Fa-f])[0-9A-Fa-f]{2})(?:%[0-9A-Fa-f]{2})*"
 _UZBEK_APOSTROPHES = "\u02bb\u02bc"
 _UZBEK_APOSTROPHE_WORD = (
     rf"[{TURKISH_LETTERS}]+(?:[{_UZBEK_APOSTROPHES}][{TURKISH_LETTERS}]+)+"
@@ -55,11 +60,11 @@ _LATIN_EXTENDED_APOSTROPHE_WORD = (
     rf"(?=[{_LATIN_EXTENDED_WORD_CHARS}']*[{_LATIN_EXTENDED_LETTERS}])"
     rf"[{_LATIN_EXTENDED_WORD_CHARS}]+(?:'[{_LATIN_EXTENDED_WORD_CHARS}]+)+"
 )
-_APOSTROPHE_FORM = rf"(?:{_FILE_LIKE}|{_NUMERIC_LIKE}|{_WORD})'(?:{_WORD})"
+_APOSTROPHE_FORM = rf"(?:{_FILE_LIKE}|{_PERCENT_ENCODED}|{_NUMERIC_LIKE}|{_WORD})'(?:{_WORD})"
 _TOKEN_RE = re.compile(
     rf"{_URL}|{_UZBEK_APOSTROPHE_WORD}|{_AZERBAIJANI_SPECIFIC_WORD}|"
     rf"{_LATIN_EXTENDED_APOSTROPHE_WORD}|{_APOSTROPHE_FORM}|"
-    rf"{_TECHNICAL_COMPARATOR}|{_FILE_LIKE}|"
+    rf"{_TECHNICAL_COMPARATOR}|{_PERCENT_ENCODED}|{_FILE_LIKE}|"
     rf"{_NUMERIC_LIKE}|{_CYRILLIC_WORD}|{_ARABIC_WORD}|{_GREEK_WORD}|"
     rf"{_LATIN_EXTENDED_WORD}|{_WORD}|\S"
 )
@@ -76,8 +81,30 @@ _APOSTROPHE_FORM_RE = re.compile(rf"^{_APOSTROPHE_FORM}$")
 _FILE_LIKE_RE = re.compile(rf"^{_FILE_LIKE}$")
 _NUMERIC_LIKE_RE = re.compile(rf"^{_NUMERIC_LIKE}$")
 _TECHNICAL_COMPARATOR_RE = re.compile(rf"^{_TECHNICAL_COMPARATOR}$")
+_PERCENT_ENCODED_RE = re.compile(rf"^{_PERCENT_ENCODED}$")
 _URL_RE = re.compile(rf"^{_URL}$")
 _URL_TRAILING_PUNCTUATION = ".,!?;:"
+_GLUED_SENTENCE_START_HINTS = (
+    "abstract",
+    "anahtar",
+    "araştırma",
+    "araştırmada",
+    "bulgular",
+    "bu",
+    "conclusion",
+    "gereç",
+    "giriş",
+    "in",
+    "introduction",
+    "keywords",
+    "methods",
+    "sonuç",
+    "summary",
+    "the",
+    "this",
+    "tüm",
+    "yöntem",
+)
 
 
 def is_url_like_token(token: str) -> bool:
@@ -127,6 +154,10 @@ def is_technical_comparator_token(token: str) -> bool:
     return bool(_TECHNICAL_COMPARATOR_RE.match(token))
 
 
+def is_percent_encoded_token(token: str) -> bool:
+    return bool(_PERCENT_ENCODED_RE.match(token))
+
+
 def is_apostrophe_surface_token(token: str) -> bool:
     return bool(_APOSTROPHE_FORM_RE.match(token))
 
@@ -159,6 +190,40 @@ def split_apostrophe_token(token: str) -> list[str]:
     return [token]
 
 
+def _looks_like_glued_sentence_tail(tail: str) -> bool:
+    lowered = turkish_lower(tail)
+    return any(lowered.startswith(hint) for hint in _GLUED_SENTENCE_START_HINTS)
+
+
+def split_glued_sentence_file_like_token(token: str) -> list[str]:
+    """Split corpus-glued sentence starts such as `edildi.Bulgular`."""
+    if not is_file_like_token(token):
+        return [token]
+
+    for index, char in enumerate(token):
+        if char != ".":
+            continue
+        head = token[:index]
+        tail = token[index + 1 :]
+        if not head or not tail:
+            continue
+        if _looks_like_glued_sentence_tail(tail):
+            return [
+                *split_glued_sentence_file_like_token(head),
+                ".",
+                *split_glued_sentence_file_like_token(tail),
+            ]
+
+    return [token]
+
+
+def split_non_url_token(token: str) -> list[str]:
+    output: list[str] = []
+    for part in split_glued_sentence_file_like_token(token):
+        output.extend(split_apostrophe_token(part))
+    return output
+
+
 def pre_tokenize(text: str, *, lowercase: bool = False) -> list[str]:
     """Split text into deterministic word, apostrophe and punctuation tokens."""
     normalized = normalize_text(text, lowercase=lowercase)
@@ -169,7 +234,7 @@ def pre_tokenize(text: str, *, lowercase: bool = False) -> list[str]:
         if is_url_like_token(token):
             tokens.extend(split_url_token(token))
         else:
-            tokens.extend(split_apostrophe_token(token))
+            tokens.extend(split_non_url_token(token))
 
     return tokens
 
@@ -186,7 +251,7 @@ def pre_tokenize_lossless(text: str) -> list[str]:
         if is_url_like_token(token):
             tokens.extend(split_url_token(token))
         else:
-            tokens.extend(split_apostrophe_token(token))
+            tokens.extend(split_non_url_token(token))
         position = match.end()
 
     if position < len(text):

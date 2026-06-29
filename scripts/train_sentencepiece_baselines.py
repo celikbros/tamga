@@ -13,6 +13,10 @@ def train_sentencepiece(
     vocab_size: int,
     model_type: str,
     max_sentence_length: int | None = None,
+    num_threads: int | None = None,
+    input_sentence_size: int | None = None,
+    shuffle_input_sentence: bool | None = None,
+    train_extremely_large_corpus: bool | None = None,
 ) -> tuple[Path, Path]:
     if importlib.util.find_spec("sentencepiece") is None:
         raise RuntimeError(
@@ -34,10 +38,17 @@ def train_sentencepiece(
         "normalization_rule_name": "identity",
         "remove_extra_whitespaces": False,
         "split_by_whitespace": True,
-        "train_extremely_large_corpus": False,
     }
     if max_sentence_length is not None:
         train_kwargs["max_sentence_length"] = max_sentence_length
+    if num_threads is not None:
+        train_kwargs["num_threads"] = num_threads
+    if input_sentence_size is not None:
+        train_kwargs["input_sentence_size"] = input_sentence_size
+    if shuffle_input_sentence is not None:
+        train_kwargs["shuffle_input_sentence"] = shuffle_input_sentence
+    if train_extremely_large_corpus is not None:
+        train_kwargs["train_extremely_large_corpus"] = train_extremely_large_corpus
 
     spm.SentencePieceTrainer.train(**train_kwargs)
 

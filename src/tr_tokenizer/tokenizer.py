@@ -14,6 +14,7 @@ from .pretok import (
     is_greek_word,
     is_non_turkish_latin_word,
     is_numeric_like_token,
+    is_percent_encoded_token,
     is_technical_comparator_token,
     is_uzbek_apostrophe_word,
     is_url_like_token,
@@ -48,7 +49,7 @@ def _mark_word_start(pieces: list[str]) -> list[str]:
 
 
 def _source_surface(token: str) -> str:
-    if token.startswith(WORD_START):
+    if token.startswith(WORD_START) and len(token) > len(WORD_START):
         return token[len(WORD_START) :]
     if token.startswith("+"):
         return token[1:]
@@ -103,6 +104,7 @@ class TurkishTokenizer:
                 or is_apostrophe_surface_token(token)
                 or is_file_like_token(token)
                 or is_numeric_like_token(token)
+                or is_percent_encoded_token(token)
                 or is_technical_comparator_token(token)
             ):
                 encoded.extend(_mark_word_start([token]))
@@ -142,7 +144,7 @@ def decode(tokens: list[str] | tuple[str, ...]) -> str:
 
         if token.isspace():
             text += token
-        elif token.startswith(WORD_START):
+        elif token.startswith(WORD_START) and len(token) > len(WORD_START):
             word = token[len(WORD_START) :]
             if (
                 not text
@@ -183,7 +185,7 @@ def _decode_lossless(tokens: list[str] | tuple[str, ...]) -> str:
             continue
         if token.isspace():
             text += token
-        elif token.startswith(WORD_START):
+        elif token.startswith(WORD_START) and len(token) > len(WORD_START):
             text += token[len(WORD_START) :]
         elif token.startswith("+") and len(token) > 1:
             text += token[1:]

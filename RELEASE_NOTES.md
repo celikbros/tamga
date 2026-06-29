@@ -2,6 +2,28 @@
 
 ## Unreleased
 
+- No changes yet.
+
+## v3.8.0 - 2026-06-28
+
+- Renamed the project to **Tamga**, with `tamga-tokenizer` as the Python
+  distribution and `tamga` as the primary CLI. Legacy CLI aliases remain.
+- Froze the Turkish-primary SentencePiece Unigram 64K model and the 64,384-id
+  wrapper contract for CELIK-GARDAS Faz 4 pretraining.
+- Added deterministic protected-span passthrough sidecars, UTF-8 byte fallback,
+  loss-mask generation, and wrapper-managed control-token ids.
+- Added the production corpus tokenizer with deterministic multiprocessing,
+  checksums, manifests, index/sidecar output, and bounded full-package gates.
+- Fixed literal U+2581 handling in the protected-span detector so arbitrary
+  corpus text remains reconstructible.
+- Completed full-corpus tokenization of 6,027,968 documents into
+  2,499,949,602 tokens with zero SentencePiece alignment mismatches.
+- Added the v2.0-v3.8 research history, including morphology-prior experiments,
+  BPB calibration, protected routing, vocabulary ablations, and LLM handoff
+  evidence.
+
+### Research development since v1.3.0
+
 - Added `docs/v1_4_decision_framework.md` as a hidden-eval-dependent decision
   framework, not an implementation plan.
 - Added revert criteria, low-power category notes, and positive-regression

@@ -30,6 +30,7 @@ def test_load_config_reads_candidate_sentencepiece_settings(tmp_path: Path):
                 "remove_extra_whitespaces = false",
                 "train_extremely_large_corpus = false",
                 'user_defined_symbols = ["ecek", "acak"]',
+                'pretokenization_delimiter = ""',
                 "",
             ]
         ),
@@ -43,6 +44,7 @@ def test_load_config_reads_candidate_sentencepiece_settings(tmp_path: Path):
     assert config.model_path == Path("models/candidate_a.model")
     assert config.vocab_path == Path("models/candidate_a.vocab")
     assert config.user_defined_symbols == ["ecek", "acak"]
+    assert config.pretokenization_delimiter == ""
 
 
 def test_load_config_reads_user_defined_symbols_path(tmp_path: Path):
@@ -118,6 +120,7 @@ def test_format_report_includes_gate_and_seed_caveat(tmp_path: Path):
     assert "user-defined symbols" in report
     assert "diagnostic and is not enforced" in report
     assert "SP tokens/raw byte" in report
+    assert "pretokenization_delimiter" in report
     assert "| valid | 2 | 100 | 150 | 1.500000 | 20 | 0.133333 | 0.200000 |" in report
 
 

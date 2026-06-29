@@ -11,6 +11,10 @@ olarak kabul edilmistir. Final corpus ve model artifact'lari private handoff
 paketinde tutulur; bu repository arastirma gecmisini, kaynak kodu, testleri ve
 production corpus araclarini icerir.
 
+Kanonik kapanis ve sonraki-surum kurallari:
+[docs/v3_8_production_final_closure.md](docs/v3_8_production_final_closure.md) ve
+[docs/tamga_v3_8_release_and_maintenance_roadmap.md](docs/tamga_v3_8_release_and_maintenance_roadmap.md).
+
 Geriye uyumluluk icin Python namespace'i `tr_tokenizer` olarak kalir. Yeni CLI
 adi `tamga`; eski `tr-tokenizer` ve `tr-centric-tokenizer` komutlari alias olarak
 korunur.

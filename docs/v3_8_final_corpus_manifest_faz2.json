@@ -1,0 +1,107 @@
+{
+  "schema_version": "v3.8-final-corpus-manifest-1",
+  "corpus": {
+    "name": "gardash_faz2_tr_dedup_20260621",
+    "frozen": true,
+    "text_path": "C:\\CELIK-GARDASH\\datasets\\faz2_corpus\\gardash_tr_dedup.lf.txt",
+    "format": "text",
+    "text_field": "",
+    "line_count": 6027968,
+    "raw_bytes": 13569773056,
+    "sha256": "9826d58e8e11713ab99fb3690fff75bbfa2d533490c81b1b78f5ebdd83aa07b5"
+  },
+  "dedup": {
+    "status": "complete",
+    "method": "exact_whitespace_normalized_cross_source",
+    "near_duplicate_policy": "waived_for_faz2_small_tr_primary_corpus",
+    "exact_duplicate_policy": "removed",
+    "report_path": "C:\\CELIK-GARDASH\\datasets\\faz2_corpus\\gardash_tr_dedup.jsonl.manifest.json"
+  },
+  "mixture": [
+    {
+      "name": "celik_gold",
+      "language": "tr",
+      "domain": "gold_mixed",
+      "share": 0.740038932,
+      "notes": "4,460,931 kept unique docs"
+    },
+    {
+      "name": "tr_corpus",
+      "language": "tr",
+      "domain": "general",
+      "share": 0.249054574,
+      "notes": "1,501,293 kept unique docs"
+    },
+    {
+      "name": "wiki_oscar_unique",
+      "language": "tr",
+      "domain": "web_wiki",
+      "share": 0.007435507,
+      "notes": "44,821 kept unique docs"
+    },
+    {
+      "name": "tdk",
+      "language": "tr",
+      "domain": "dictionary_reference",
+      "share": 0.003463356,
+      "notes": "20,877 kept unique docs"
+    },
+    {
+      "name": "academic",
+      "language": "tr",
+      "domain": "academic_residual",
+      "share": 0.000006802,
+      "notes": "41 kept unique docs"
+    },
+    {
+      "name": "trt",
+      "language": "tr",
+      "domain": "news_residual",
+      "share": 0.000000664,
+      "notes": "4 kept unique docs"
+    },
+    {
+      "name": "ttk",
+      "language": "tr",
+      "domain": "history_residual",
+      "share": 0.000000166,
+      "notes": "1 kept unique doc"
+    }
+  ],
+  "normalization": {
+    "policy": "identity",
+    "already_applied": true,
+    "unicode_form": "raw",
+    "remove_extra_whitespaces": false,
+    "notes": "SP normalizer remains identity. LLM team applied whitespace collapse only for dedup/materialized one-doc-per-line text."
+  },
+  "tokenizer_registry": {
+    "v3_7_registry_unchanged": true,
+    "effective_vocab_size": 64384,
+    "sp_vocab_size": 64000,
+    "byte_fallback_start": 64000,
+    "byte_fallback_end_exclusive": 64256,
+    "control_start": 64256,
+    "control_end_exclusive": 64384,
+    "pad_id": 64256,
+    "unk_id": 0
+  },
+  "training_sample": {
+    "use_full_corpus": true,
+    "max_bytes": null,
+    "max_lines": null,
+    "sample_manifest_path": ""
+  },
+  "document_boundaries": {
+    "preserve": false,
+    "notes": "The tokenizer-facing .lf.txt handoff is one deduplicated document per LF-terminated line; EOS is line-based."
+  },
+  "handoff_reference": {
+    "llm_manifest_path": "C:\\CELIK-GARDASH\\datasets\\faz2_corpus\\gardash_tr_dedup.jsonl.manifest.json",
+    "jsonl_path": "C:\\CELIK-GARDASH\\datasets\\faz2_corpus\\gardash_tr_dedup.jsonl",
+    "llm_text_path_original_crlf": "C:\\CELIK-GARDASH\\datasets\\faz2_corpus\\gardash_tr_dedup.txt",
+    "jsonl_sha256": "38b812046831c9176f217bfae364093cb55c768da3081110e0c062825c6f8a07",
+    "estimated_effective_tokens": 2509292841,
+    "near_dedup": "not_applied_by_llm_team_for_faz2"
+  }
+}

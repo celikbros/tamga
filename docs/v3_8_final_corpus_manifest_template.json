@@ -1,0 +1,58 @@
+{
+  "schema_version": "v3.8-final-corpus-manifest-1",
+  "corpus": {
+    "name": "celik_tr_primary_pretrain_final_v1_0_YYYYMMDD",
+    "frozen": true,
+    "text_path": "C:\\CELIK-GARDASH\\datasets\\pretraining_final\\celik_tr_primary_pretrain_final_v1_0_YYYYMMDD.txt",
+    "format": "text",
+    "text_field": "",
+    "line_count": null,
+    "raw_bytes": null,
+    "sha256": ""
+  },
+  "dedup": {
+    "status": "complete",
+    "method": "minhash",
+    "near_duplicate_policy": "removed",
+    "exact_duplicate_policy": "removed",
+    "report_path": "C:\\CELIK-GARDASH\\artifacts\\corpus\\final_corpus_dedup_report.md"
+  },
+  "mixture": [
+    {
+      "name": "turkish_primary",
+      "language": "tr",
+      "domain": "mixed_clean",
+      "share": 1.0,
+      "source_path": "C:\\CELIK-GARDASH\\datasets\\pretraining_final\\celik_tr_primary_pretrain_final_v1_0_YYYYMMDD.txt",
+      "notes": "Replace with final language/domain mixture rows."
+    }
+  ],
+  "normalization": {
+    "policy": "identity",
+    "already_applied": false,
+    "unicode_form": "raw",
+    "remove_extra_whitespaces": false,
+    "notes": "Change only if LLM and tokenizer teams jointly freeze another policy."
+  },
+  "tokenizer_registry": {
+    "v3_7_registry_unchanged": true,
+    "effective_vocab_size": 64384,
+    "sp_vocab_size": 64000,
+    "byte_fallback_start": 64000,
+    "byte_fallback_end_exclusive": 64256,
+    "control_start": 64256,
+    "control_end_exclusive": 64384,
+    "pad_id": 64256,
+    "unk_id": 0
+  },
+  "training_sample": {
+    "use_full_corpus": true,
+    "max_bytes": null,
+    "max_lines": null,
+    "sample_manifest_path": ""
+  },
+  "document_boundaries": {
+    "preserve": false,
+    "notes": "Set true only if SentencePiece sampling/retrain must respect document boundaries."
+  }
+}

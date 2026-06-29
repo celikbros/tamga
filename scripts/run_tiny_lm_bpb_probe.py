@@ -19,6 +19,10 @@ from scripts.evaluate_v2_finite_protected_sp64_intrinsic import (  # noqa: E402
     load_sp_processor,
     selected_piece_strings,
 )
+from scripts.sweep_v2_boundary_biased_unigram import (  # noqa: E402
+    BoundaryBiasedVocab,
+    viterbi_segment,
+)
 from scripts.materialize_v2_raw_soft_marker_candidate_views import SOFT_MARKER  # noqa: E402
 from scripts.materialize_v2_soft_morph_artifacts import analyze_line  # noqa: E402
 from tr_tokenizer import TurkishTokenizer  # noqa: E402
@@ -35,8 +39,14 @@ class TokenizerConfig:
     name: str
     kind: str
     path: Path | None = None
+    vocab_path: Path | None = None
     max_vocab_size: int | None = None
     selected_pieces: Path | None = None
+    boundary_lambda: float = 0.0
+    sp_passthrough_routes: frozenset[str] = field(default_factory=frozenset)
+    isolate_sp_passthrough_routes: bool = False
+    byte_fallback_crossing_pieces: bool = False
+    pre_split_sp_passthrough_routes: bool = False
 
 
 @dataclass(frozen=True)
@@ -120,7 +130,23 @@ class TrainMetrics:
     best_valid_bpb: float | None = None
     final_valid_bpb: float | None = None
     test_bpb: float | None = None
+    final_valid_bits_per_token: float | None = None
+    test_bits_per_token: float | None = None
+    final_valid_target_tokens: int = 0
+    test_target_tokens: int = 0
+    final_valid_evaluated_bytes: float = 0.0
+    test_evaluated_bytes: float = 0.0
     reason: str = ""
+
+
+@dataclass(frozen=True)
+class EvalLossStats:
+    bpb: float
+    bits_per_token: float
+    target_tokens: int
+    evaluated_bytes: float
+    evaluated_fraction: float
+    nll_bits: float
 
 
 def _string_field(item: dict[str, Any], field: str, *, context: str) -> str:
@@ -166,13 +192,31 @@ def load_probe_config(path: str | Path) -> ProbeConfig:
             "utf8_byte",
             "finite_protected_soft_marker",
             "finite_protected_marker_stripped",
+            "finite_protected_marker_stripped_numeric_sp",
+            "boundary_biased_unigram_numeric_sp",
         }:
             raise ValueError(f"unsupported tokenizer kind for {name}: {kind}")
+        routes_raw = item.get("sp_passthrough_routes", [])
+        if isinstance(routes_raw, str):
+            sp_passthrough_routes = frozenset(
+                route.strip() for route in routes_raw.split(",") if route.strip()
+            )
+        elif isinstance(routes_raw, list) and all(isinstance(route, str) for route in routes_raw):
+            sp_passthrough_routes = frozenset(routes_raw)
+        else:
+            raise ValueError(
+                f"tokenizer {name} sp_passthrough_routes must be a string list or comma string"
+            )
         tokenizers.append(
             TokenizerConfig(
                 name=name,
                 kind=kind,
                 path=Path(item["path"]) if isinstance(item.get("path"), str) else None,
+                vocab_path=(
+                    Path(item["vocab_path"])
+                    if isinstance(item.get("vocab_path"), str)
+                    else None
+                ),
                 max_vocab_size=item.get("max_vocab_size")
                 if isinstance(item.get("max_vocab_size"), int)
                 else None,
@@ -180,6 +224,17 @@ def load_probe_config(path: str | Path) -> ProbeConfig:
                     Path(item["selected_pieces"])
                     if isinstance(item.get("selected_pieces"), str)
                     else None
+                ),
+                boundary_lambda=float(item.get("boundary_lambda", 0.0)),
+                sp_passthrough_routes=sp_passthrough_routes,
+                isolate_sp_passthrough_routes=bool(
+                    item.get("isolate_sp_passthrough_routes", False)
+                ),
+                byte_fallback_crossing_pieces=bool(
+                    item.get("byte_fallback_crossing_pieces", False)
+                ),
+                pre_split_sp_passthrough_routes=bool(
+                    item.get("pre_split_sp_passthrough_routes", False)
                 ),
             )
         )
@@ -321,6 +376,48 @@ def _processor_encode_ids(processor, surface: str) -> list[int]:
     return [int(item) for item in processor.encode(surface, out_type=int)]
 
 
+def _processor_decode_ids(processor, ids: list[int]) -> str | None:
+    if not ids:
+        return ""
+    if hasattr(processor, "DecodeIds"):
+        return str(processor.DecodeIds(ids))
+    if hasattr(processor, "decode"):
+        return str(processor.decode(ids))
+    return None
+
+
+def _processor_encode_ids_lossless_or_byte_fallback(
+    processor,
+    surface: str,
+    *,
+    byte_offset: int,
+) -> tuple[list[int], int]:
+    ids = _processor_encode_ids(processor, surface)
+    decoded = _processor_decode_ids(processor, ids)
+    if decoded is None or decoded == surface:
+        return ids, 0
+    if not hasattr(processor, "EncodeAsImmutableProto"):
+        output: list[int] = []
+        byte_fallback_tokens = 0
+        for char in surface:
+            char_ids = _processor_encode_ids(processor, char)
+            if _processor_decode_ids(processor, char_ids) == char:
+                output.extend(char_ids)
+                continue
+            byte_fallback_tokens += _append_utf8_bytes(
+                output,
+                char,
+                byte_offset=byte_offset,
+            )
+        return output, byte_fallback_tokens
+    return _processor_encode_ids_with_boundary_byte_fallback(
+        processor,
+        surface,
+        boundaries=set(),
+        byte_offset=byte_offset,
+    )
+
+
 def encode_protected_surface_ids(
     surface: str,
     *,
@@ -349,6 +446,110 @@ def encode_protected_surface_ids(
     return ids, byte_fallback_tokens
 
 
+def _processor_encode_ids_with_boundary_byte_fallback(
+    processor,
+    surface: str,
+    *,
+    boundaries: set[int],
+    byte_offset: int,
+) -> tuple[list[int], int]:
+    if not surface:
+        return [], 0
+    proto = processor.EncodeAsImmutableProto(surface)
+    output: list[int] = []
+    byte_fallback_tokens = 0
+    unknown_id = int(processor.unk_id()) if hasattr(processor, "unk_id") else 0
+    for piece in proto.pieces:
+        begin = int(piece.begin)
+        end = int(piece.end)
+        crosses_boundary = any(begin < boundary < end for boundary in boundaries)
+        is_unknown = int(piece.id) == unknown_id
+        if not crosses_boundary and not is_unknown:
+            output.append(int(piece.id))
+            continue
+        encoded = surface[begin:end].encode("utf-8")
+        output.extend(byte_offset + byte for byte in encoded)
+        byte_fallback_tokens += len(encoded)
+    return output, byte_fallback_tokens
+
+
+def _processor_piece_to_id_safe(processor, piece: str) -> int:
+    if hasattr(processor, "PieceToId"):
+        return int(processor.PieceToId(piece))
+    if hasattr(processor, "piece_to_id"):
+        return int(processor.piece_to_id(piece))
+    return -1
+
+
+def _processor_id_to_piece(processor, piece_id: int) -> str:
+    if hasattr(processor, "IdToPiece"):
+        return str(processor.IdToPiece(piece_id))
+    return str(processor.id_to_piece(piece_id))
+
+
+def _append_utf8_bytes(output: list[int], surface: str, *, byte_offset: int) -> int:
+    encoded = surface.encode("utf-8")
+    output.extend(byte_offset + byte for byte in encoded)
+    return len(encoded)
+
+
+def _processor_encode_presplit_segment_ids(
+    processor,
+    surface: str,
+    *,
+    starts_at_line_start: bool,
+    byte_offset: int,
+) -> tuple[list[int], int]:
+    if not surface:
+        return [], 0
+    proto = processor.EncodeAsImmutableProto(surface)
+    output: list[int] = []
+    byte_fallback_tokens = 0
+    unknown_id = int(processor.unk_id()) if hasattr(processor, "unk_id") else 0
+
+    for index, piece in enumerate(proto.pieces):
+        piece_id = int(piece.id)
+        begin = int(piece.begin)
+        end = int(piece.end)
+        raw_surface = surface[begin:end]
+        if not raw_surface and piece_id == _processor_eos_id(processor):
+            continue
+        if piece_id == unknown_id:
+            byte_fallback_tokens += _append_utf8_bytes(
+                output,
+                raw_surface,
+                byte_offset=byte_offset,
+            )
+            continue
+
+        sp_piece = _processor_id_to_piece(processor, piece_id)
+        dummy_prefix = (
+            index == 0
+            and not starts_at_line_start
+            and not raw_surface.startswith((" ", "\t", "\r", "\n"))
+            and sp_piece.startswith("▁")
+        )
+        if not dummy_prefix:
+            output.append(piece_id)
+            continue
+
+        stripped_piece = sp_piece[1:]
+        if not stripped_piece:
+            continue
+        stripped_id = _processor_piece_to_id_safe(processor, stripped_piece)
+        if stripped_id >= 0 and _processor_id_to_piece(processor, stripped_id) == stripped_piece:
+            output.append(stripped_id)
+            continue
+
+        byte_fallback_tokens += _append_utf8_bytes(
+            output,
+            raw_surface,
+            byte_offset=byte_offset,
+        )
+
+    return output, byte_fallback_tokens
+
+
 def encode_finite_protected_soft_marker_line_ids(
     text: str,
     *,
@@ -356,6 +557,11 @@ def encode_finite_protected_soft_marker_line_ids(
     selected_pieces: list[str],
     protected_piece_offset: int,
     insert_soft_markers: bool = True,
+    numeric_sp_passthrough: bool = False,
+    sp_passthrough_routes: frozenset[str] | set[str] | None = None,
+    isolate_sp_passthrough_routes: bool = False,
+    byte_fallback_crossing_pieces: bool = False,
+    pre_split_sp_passthrough_routes: bool = False,
 ) -> tuple[list[int], int]:
     piece_to_id = {
         piece: protected_piece_offset + index
@@ -366,6 +572,158 @@ def encode_finite_protected_soft_marker_line_ids(
     ids: list[int] = []
     protected_byte_tokens = 0
     segment = ""
+    passthrough_routes = set(sp_passthrough_routes or set())
+    if numeric_sp_passthrough:
+        passthrough_routes.add("numeric_like")
+
+    if not insert_soft_markers:
+        if pre_split_sp_passthrough_routes:
+            segment_start = 0
+            offset = 0
+
+            def flush_presplit() -> None:
+                nonlocal segment, protected_byte_tokens, segment_start
+                if not segment:
+                    return
+                segment_ids, byte_tokens = _processor_encode_presplit_segment_ids(
+                    processor,
+                    segment,
+                    starts_at_line_start=segment_start == 0,
+                    byte_offset=byte_offset,
+                )
+                ids.extend(segment_ids)
+                protected_byte_tokens += byte_tokens
+                segment = ""
+
+            for piece in pieces:
+                piece_start = offset
+                piece_end = piece_start + len(piece.surface)
+                if piece.kind.startswith("protected:"):
+                    route = piece.kind.removeprefix("protected:")
+                    if route in passthrough_routes:
+                        flush_presplit()
+                        segment_ids, byte_tokens = _processor_encode_presplit_segment_ids(
+                            processor,
+                            piece.surface,
+                            starts_at_line_start=piece_start == 0,
+                            byte_offset=byte_offset,
+                        )
+                        ids.extend(segment_ids)
+                        protected_byte_tokens += byte_tokens
+                        offset = piece_end
+                        segment_start = offset
+                        continue
+                    flush_presplit()
+                    protected_ids, byte_tokens = encode_protected_surface_ids(
+                        piece.surface,
+                        selected_pieces=selected_pieces,
+                        piece_to_id=piece_to_id,
+                        byte_offset=byte_offset,
+                    )
+                    ids.extend(protected_ids)
+                    protected_byte_tokens += byte_tokens
+                    offset = piece_end
+                    segment_start = offset
+                    continue
+
+                if not segment:
+                    segment_start = piece_start
+                segment += piece.surface
+                offset = piece_end
+
+            flush_presplit()
+            return ids, protected_byte_tokens
+
+        if byte_fallback_crossing_pieces:
+            segment_boundaries: set[int] = set()
+
+            def flush_edge_safe() -> None:
+                nonlocal segment, protected_byte_tokens, segment_boundaries
+                if not segment:
+                    return
+                segment_ids, byte_tokens = _processor_encode_ids_with_boundary_byte_fallback(
+                    processor,
+                    segment,
+                    boundaries=segment_boundaries,
+                    byte_offset=byte_offset,
+                )
+                ids.extend(segment_ids)
+                protected_byte_tokens += byte_tokens
+                segment = ""
+                segment_boundaries = set()
+
+            for piece in pieces:
+                if piece.kind.startswith("protected:"):
+                    route = piece.kind.removeprefix("protected:")
+                    if route in passthrough_routes:
+                        start = len(segment)
+                        segment += piece.surface
+                        segment_boundaries.add(start)
+                        segment_boundaries.add(len(segment))
+                        continue
+                    flush_edge_safe()
+                    protected_ids, byte_tokens = encode_protected_surface_ids(
+                        piece.surface,
+                        selected_pieces=selected_pieces,
+                        piece_to_id=piece_to_id,
+                        byte_offset=byte_offset,
+                    )
+                    ids.extend(protected_ids)
+                    protected_byte_tokens += byte_tokens
+                    continue
+
+                segment += piece.surface
+
+            flush_edge_safe()
+            return ids, protected_byte_tokens
+
+        # Runtime protected wrappers must not reset SentencePiece at every
+        # morphology/punctuation boundary. Doing so creates internal dummy-prefix
+        # pieces that decode as fake spaces. Keep normal text as raw chunks and
+        # split only around finite protected spans.
+        def flush_route_only() -> None:
+            nonlocal segment, protected_byte_tokens
+            if segment:
+                segment_ids, byte_tokens = _processor_encode_ids_lossless_or_byte_fallback(
+                    processor,
+                    segment,
+                    byte_offset=byte_offset,
+                )
+                ids.extend(segment_ids)
+                protected_byte_tokens += byte_tokens
+                segment = ""
+
+        for piece in pieces:
+            if piece.kind.startswith("protected:"):
+                route = piece.kind.removeprefix("protected:")
+                if route in passthrough_routes:
+                    if isolate_sp_passthrough_routes:
+                        flush_route_only()
+                        segment_ids, byte_tokens = _processor_encode_ids_lossless_or_byte_fallback(
+                            processor,
+                            piece.surface,
+                            byte_offset=byte_offset,
+                        )
+                        ids.extend(segment_ids)
+                        protected_byte_tokens += byte_tokens
+                    else:
+                        segment += piece.surface
+                    continue
+                flush_route_only()
+                protected_ids, byte_tokens = encode_protected_surface_ids(
+                    piece.surface,
+                    selected_pieces=selected_pieces,
+                    piece_to_id=piece_to_id,
+                    byte_offset=byte_offset,
+                )
+                ids.extend(protected_ids)
+                protected_byte_tokens += byte_tokens
+                continue
+
+            segment += piece.surface
+
+        flush_route_only()
+        return ids, protected_byte_tokens
 
     def flush() -> None:
         nonlocal segment
@@ -380,6 +738,10 @@ def encode_finite_protected_soft_marker_line_ids(
 
         if piece.kind.startswith("protected:"):
             flush()
+            route = piece.kind.removeprefix("protected:")
+            if route in passthrough_routes:
+                ids.extend(_processor_encode_ids(processor, piece.surface))
+                continue
             protected_ids, byte_tokens = encode_protected_surface_ids(
                 piece.surface,
                 selected_pieces=selected_pieces,
@@ -418,16 +780,21 @@ def encode_finite_protected_soft_marker_line_ids(
 def encode_finite_protected_soft_marker_split(
     *,
     model_path: Path,
-    selected_pieces_path: Path,
+    selected_pieces_path: Path | None,
     lines: list[str],
     byte_count: int,
     split: str,
     insert_soft_markers: bool = True,
+    numeric_sp_passthrough: bool = False,
+    sp_passthrough_routes: frozenset[str] | set[str] | None = None,
+    isolate_sp_passthrough_routes: bool = False,
+    byte_fallback_crossing_pieces: bool = False,
+    pre_split_sp_passthrough_routes: bool = False,
     tokenizer_name: str = "",
     progress: int = 0,
 ) -> tuple[int, EncodedSplit]:
     processor = load_sp_processor(model_path)
-    selected = selected_piece_strings(selected_pieces_path)
+    selected = selected_piece_strings(selected_pieces_path) if selected_pieces_path else []
     piece_size = _processor_piece_size(processor)
     eos = _processor_eos_id(processor)
     ids: list[int] = []
@@ -439,6 +806,171 @@ def encode_finite_protected_soft_marker_split(
             selected_pieces=selected,
             protected_piece_offset=piece_size,
             insert_soft_markers=insert_soft_markers,
+            numeric_sp_passthrough=numeric_sp_passthrough,
+            sp_passthrough_routes=sp_passthrough_routes,
+            isolate_sp_passthrough_routes=isolate_sp_passthrough_routes,
+            byte_fallback_crossing_pieces=byte_fallback_crossing_pieces,
+            pre_split_sp_passthrough_routes=pre_split_sp_passthrough_routes,
+        )
+        ids.extend(line_ids)
+        protected_byte_tokens += byte_tokens
+        if eos >= 0:
+            ids.append(eos)
+        if progress > 0 and line_number % progress == 0:
+            print(
+                f"encoding {tokenizer_name or model_path.stem} split={split}: "
+                f"{line_number:,} lines tokens={len(ids):,} "
+                f"protected_byte_tokens={protected_byte_tokens:,}",
+                flush=True,
+            )
+    vocab_size = piece_size + len(selected) + BYTE_VOCAB_SIZE
+    return (
+        vocab_size,
+        EncodedSplit(split, ids, byte_count, len(lines), oov_tokens=protected_byte_tokens),
+    )
+
+
+def _processor_piece_to_id(processor, piece: str) -> int:
+    if hasattr(processor, "PieceToId"):
+        return int(processor.PieceToId(piece))
+    return int(processor.piece_to_id(piece))
+
+
+def _append_boundary_biased_segment_ids(
+    ids: list[int],
+    *,
+    surface: str,
+    soft_boundaries: tuple[int, ...],
+    vocab: BoundaryBiasedVocab,
+    processor,
+    boundary_lambda: float,
+) -> None:
+    if not surface:
+        return
+    result = viterbi_segment(
+        surface,
+        boundaries=soft_boundaries,
+        vocab=vocab,
+        boundary_lambda=boundary_lambda,
+    )
+    for sp_piece, piece_surface in zip(result.sp_pieces, result.surfaces):
+        piece_id = _processor_piece_to_id(processor, sp_piece)
+        if piece_id >= 0:
+            ids.append(piece_id)
+        else:
+            ids.extend(_processor_encode_ids(processor, piece_surface))
+
+
+def encode_boundary_biased_unigram_line_ids(
+    text: str,
+    *,
+    processor,
+    boundary_vocab: BoundaryBiasedVocab,
+    selected_pieces: list[str],
+    protected_piece_offset: int,
+    boundary_lambda: float,
+    numeric_sp_passthrough: bool = True,
+) -> tuple[list[int], int]:
+    piece_to_id = {
+        piece: protected_piece_offset + index
+        for index, piece in enumerate(selected_pieces)
+    }
+    byte_offset = protected_piece_offset + len(selected_pieces)
+    pieces = analyze_line(text, TurkishTokenizer(preserve_whitespace=True))
+    ids: list[int] = []
+    protected_byte_tokens = 0
+    segment = ""
+    segment_boundaries: list[int] = []
+
+    def flush() -> None:
+        nonlocal segment, segment_boundaries
+        if segment:
+            _append_boundary_biased_segment_ids(
+                ids,
+                surface=segment,
+                soft_boundaries=tuple(segment_boundaries),
+                vocab=boundary_vocab,
+                processor=processor,
+                boundary_lambda=boundary_lambda,
+            )
+            segment = ""
+            segment_boundaries = []
+
+    for piece in pieces:
+        if piece.kind == "whitespace":
+            flush()
+            continue
+
+        if piece.kind.startswith("protected:"):
+            flush()
+            if numeric_sp_passthrough and piece.kind == "protected:numeric_like":
+                ids.extend(_processor_encode_ids(processor, piece.surface))
+                continue
+            protected_ids, byte_tokens = encode_protected_surface_ids(
+                piece.surface,
+                selected_pieces=selected_pieces,
+                piece_to_id=piece_to_id,
+                byte_offset=byte_offset,
+            )
+            ids.extend(protected_ids)
+            protected_byte_tokens += byte_tokens
+            continue
+
+        if piece.kind == "apostrophe":
+            flush()
+            ids.extend(_processor_encode_ids(processor, piece.surface))
+            continue
+
+        if piece.kind == "suffix" and piece.boundary_before == "hard":
+            flush()
+            ids.extend(_processor_encode_ids(processor, piece.surface))
+            continue
+
+        if piece.boundary_before == "soft":
+            segment_boundaries.append(len(segment))
+            segment += piece.surface
+            continue
+
+        if piece.boundary_before == "hard":
+            flush()
+            segment = piece.surface
+            segment_boundaries = []
+            continue
+
+        segment += piece.surface
+
+    flush()
+    return ids, protected_byte_tokens
+
+
+def encode_boundary_biased_unigram_split(
+    *,
+    model_path: Path,
+    vocab_path: Path,
+    selected_pieces_path: Path,
+    lines: list[str],
+    byte_count: int,
+    split: str,
+    boundary_lambda: float,
+    tokenizer_name: str = "",
+    progress: int = 0,
+) -> tuple[int, EncodedSplit]:
+    processor = load_sp_processor(model_path)
+    boundary_vocab = BoundaryBiasedVocab.from_vocab_file(vocab_path)
+    selected = selected_piece_strings(selected_pieces_path)
+    piece_size = _processor_piece_size(processor)
+    eos = _processor_eos_id(processor)
+    ids: list[int] = []
+    protected_byte_tokens = 0
+    for line_number, line in enumerate(lines, start=1):
+        line_ids, byte_tokens = encode_boundary_biased_unigram_line_ids(
+            line,
+            processor=processor,
+            boundary_vocab=boundary_vocab,
+            selected_pieces=selected,
+            protected_piece_offset=piece_size,
+            boundary_lambda=boundary_lambda,
+            numeric_sp_passthrough=True,
         )
         ids.extend(line_ids)
         protected_byte_tokens += byte_tokens
@@ -499,10 +1031,42 @@ def encode_tokenizer(
                 for name, split in splits.items()
             }
             return EncodedTokenizer(config, int(processor.GetPieceSize()), "ok", splits=encoded)
-        if config.kind in {"finite_protected_soft_marker", "finite_protected_marker_stripped"}:
+        if config.kind == "boundary_biased_unigram_numeric_sp":
             if config.path is None or not config.path.exists():
                 return EncodedTokenizer(config, 0, "skipped", reason=f"missing model: {config.path}")
+            vocab_path = config.vocab_path or config.path.with_suffix(".vocab")
+            if not vocab_path.exists():
+                return EncodedTokenizer(config, 0, "skipped", reason=f"missing vocab: {vocab_path}")
             if config.selected_pieces is None or not config.selected_pieces.exists():
+                return EncodedTokenizer(
+                    config,
+                    0,
+                    "skipped",
+                    reason=f"missing selected pieces: {config.selected_pieces}",
+                )
+            encoded = {}
+            vocab_size = 0
+            for name, split in splits.items():
+                vocab_size, encoded[name] = encode_boundary_biased_unigram_split(
+                    model_path=config.path,
+                    vocab_path=vocab_path,
+                    selected_pieces_path=config.selected_pieces,
+                    lines=split.lines,
+                    byte_count=split.bytes,
+                    split=name,
+                    boundary_lambda=config.boundary_lambda,
+                    tokenizer_name=config.name,
+                    progress=encode_progress,
+                )
+            return EncodedTokenizer(config, vocab_size, "ok", splits=encoded)
+        if config.kind in {
+            "finite_protected_soft_marker",
+            "finite_protected_marker_stripped",
+            "finite_protected_marker_stripped_numeric_sp",
+        }:
+            if config.path is None or not config.path.exists():
+                return EncodedTokenizer(config, 0, "skipped", reason=f"missing model: {config.path}")
+            if config.selected_pieces is not None and not config.selected_pieces.exists():
                 return EncodedTokenizer(
                     config,
                     0,
@@ -519,6 +1083,13 @@ def encode_tokenizer(
                     byte_count=split.bytes,
                     split=name,
                     insert_soft_markers=config.kind == "finite_protected_soft_marker",
+                    numeric_sp_passthrough=(
+                        config.kind == "finite_protected_marker_stripped_numeric_sp"
+                    ),
+                    sp_passthrough_routes=config.sp_passthrough_routes,
+                    isolate_sp_passthrough_routes=config.isolate_sp_passthrough_routes,
+                    byte_fallback_crossing_pieces=config.byte_fallback_crossing_pieces,
+                    pre_split_sp_passthrough_routes=config.pre_split_sp_passthrough_routes,
                     tokenizer_name=config.name,
                     progress=encode_progress,
                 )
@@ -629,7 +1200,7 @@ def sample_batch(torch, ids: list[int], *, seq_len: int, batch_size: int, rng: r
     )
 
 
-def evaluate_bpb(model, encoded: EncodedSplit, *, model_config: ModelConfig, device) -> float:
+def evaluate_loss_stats(model, encoded: EncodedSplit, *, model_config: ModelConfig, device) -> EvalLossStats:
     torch, _nn, functional = _require_torch()
     model.eval()
     total_nll = 0.0
@@ -651,10 +1222,29 @@ def evaluate_bpb(model, encoded: EncodedSplit, *, model_config: ModelConfig, dev
             total_nll += float(loss.item())
             total_targets += int(targets.numel())
     if total_targets == 0 or encoded.bytes == 0:
-        return float("nan")
+        return EvalLossStats(
+            bpb=float("nan"),
+            bits_per_token=float("nan"),
+            target_tokens=total_targets,
+            evaluated_bytes=0.0,
+            evaluated_fraction=0.0,
+            nll_bits=float("nan"),
+        )
     evaluated_fraction = total_targets / max(1, len(ids) - 1)
     evaluated_bytes = encoded.bytes * evaluated_fraction
-    return total_nll / math.log(2) / evaluated_bytes
+    nll_bits = total_nll / math.log(2)
+    return EvalLossStats(
+        bpb=nll_bits / evaluated_bytes,
+        bits_per_token=nll_bits / total_targets,
+        target_tokens=total_targets,
+        evaluated_bytes=evaluated_bytes,
+        evaluated_fraction=evaluated_fraction,
+        nll_bits=nll_bits,
+    )
+
+
+def evaluate_bpb(model, encoded: EncodedSplit, *, model_config: ModelConfig, device) -> float:
+    return evaluate_loss_stats(model, encoded, model_config=model_config, device=device).bpb
 
 
 def train_one(
@@ -709,14 +1299,23 @@ def train_one(
             tokens_seen += int(targets.numel())
 
             if step == 1 or step % config.model.eval_interval == 0 or step == config.model.max_steps:
-                valid_bpb = evaluate_bpb(model, encoded.splits["valid"], model_config=config.model, device=device)
-                final_valid = valid_bpb
-                best_valid = valid_bpb if best_valid is None else min(best_valid, valid_bpb)
+                valid_stats = evaluate_loss_stats(
+                    model,
+                    encoded.splits["valid"],
+                    model_config=config.model,
+                    device=device,
+                )
+                final_valid = valid_stats.bpb
+                best_valid = valid_stats.bpb if best_valid is None else min(best_valid, valid_stats.bpb)
                 approx_bytes = tokens_seen / train_tokens_per_byte if train_tokens_per_byte else 0.0
                 row = {
                     "step": step,
                     "train_loss_nats_per_token": float(loss.item()),
-                    "valid_bpb": valid_bpb,
+                    "valid_bpb": valid_stats.bpb,
+                    "valid_bits_per_token": valid_stats.bits_per_token,
+                    "valid_target_tokens": valid_stats.target_tokens,
+                    "valid_evaluated_bytes": valid_stats.evaluated_bytes,
+                    "valid_evaluated_fraction": valid_stats.evaluated_fraction,
                     "tokens_seen": tokens_seen,
                     "approx_bytes_seen": approx_bytes,
                 }
@@ -725,11 +1324,17 @@ def train_one(
                 print(
                     f"{encoded.config.name}: step={step} "
                     f"tokens_seen={tokens_seen} approx_bytes_seen={approx_bytes:.0f} "
-                    f"valid_bpb={valid_bpb:.6f}",
+                    f"valid_bpb={valid_stats.bpb:.6f}",
                     flush=True,
                 )
 
-    test_bpb = evaluate_bpb(model, encoded.splits["test"], model_config=config.model, device=device)
+    valid_final_stats = evaluate_loss_stats(
+        model,
+        encoded.splits["valid"],
+        model_config=config.model,
+        device=device,
+    )
+    test_stats = evaluate_loss_stats(model, encoded.splits["test"], model_config=config.model, device=device)
     return TrainMetrics(
         tokenizer=encoded.config.name,
         status="ok",
@@ -742,7 +1347,13 @@ def train_one(
         approx_bytes_seen=tokens_seen / train_tokens_per_byte if train_tokens_per_byte else 0.0,
         best_valid_bpb=best_valid,
         final_valid_bpb=final_valid,
-        test_bpb=test_bpb,
+        test_bpb=test_stats.bpb,
+        final_valid_bits_per_token=valid_final_stats.bits_per_token,
+        test_bits_per_token=test_stats.bits_per_token,
+        final_valid_target_tokens=valid_final_stats.target_tokens,
+        test_target_tokens=test_stats.target_tokens,
+        final_valid_evaluated_bytes=valid_final_stats.evaluated_bytes,
+        test_evaluated_bytes=test_stats.evaluated_bytes,
     )
 
 
@@ -821,6 +1432,31 @@ def format_report(
                 f"{_fmt_float(row.test_bpb)} | {row.reason} |"
             )
 
+    if not dry_run and train_metrics:
+        lines.extend(
+            [
+                "",
+                "## Loss Accounting",
+                "",
+                "This table reports the same eval pass used for BPB, converted back",
+                "to bits/token. Values above `log2(vocab)` indicate an early or",
+                "pathological optimization regime and should not be read as",
+                "converged LM quality.",
+                "",
+                "| Tokenizer | log2(vocab) | Valid bits/token | Test bits/token | Valid target tokens | Test target tokens | Valid evaluated bytes | Test evaluated bytes |",
+                "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+            ]
+        )
+        for row in train_metrics:
+            uniform = math.log2(row.vocab_size) if row.vocab_size > 0 else float("nan")
+            lines.append(
+                f"| {row.tokenizer} | {_fmt_float(uniform, 4)} | "
+                f"{_fmt_float(row.final_valid_bits_per_token, 4)} | "
+                f"{_fmt_float(row.test_bits_per_token, 4)} | "
+                f"{row.final_valid_target_tokens} | {row.test_target_tokens} | "
+                f"{row.final_valid_evaluated_bytes:.0f} | {row.test_evaluated_bytes:.0f} |"
+            )
+
     lines.extend(
         [
             "",
@@ -876,6 +1512,7 @@ def main(argv: list[str] | None = None) -> int:
         help="Restrict to one or more tokenizer names.",
     )
     parser.add_argument("--max-steps", type=int, help="Override configured max_steps.")
+    parser.add_argument("--eval-interval", type=int, help="Override configured eval_interval.")
     parser.add_argument("--encode-progress", type=int, help="Print encode progress every N lines.")
     parser.add_argument("--report-out", help="Override configured public report path.")
     parser.add_argument("--output-dir", help="Override configured private output directory.")
@@ -888,6 +1525,13 @@ def main(argv: list[str] | None = None) -> int:
         config = replace(
             config,
             model=replace(config.model, max_steps=args.max_steps),
+        )
+    if args.eval_interval is not None:
+        if args.eval_interval <= 0:
+            raise ValueError("--eval-interval must be positive")
+        config = replace(
+            config,
+            model=replace(config.model, eval_interval=args.eval_interval),
         )
     if args.encode_progress is not None:
         if args.encode_progress < 0:
