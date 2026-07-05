@@ -1,6 +1,6 @@
 # Current Resume Point
 
-Date: 2026-06-28
+Date: 2026-07-05
 
 ## Latest Actual State: Tamga v3.8 Production-Final
 
@@ -32,9 +32,23 @@ it only for a reproduced regression, security/reconstruction defect, or an
 explicit new corpus scope. Multilingual or code-heavy expansion requires a new
 version and compatibility decision; it must not mutate v3.8.
 
-The remaining local task at this resume point is repository release curation:
-publish the public source, tests, configs, aggregate evidence, and v3.8.0 tag
-without private corpora, private models, or full token binaries.
+Repository release curation is complete. The public source, tests, configs,
+aggregate evidence, and the v3.8.0 tag are published at
+https://github.com/celikbros/tamga without private corpora, private models, or
+full token binaries.
+
+Post-release repository housekeeping (2026-07-05):
+
+```text
+README.md rewritten as a bilingual (Turkish/English) front page
+previous detailed README archived verbatim: docs/readme_research_history_tr.md
+CLAUDE.md added: commit-authorship rule + v3.8 freeze guardrails for AI agents
+deploy-key SSH push access configured (github.com-tamga alias)
+full test suite verified: 319/319 passed
+```
+
+No open tokenizer-side task remains. The critical path is Faz 4 pretraining,
+owned by the LLM team.
 
 ## Historical State: v2.1 Protected Sidecar Contract
 
