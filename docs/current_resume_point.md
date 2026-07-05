@@ -47,7 +47,18 @@ deploy-key SSH push access configured (github.com-tamga alias)
 full test suite verified: 319/319 passed
 ```
 
-No open tokenizer-side task remains. The critical path is Faz 4 pretraining,
+Current tokenizer-side queue (2026-07-05, after LLM team field feedback):
+
+```text
+field validation: v3.8 package proven in a real 132M training run (~0.2B
+  tokens consumed; loader/loss_mask/label-shift chain defect-free)
+queued reactive job: re-tokenize the Derlem PII-clean corpus with the frozen
+  v3.8 chain once the Derlem release gates close
+  readiness plan: docs/v3_8_pii_clean_retokenize_readiness.md
+  this job blocks the LLM team's Spark v1 schedule; tokenizer side is READY
+```
+
+No other tokenizer-side task is open. The critical path is Faz 4 pretraining,
 owned by the LLM team.
 
 ## Historical State: v2.1 Protected Sidecar Contract
