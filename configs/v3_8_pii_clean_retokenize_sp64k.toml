@@ -1,0 +1,61 @@
+# v3.8 PII-clean re-tokenize template.
+#
+# Purpose: re-run the FROZEN v3.8 tokenizer chain over the Derlem PII-clean
+# corpus (docs/v3_8_pii_clean_retokenize_readiness.md). The tokenizer model,
+# id contract, routes, and normalizer DO NOT change; only the input corpus
+# and output locations do.
+#
+# Fill every <PLACEHOLDER> below from the consumer (Gardash) environment, or
+# generate a resolved copy with GARDASH_ROOT set. Do NOT edit
+# configs/v3_8_final_sidecar_sp64k.toml - that file is the historical record
+# of the original v3.8 full-corpus run.
+#
+# Usage (from the consumer environment, after filling placeholders):
+#   python scripts/tokenize_corpus.py \
+#     --config configs/v3_8_pii_clean_retokenize_sp64k.toml \
+#     --tokenizer sp64k_final_protected_passthrough_sidecar_controls128 \
+#     --input <PII_CLEAN_CORPUS_LF_TXT> \
+#     --out-dir <DATASETS_ROOT>/tokenized_v3_8_pii_clean \
+#     --report-out <REPORTS_ROOT>/v3_8_pii_clean_tokenize_corpus.md \
+#     --max-lines 0 --workers 12 --chunk-lines 256
+
+[settings]
+split_dir = "<GARDASH_ROOT>/datasets/pretraining_final/split"
+output_dir = "<GARDASH_ROOT>/artifacts/tokenizer_v3_0/v3_8_pii_clean"
+report_out = "<GARDASH_ROOT>/artifacts/tokenizer_v3_0/v3_8_pii_clean.md"
+seed = 20260620
+encode_progress = 5000
+
+[model]
+seq_len = 128
+batch_size = 4
+max_steps = 300
+eval_interval = 100
+learning_rate = 0.0003
+d_model = 256
+n_layers = 4
+n_heads = 4
+ff_mult = 4
+dropout = 0.1
+device = "auto"
+
+# FROZEN v3.8 tokenizer entry. Only `path` is environment-specific; the model
+# file must match sha256 5f54645a76c8cc6346f4283884b2adb219eb44118e6024b765d965239f62e77a.
+[[tokenizers]]
+name = "sp64k_final_protected_passthrough_sidecar_controls128"
+kind = "finite_protected_marker_stripped_numeric_sp"
+path = "<GARDASH_ROOT>/models/tokenizer_v3_8/sp_unigram_64000_faz2_tr.model"
+sp_passthrough_routes = [
+  "url",
+  "technical_comparator",
+  "file_like",
+  "apostrophe_surface",
+  "non_turkish_latin_word",
+  "greek_word",
+  "uzbek_apostrophe_word",
+  "cyrillic_word",
+  "arabic_word",
+  "percent_encoded",
+  "azerbaijani_word",
+]
+enabled = true

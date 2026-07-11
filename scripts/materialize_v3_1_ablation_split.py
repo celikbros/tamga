@@ -3,9 +3,13 @@ from __future__ import annotations
 from dataclasses import dataclass
 import argparse
 import json
+import os
 import random
 import sys
 from pathlib import Path
+
+# Consumer (LLM-team) environment root; see run_v3_8_final_release_gates.py.
+GARDASH_ROOT = os.environ.get("GARDASH_ROOT", "C:/CELIK-GARDASH")
 
 
 @dataclass(frozen=True)
@@ -79,7 +83,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Create a deterministic text split for v3.1 vocab ablation.")
     parser.add_argument(
         "--input",
-        default="C:/CELIK-GARDASH/datasets/tokenizer_v3_0/real_mix_60k_sample.txt",
+        default=f"{GARDASH_ROOT}/datasets/tokenizer_v3_0/real_mix_60k_sample.txt",
     )
     parser.add_argument(
         "--output-dir",

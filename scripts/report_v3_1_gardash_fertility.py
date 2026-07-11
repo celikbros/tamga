@@ -3,10 +3,14 @@ from __future__ import annotations
 from dataclasses import dataclass
 import argparse
 import json
+import os
 import re
 import sys
 from pathlib import Path
 from typing import Any
+
+# Consumer (LLM-team) environment root; see run_v3_8_final_release_gates.py.
+GARDASH_ROOT = os.environ.get("GARDASH_ROOT", "C:/CELIK-GARDASH")
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -385,7 +389,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Report Gardaş v3.1 tokenizer fertility.")
     parser.add_argument(
         "--config",
-        default="C:/CELIK-GARDASH/configs/tokenizer_v3_0/v3_0_gardash_sidecar.toml",
+        default=f"{GARDASH_ROOT}/configs/tokenizer_v3_0/v3_0_gardash_sidecar.toml",
         help="Tokenizer config containing the handoff tokenizer.",
     )
     parser.add_argument(
@@ -395,7 +399,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument(
         "--input",
-        default="C:/CELIK-GARDASH/datasets/tokenizer_v3_0/real_mix_60k_sample.txt",
+        default=f"{GARDASH_ROOT}/datasets/tokenizer_v3_0/real_mix_60k_sample.txt",
         help="Plain text corpus, one sample per line.",
     )
     parser.add_argument("--max-lines", type=int, default=None)

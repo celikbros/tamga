@@ -517,8 +517,10 @@ def main(argv: list[str] | None = None) -> int:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser(description="Tokenize a corpus into the v3.x binary handoff format.")
-    parser.add_argument("--config", default="configs/v3_5_sidecar_sp64k_stratified_480mb.toml")
-    parser.add_argument("--tokenizer", default="sp64k_stratified_480mb_protected_passthrough_sidecar")
+    # No defaults on purpose: a forgotten flag must fail loudly instead of
+    # silently selecting a stale tokenizer generation (former default was v3.5).
+    parser.add_argument("--config", required=True)
+    parser.add_argument("--tokenizer", required=True)
     parser.add_argument("--input", required=True)
     parser.add_argument("--out-dir", required=True)
     parser.add_argument("--report-out", required=True)

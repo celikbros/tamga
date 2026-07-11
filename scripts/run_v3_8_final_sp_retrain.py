@@ -3,9 +3,13 @@ from __future__ import annotations
 import argparse
 from dataclasses import dataclass
 import json
+import os
 from pathlib import Path
 import sys
 from typing import Any
+
+# Consumer (LLM-team) environment root; see run_v3_8_final_release_gates.py.
+GARDASH_ROOT = os.environ.get("GARDASH_ROOT", "C:/CELIK-GARDASH")
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -185,9 +189,9 @@ def build_tokenizer_config(plan: RetrainPlan) -> dict[str, Any]:
 def build_sidecar_toml(plan: RetrainPlan) -> str:
     route_lines = "\n".join(f'  "{route}",' for route in DEFAULT_TOML_ROUTES)
     return f"""[settings]
-split_dir = "C:/CELIK-GARDASH/datasets/pretraining_final/split"
-output_dir = "C:/CELIK-GARDASH/artifacts/tokenizer_v3_0/v3_8_final_tiny_lm"
-report_out = "C:/CELIK-GARDASH/artifacts/tokenizer_v3_0/v3_8_final_tiny_lm.md"
+split_dir = "{GARDASH_ROOT}/datasets/pretraining_final/split"
+output_dir = "{GARDASH_ROOT}/artifacts/tokenizer_v3_0/v3_8_final_tiny_lm"
+report_out = "{GARDASH_ROOT}/artifacts/tokenizer_v3_0/v3_8_final_tiny_lm.md"
 seed = 20260620
 encode_progress = 5000
 
@@ -306,14 +310,14 @@ def format_report(plan: RetrainPlan, *, warnings: list[str], failures: list[str]
             "```powershell",
             "python tokenizer_v3_0_repo_snapshot\\scripts\\validate_v3_1_tokenizer_config.py `",
             f"  --config {plan.tokenizer_config_out} `",
-            "  --report-out C:\\CELIK-GARDASH\\artifacts\\tokenizer_v3_0\\v3_8_final_config_validation.md",
+            f"  --report-out {GARDASH_ROOT}/artifacts/tokenizer_v3_0/v3_8_final_config_validation.md",
             "",
             "python tokenizer_v3_0_repo_snapshot\\scripts\\tokenize_corpus.py `",
             f"  --config {plan.toml_out} `",
             f"  --tokenizer {plan.tokenizer_name} `",
             f"  --input {plan.corpus_text} `",
-            "  --out-dir C:\\CELIK-GARDASH\\datasets\\tokenizer_v3_8_final_full `",
-            "  --report-out C:\\CELIK-GARDASH\\artifacts\\tokenizer_v3_0\\v3_8_final_tokenize_corpus.md `",
+            f"  --out-dir {GARDASH_ROOT}/datasets/tokenizer_v3_8_final_full `",
+            f"  --report-out {GARDASH_ROOT}/artifacts/tokenizer_v3_0/v3_8_final_tokenize_corpus.md `",
             "  --max-lines 0 `",
             "  --workers 8 `",
             "  --chunk-lines 256 `",
@@ -374,7 +378,7 @@ def parse_args(argv: list[str] | None = None) -> RetrainPlan:
     parser.add_argument("--corpus-text", required=True)
     parser.add_argument(
         "--model-prefix",
-        default="C:/CELIK-GARDASH/models/tokenizer_v3_8/sp_unigram_64000_final",
+        default=f"{GARDASH_ROOT}/models/tokenizer_v3_8/sp_unigram_64000_final",
     )
     parser.add_argument(
         "--tokenizer-name",
@@ -382,15 +386,15 @@ def parse_args(argv: list[str] | None = None) -> RetrainPlan:
     )
     parser.add_argument(
         "--toml-out",
-        default="C:/CELIK-GARDASH/configs/tokenizer_v3_0/v3_8_final_sidecar_sp64k.toml",
+        default=f"{GARDASH_ROOT}/configs/tokenizer_v3_0/v3_8_final_sidecar_sp64k.toml",
     )
     parser.add_argument(
         "--tokenizer-config-out",
-        default="C:/CELIK-GARDASH/configs/tokenizer_v3_0/tokenizer_config.json",
+        default=f"{GARDASH_ROOT}/configs/tokenizer_v3_0/tokenizer_config.json",
     )
     parser.add_argument(
         "--report-out",
-        default="C:/CELIK-GARDASH/artifacts/tokenizer_v3_0/v3_8_final_sp_retrain_plan.md",
+        default=f"{GARDASH_ROOT}/artifacts/tokenizer_v3_0/v3_8_final_sp_retrain_plan.md",
     )
     parser.add_argument(
         "--template-config",

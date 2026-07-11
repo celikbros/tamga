@@ -3,12 +3,17 @@ from __future__ import annotations
 import argparse
 from dataclasses import dataclass
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
 
 
-DEFAULT_BASE_DIR = Path("C:/CELIK-GARDASH")
+# Consumer (LLM-team) environment root. The historical literal is kept as the
+# fallback so old runbooks stay reproducible; set GARDASH_ROOT when the
+# consumer environment lives elsewhere.
+GARDASH_ROOT = os.environ.get("GARDASH_ROOT", "C:/CELIK-GARDASH")
+DEFAULT_BASE_DIR = Path(GARDASH_ROOT)
 DEFAULT_SNAPSHOT_DIR = Path("tokenizer_v3_0_repo_snapshot")
 DEFAULT_TOKENIZER_NAME = "sp64k_final_protected_passthrough_sidecar_controls128"
 
@@ -359,24 +364,24 @@ def parse_args(argv: list[str] | None = None) -> ReleaseGatePlan:
     parser.add_argument("--snapshot-dir", default=str(DEFAULT_SNAPSHOT_DIR))
     parser.add_argument(
         "--corpus-text",
-        default="C:/CELIK-GARDASH/datasets/pretraining_final/final_corpus_text.txt",
+        default=f"{GARDASH_ROOT}/datasets/pretraining_final/final_corpus_text.txt",
     )
     parser.add_argument(
         "--tokenizer-config",
-        default="C:/CELIK-GARDASH/configs/tokenizer_v3_0/tokenizer_config.json",
+        default=f"{GARDASH_ROOT}/configs/tokenizer_v3_0/tokenizer_config.json",
     )
     parser.add_argument(
         "--sidecar-config",
-        default="C:/CELIK-GARDASH/configs/tokenizer_v3_0/v3_8_final_sidecar_sp64k.toml",
+        default=f"{GARDASH_ROOT}/configs/tokenizer_v3_0/v3_8_final_sidecar_sp64k.toml",
     )
     parser.add_argument("--tokenizer-name", default=DEFAULT_TOKENIZER_NAME)
     parser.add_argument(
         "--tokenized-out-dir",
-        default="C:/CELIK-GARDASH/datasets/tokenizer_v3_8_final_full",
+        default=f"{GARDASH_ROOT}/datasets/tokenizer_v3_8_final_full",
     )
     parser.add_argument(
         "--report-dir",
-        default="C:/CELIK-GARDASH/artifacts/tokenizer_v3_0/v3_8_final_release_gates",
+        default=f"{GARDASH_ROOT}/artifacts/tokenizer_v3_0/v3_8_final_release_gates",
     )
     parser.add_argument("--max-lines", type=int, default=100000)
     parser.add_argument("--smoke-max-lines", type=int, default=5000)

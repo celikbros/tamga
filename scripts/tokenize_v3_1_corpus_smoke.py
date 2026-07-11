@@ -5,9 +5,13 @@ from collections import Counter
 from dataclasses import dataclass
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any
+
+# Consumer (LLM-team) environment root; see run_v3_8_final_release_gates.py.
+GARDASH_ROOT = os.environ.get("GARDASH_ROOT", "C:/CELIK-GARDASH")
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -397,12 +401,12 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Materialize a v3.1 tokenization smoke package.")
     parser.add_argument(
         "--config",
-        default="C:/CELIK-GARDASH/configs/tokenizer_v3_0/v3_0_gardash_sidecar.toml",
+        default=f"{GARDASH_ROOT}/configs/tokenizer_v3_0/v3_0_gardash_sidecar.toml",
     )
     parser.add_argument("--tokenizer", default="sp64_protected_passthrough_sidecar")
     parser.add_argument(
         "--input",
-        default="C:/CELIK-GARDASH/datasets/tokenizer_v3_0/real_mix_60k_sample.txt",
+        default=f"{GARDASH_ROOT}/datasets/tokenizer_v3_0/real_mix_60k_sample.txt",
     )
     parser.add_argument("--out-dir", required=True)
     parser.add_argument("--report-out", required=True)

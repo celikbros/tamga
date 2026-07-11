@@ -74,8 +74,12 @@ suggested output dir name: tokenized_v3_8_pii_clean (distinct from tokenized_v3_
    (LF canonicalization if needed, line/byte counts, sha vs manifest)
 2. manifest: instantiate docs/v3_8_final_corpus_manifest_template.json,
    validate with scripts/validate_v3_8_final_corpus_manifest.py
-3. tokenize: scripts/tokenize_corpus.py with the frozen v3.8 config/tokenizer
+3. tokenize: scripts/tokenize_corpus.py with the frozen v3.8 tokenizer entry
    (worker determinism was verified in v3.8: workers=1 vs 2 checksum-identical)
+   config template: configs/v3_8_pii_clean_retokenize_sp64k.toml (fill the
+   <GARDASH_ROOT> placeholders; --config/--tokenizer are now required args)
+   environment: v3.8-era tools resolve consumer paths via the GARDASH_ROOT
+   environment variable (fallback: the historical C:/CELIK-GARDASH literal)
 4. package gates: scripts/run_v3_8_tokenized_package_gates.py
    (checksum PASS, fixture PASS, dataloader sampled 4,096 batches PASS)
 5. handoff smoke: scripts/audit_v2_2_llm_handoff_smoke.py
