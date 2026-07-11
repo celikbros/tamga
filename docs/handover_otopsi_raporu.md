@@ -7,6 +7,11 @@ olduğunu tek belgeden öğrenmesi. Övgü yok; her bulgu dosya/satır referansl
 
 > Sonraki adım planı için: `docs/handover_iyilestirme_yol_haritasi.md`
 > Güncel proje durumu için: `docs/current_resume_point.md`
+>
+> Bu rapor, denetim ANININ (2026-07-11 sabahı) kaydıdır ve tarihsel belge
+> olarak değiştirilmez. Bulguların güncel kapanış durumu için aşağıdaki
+> Bölüm 4 tablosuna ve yol haritasındaki durum tablosuna bakın — aynı gün
+> içinde B1-B5 kapatılmıştır.
 
 ---
 
@@ -156,3 +161,20 @@ Greenfield rewrite REDDEDİLDİ, gerekçe:
    hattı "açmak" sayılmaz.
 
 Uygulama sırası ve kapıları: `docs/handover_iyilestirme_yol_haritasi.md`.
+
+## 4. Bulgu kapanış durumu (son güncelleme: 2026-07-11)
+
+| Bulgu | Durum | Nasıl / Nerede |
+|---|---|---|
+| B1 ters bağımlılık | ✅ KAPANDI (repo-içi) | Faz 2, commit `5625c02`: v3.8 zinciri `src/tr_tokenizer/production/` paketine taşındı (detector/spans/sp/config); eski script konumları re-export shim'i; `tokenize_corpus.py` yalnızca paketten import ediyor. Kanıt: 319/319 test + 4 çıktı artifact'ı 3 kıyasta bit-aynı (workers=1/2, U+2581 literal dahil). Kalan: Gardash 10k örneklem teyidi (Faz 1 ile) + `boundary_weighted_bpe.py` içindeki bağımsız U+2581 kopyası (Faz 3). |
+| B2 kayıplı varsayılan vs "lossless" iddiası | ✅ KAPANDI | Faz 0.5, commit `3cb5080`: CLI'a `--lossless` bayrağı (6/6 roundtrip doğrulandı); CLI açıklaması + README (TR/EN) iddiayı v3.8 production zincirine kapsamladı. Varsayılan davranış bilinçli olarak DEĞİŞTİRİLMEDİ (guardrail uyumu); dürüstlük düzeltildi. |
+| B3 ölü mutlak yollar | ✅ KAPANDI | Faz 0.1, commit `3df0523`: 5 script `GARDASH_ROOT` ortam değişkeninden çözüyor (tarihsel literal fallback); PII işi için placeholder'lı şablon `configs/v3_8_pii_clean_retokenize_sp64k.toml`; orijinal v3.8 config'i tarihsel kayıt olarak işaretlendi. |
+| B4 bayat v3.5 varsayılanı | ✅ KAPANDI | Faz 0.2, commit `3df0523`: `tokenize_corpus.py` `--config/--tokenizer` zorunlu; sessiz yanlış nesil seçimi imkânsız. |
+| B5 paketleme (sentencepiece) | ✅ KAPANDI | Faz 0.4, commit `3cb5080`: `pyproject.toml`'a `[production]` extra'sı. |
+| B6 paket içi ölü kod | ⏳ AÇIK | Faz 3.2'de: `boundary_weighted_bpe.py`, `baseline_bpe.py`, `external_baselines.py` paketten çıkacak (sürüm kararıyla birlikte). |
+| B7 kod biçiminde arşiv | ⏳ AÇIK | Faz 3.1'de: kapalı deney script'leri `research/` altına; Faz 2 shim'leri sayesinde artık güvenle taşınabilir. |
+| B8 küçükler | ⏳ KISMEN | Silinemeyen temp klasörleri yönetici komutu bekliyor (yol haritası "ilk 1 saat" notu); `current_resume_point.md` sadeleştirmesi Faz 3.4'te. |
+
+Devir anında okuma sırası: bu tablo → yol haritası durum tablosu →
+`docs/current_resume_point.md` en üst bölümü. Üçü tutarlı olmalıdır; bir faz
+kapandığında üçü birden güncellenir.

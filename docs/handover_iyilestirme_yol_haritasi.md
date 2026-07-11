@@ -150,13 +150,17 @@ v3.8'e DOKUNULMAZ; yeni hat yeni sürümdür.
 
 ## Durum takibi
 
-| Faz | Durum | Not |
-|---|---|---|
-| 0 | ✅ tamamlandı (2026-07-11) | 0.1-0.5 uygulandı; kapı: 319/319 test + lossless smoke 6/6 |
-| 1 | ⏳ Derlem release bekliyor | readiness hazır |
-| 2 | 🔄 repo-içi kapılar GEÇTİ (2026-07-11) | çıkarma + shim'ler tamam; dışsal 10k teyidi Faz 1 ile gelir |
-| 3 | ⏸ Faz 2 sonrası | sıra bağımlılığı kesin |
-| 4 | ⏸ dışsal tetik | yeni corpus kapsamı |
+| Faz | Durum | Commit izi | Not |
+|---|---|---|---|
+| 0 | ✅ tamamlandı (2026-07-11) | `3df0523` (0.1-0.3), `3cb5080` (0.4-0.5) | kapı: 319/319 test + lossless smoke 6/6 + env-override/zorunlu-arg doğrulamaları |
+| 1 | ⏳ Derlem release bekliyor | — | readiness: `docs/v3_8_pii_clean_retokenize_readiness.md` + şablon config; araçlar Faz 0'da onarıldı |
+| 2 | 🔄 repo-içi kapılar GEÇTİ (2026-07-11) | `5625c02` | production paketi + shim'ler; 4 artifact × 3 kıyas bit-aynı; dışsal 10k teyidi Faz 1 ile gelir |
+| 3 | ⏸ Faz 2 kapanışı sonrası | — | sıra bağımlılığı kesin; shim'ler sayesinde script taşıma artık düşük risk |
+| 4 | ⏸ dışsal tetik | — | yeni corpus kapsamı (çok dilli / kod-ağırlıklı) |
+
+Belge zinciri (devirde okunma sırası): otopsi Bölüm 4 kapanış tablosu →
+bu tablo → `docs/current_resume_point.md` en üst bölümü. Bir faz kapandığında
+üçü birden güncellenir; commit mesajları kanıtın kendisini taşır.
 
 Bu tabloyu her faz geçişinde güncelleyin; ayrıntılı güncel durum her zaman
 `docs/current_resume_point.md` başına yazılır.
