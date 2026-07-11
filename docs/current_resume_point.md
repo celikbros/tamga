@@ -1,6 +1,19 @@
 # Current Resume Point
 
-Date: 2026-07-05
+Date: 2026-07-11
+
+## Handover / Remediation Track (2026-07-11)
+
+A forensic audit and a phased remediation roadmap were added for future
+maintainers:
+
+```text
+docs/handover_otopsi_raporu.md            (findings B1-B8, file/line refs)
+docs/handover_iyilestirme_yol_haritasi.md (Faz 0-4, acceptance gates)
+Faz 0 (tooling repair + honesty fixes) started 2026-07-11.
+Faz 2/3 (production extraction + quarantine) must wait for the PII
+re-tokenize job (Faz 1) to complete first.
+```
 
 ## Latest Actual State: Tamga v3.8 Production-Final
 
