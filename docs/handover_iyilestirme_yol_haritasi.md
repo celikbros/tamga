@@ -122,7 +122,7 @@ v3.8'e DOKUNULMAZ; yeni hat yeni sürümdür.
 
 | Faz | Durum | Not |
 |---|---|---|
-| 0 | 🔄 başladı (2026-07-11) | bu commit serisi |
+| 0 | ✅ tamamlandı (2026-07-11) | 0.1-0.5 uygulandı; kapı: 319/319 test + lossless smoke 6/6 |
 | 1 | ⏳ Derlem release bekliyor | readiness hazır |
 | 2 | ⏸ Faz 1 sonrası | bit-aynılık kapısıyla |
 | 3 | ⏸ Faz 2 sonrası | sıra bağımlılığı kesin |

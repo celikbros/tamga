@@ -28,6 +28,11 @@ dependencies = []
 dev = [
   "pytest>=8.0"
 ]
+# Required by the v3.8 production tokenization chain (scripts/tokenize_corpus.py
+# and the finite-protected SP encoder path).
+production = [
+  "sentencepiece>=0.2"
+]
 baselines = [
   "sentencepiece>=0.2",
   "transformers>=4.40",

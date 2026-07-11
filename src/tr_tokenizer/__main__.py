@@ -13,7 +13,12 @@ def main(argv: list[str] | None = None) -> int:
 
     parser = argparse.ArgumentParser(
         prog="tamga",
-        description="Tamga Turkish-first lossless tokenizer.",
+        description=(
+            "Tamga deterministik Turkce morfoloji PROTOTIPI. "
+            "Varsayilan mod bosluk duzenini normalize eder; girdiyi bayt-bayt "
+            "korumak icin --lossless kullanin. Byte-exact v3.8 production "
+            "zinciri ayridir (scripts/tokenize_corpus.py)."
+        ),
     )
     parser.add_argument("text", nargs="*", help="Tokenize edilecek metin")
     parser.add_argument(
@@ -21,13 +26,24 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Turkceye uygun kucuk harfe cevirerek tokenize et",
     )
+    parser.add_argument(
+        "--lossless",
+        action="store_true",
+        help="Bosluk/tab/satir sonlarini birebir koruyarak tokenize et",
+    )
     args = parser.parse_args(argv)
+
+    if args.lossless and args.lowercase:
+        parser.error("--lossless ham yuzeyi korur; --lowercase ile birlikte kullanilamaz")
 
     text = " ".join(args.text).strip()
     if not text:
         text = sys.stdin.read()
 
-    tokenizer = TurkishTokenizer(lowercase=args.lowercase)
+    tokenizer = TurkishTokenizer(
+        lowercase=args.lowercase,
+        preserve_whitespace=args.lossless,
+    )
     tokens = tokenizer.encode(text)
     print(json.dumps(tokens, ensure_ascii=False))
     print(tokenizer.decode(tokens))

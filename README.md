@@ -56,6 +56,13 @@ tamga "Türkiye'den kedilerden geldim."
 Türkiye'den kedilerden geldim.
 ```
 
+> **Not:** `tamga` CLI'ı deterministik araştırma **prototipini** çalıştırır ve
+> varsayılan modu boşluk düzenini normalize eder (çift boşluk/tab/satır sonu
+> birebir korunmaz). Girdiyi bayt-bayt korumak için `tamga --lossless ...`
+> kullanın. **Byte-exact kayıpsızlık garantisi asıl ürün olan v3.8 production
+> zincirine aittir** (SP64k + korumalı sidecar; `scripts/tokenize_corpus.py`
+> üzerinden koşulur, model private handoff paketindedir).
+
 Geriye uyumluluk için Python namespace'i `tr_tokenizer` olarak kalır. Yeni CLI
 adı `tamga`; eski `tr-tokenizer` ve `tr-centric-tokenizer` komutları alias
 olarak korunur.
@@ -83,8 +90,9 @@ Boundary F1 tanımı için [docs/evaluation.md](docs/evaluation.md).
 - Apostrof sonrası ekler ayrılır: `Türkiye'den → ▁Türkiye ' +den`.
 - Yüzey gövde korunur: `kitaplarımdan → ▁Kitap +lar +ım +dan`.
 - İnformal biçimler standart dile çevrilmez: `Gelicem → ▁Gel +icem`.
-- Protected span'ler (sayı, dosya adı, teknik ifade vb.) kayıpsız korunur;
-  decode her zaman byte-exact geri dönüş verir.
+- Protected span'ler (sayı, dosya adı, teknik ifade vb.) korunur; byte-exact
+  decode garantisi v3.8 production zincirinde (passthrough sidecar + byte
+  fallback) sağlanır ve tam corpus üzerinde kanıtlanmıştır.
 - Kısa riskli ekler genel greedy splitter'a konmaz; lexicon-aware güvenli
   akışta kullanılır.
 
@@ -163,6 +171,13 @@ Example output:
 Türkiye'den kedilerden geldim.
 ```
 
+> **Note:** the `tamga` CLI runs the deterministic research **prototype**, and
+> its default mode normalizes whitespace (double spaces/tabs/newlines are not
+> preserved exactly). Use `tamga --lossless ...` to preserve the input
+> byte-for-byte. **The byte-exact losslessness guarantee belongs to the actual
+> product, the v3.8 production chain** (SP64k + protected sidecar; run via
+> `scripts/tokenize_corpus.py`, model in the private handoff package).
+
 For backward compatibility the Python namespace remains `tr_tokenizer`. The
 CLI is `tamga`; the legacy `tr-tokenizer` and `tr-centric-tokenizer` commands
 are kept as aliases.
@@ -191,8 +206,9 @@ See [docs/evaluation.md](docs/evaluation.md) for the boundary F1 definition.
 - Surface stems are preserved: `kitaplarımdan → ▁Kitap +lar +ım +dan`.
 - Informal forms are not normalized to standard Turkish:
   `Gelicem → ▁Gel +icem`.
-- Protected spans (numbers, file names, technical strings, …) are preserved
-  losslessly; decoding is always byte-exact.
+- Protected spans (numbers, file names, technical strings, …) are preserved;
+  the byte-exact decode guarantee is provided by the v3.8 production chain
+  (passthrough sidecar + byte fallback) and proven on the full corpus.
 - Short, risky suffixes are excluded from the general greedy splitter and only
   used on the lexicon-aware safe path.
 
