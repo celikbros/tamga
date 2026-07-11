@@ -1,7 +1,9 @@
 # Devir-Teslim İyileştirme Yol Haritası
 
+> Türkçe · [English version](roadmap.en.md)
+
 Tarih: 2026-07-11
-Girdi: `docs/handover_otopsi_raporu.md` (bulgu numaraları B1-B8 oradan)
+Girdi: `docs/handover.md` (bulgu numaraları B1-B8 oradan)
 İlke: Her faz kendi kabul kapısıyla biter; kapıdan geçmeyen faz merge edilmez.
 
 ---
@@ -12,7 +14,7 @@ Girdi: `docs/handover_otopsi_raporu.md` (bulgu numaraları B1-B8 oradan)
 1. README.md oku (çift dilli genel bakış).
 2. CLAUDE.md oku (commit kuralları: author celikbros + iki co-author trailer,
    Claude trailer'ı YOK; v3.8 dondurma guardrail'leri).
-3. docs/handover_otopsi_raporu.md oku (neresi çürük, neden).
+3. docs/handover.md oku (neresi çürük, neden).
 4. Bu dosyayı oku (ne yapılacak, hangi sırayla).
 5. docs/current_resume_point.md İLK bölümünü oku (güncel durum her zaman
    dosyanın EN ÜSTÜNDEDİR; alt bölümler tarihsel katmandır, kafa karıştırmasın).

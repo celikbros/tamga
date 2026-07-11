@@ -8,8 +8,8 @@ A forensic audit and a phased remediation roadmap were added for future
 maintainers:
 
 ```text
-docs/handover_otopsi_raporu.md            (findings B1-B8, file/line refs)
-docs/handover_iyilestirme_yol_haritasi.md (Faz 0-4, acceptance gates)
+docs/handover.md            (findings B1-B8, file/line refs)
+docs/roadmap.md (Faz 0-4, acceptance gates)
 Faz 0 (tooling repair + honesty fixes): DONE 2026-07-11.
 Faz 2 (production extraction): repo-side gates PASSED 2026-07-11 —
   the v3.8 chain now lives in src/tr_tokenizer/production/ (detector,

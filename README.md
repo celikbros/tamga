@@ -35,6 +35,8 @@ araçlarını içerir. Kanonik kapanış ve sonraki-sürüm kuralları:
 - [docs/v3_8_production_final_closure.md](docs/v3_8_production_final_closure.md)
 - [docs/tamga_v3_8_release_and_maintenance_roadmap.md](docs/tamga_v3_8_release_and_maintenance_roadmap.md)
 - [docs/current_resume_point.md](docs/current_resume_point.md) — güncel durum
+- [docs/handover.md](docs/handover.md) + [docs/roadmap.md](docs/roadmap.md) —
+  devir-teslim otopsi raporu ve iyileştirme yol haritası (İngilizce: `.en.md`)
 
 ### Kurulum ve İlk Çalıştırma
 
@@ -150,6 +152,8 @@ corpus tooling. Canonical closure and next-version rules:
 - [docs/v3_8_production_final_closure.md](docs/v3_8_production_final_closure.md)
 - [docs/tamga_v3_8_release_and_maintenance_roadmap.md](docs/tamga_v3_8_release_and_maintenance_roadmap.md)
 - [docs/current_resume_point.md](docs/current_resume_point.md) — current state
+- [docs/handover.en.md](docs/handover.en.md) + [docs/roadmap.en.md](docs/roadmap.en.md) —
+  handover forensic audit and remediation roadmap (Turkish originals: `.md`)
 
 ### Quickstart
 

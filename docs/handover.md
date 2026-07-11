@@ -1,11 +1,13 @@
 # Devir-Teslim Otopsi Raporu (Forensic Audit)
 
+> Türkçe · [English version](handover.en.md)
+
 Tarih: 2026-07-11
 Kapsam: tamga reposu (v3.8.0 sonrası durum)
 Amaç: Projeyi devralacak mühendisin, neyin ne olduğunu ve nerelerin çürük
 olduğunu tek belgeden öğrenmesi. Övgü yok; her bulgu dosya/satır referanslı.
 
-> Sonraki adım planı için: `docs/handover_iyilestirme_yol_haritasi.md`
+> Sonraki adım planı için: `docs/roadmap.md`
 > Güncel proje durumu için: `docs/current_resume_point.md`
 >
 > Bu rapor, denetim ANININ (2026-07-11 sabahı) kaydıdır ve tarihsel belge
@@ -160,7 +162,7 @@ Greenfield rewrite REDDEDİLDİ, gerekçe:
    kanıtlanabilir. Davranış değişimi sıfır olduğu sürece bu, donmuş algoritmik
    hattı "açmak" sayılmaz.
 
-Uygulama sırası ve kapıları: `docs/handover_iyilestirme_yol_haritasi.md`.
+Uygulama sırası ve kapıları: `docs/roadmap.md`.
 
 ## 4. Bulgu kapanış durumu (son güncelleme: 2026-07-11)
 
