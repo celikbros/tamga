@@ -34,46 +34,14 @@ BYTE_OFFSET = 3
 BYTE_VOCAB_SIZE = 256
 
 
-@dataclass(frozen=True)
-class TokenizerConfig:
-    name: str
-    kind: str
-    path: Path | None = None
-    vocab_path: Path | None = None
-    max_vocab_size: int | None = None
-    selected_pieces: Path | None = None
-    boundary_lambda: float = 0.0
-    sp_passthrough_routes: frozenset[str] = field(default_factory=frozenset)
-    isolate_sp_passthrough_routes: bool = False
-    byte_fallback_crossing_pieces: bool = False
-    pre_split_sp_passthrough_routes: bool = False
-
-
-@dataclass(frozen=True)
-class ModelConfig:
-    seq_len: int
-    batch_size: int
-    max_steps: int
-    eval_interval: int
-    learning_rate: float
-    d_model: int
-    n_layers: int
-    n_heads: int
-    ff_mult: int
-    dropout: float
-    device: str
-
-
-@dataclass(frozen=True)
-class ProbeConfig:
-    path: Path
-    split_dir: Path
-    output_dir: Path
-    report_out: Path
-    seed: int
-    encode_progress: int
-    model: ModelConfig
-    tokenizers: list[TokenizerConfig]
+# Moved to the production package (Faz 2); re-exported here so the archived
+# research tooling and historical commands keep working unchanged.
+from tr_tokenizer.production.config import (  # noqa: E402,F401
+    ModelConfig,
+    ProbeConfig,
+    TokenizerConfig,
+    load_probe_config,
+)
 
 
 @dataclass(frozen=True)
@@ -147,120 +115,6 @@ class EvalLossStats:
     evaluated_bytes: float
     evaluated_fraction: float
     nll_bits: float
-
-
-def _string_field(item: dict[str, Any], field: str, *, context: str) -> str:
-    value = item.get(field)
-    if not isinstance(value, str) or not value:
-        raise ValueError(f"{context} requires string field {field!r}")
-    return value
-
-
-def _int_field(item: dict[str, Any], field: str, *, context: str) -> int:
-    value = item.get(field)
-    if not isinstance(value, int):
-        raise ValueError(f"{context} requires integer field {field!r}")
-    return value
-
-
-def _float_field(item: dict[str, Any], field: str, *, context: str) -> float:
-    value = item.get(field)
-    if not isinstance(value, (float, int)):
-        raise ValueError(f"{context} requires numeric field {field!r}")
-    return float(value)
-
-
-def load_probe_config(path: str | Path) -> ProbeConfig:
-    config_path = Path(path)
-    raw = _load_toml(config_path)
-    settings = raw.get("settings", {})
-    model_raw = raw.get("model", {})
-    if not isinstance(settings, dict):
-        raise ValueError("[settings] must be a table")
-    if not isinstance(model_raw, dict):
-        raise ValueError("[model] must be a table")
-
-    tokenizers: list[TokenizerConfig] = []
-    for item in raw.get("tokenizers", []):
-        if not isinstance(item, dict) or item.get("enabled", True) is False:
-            continue
-        name = _string_field(item, "name", context="tokenizer")
-        kind = _string_field(item, "kind", context=f"tokenizer {name}")
-        if kind not in {
-            "custom",
-            "sentencepiece",
-            "utf8_byte",
-            "finite_protected_soft_marker",
-            "finite_protected_marker_stripped",
-            "finite_protected_marker_stripped_numeric_sp",
-            "boundary_biased_unigram_numeric_sp",
-        }:
-            raise ValueError(f"unsupported tokenizer kind for {name}: {kind}")
-        routes_raw = item.get("sp_passthrough_routes", [])
-        if isinstance(routes_raw, str):
-            sp_passthrough_routes = frozenset(
-                route.strip() for route in routes_raw.split(",") if route.strip()
-            )
-        elif isinstance(routes_raw, list) and all(isinstance(route, str) for route in routes_raw):
-            sp_passthrough_routes = frozenset(routes_raw)
-        else:
-            raise ValueError(
-                f"tokenizer {name} sp_passthrough_routes must be a string list or comma string"
-            )
-        tokenizers.append(
-            TokenizerConfig(
-                name=name,
-                kind=kind,
-                path=Path(item["path"]) if isinstance(item.get("path"), str) else None,
-                vocab_path=(
-                    Path(item["vocab_path"])
-                    if isinstance(item.get("vocab_path"), str)
-                    else None
-                ),
-                max_vocab_size=item.get("max_vocab_size")
-                if isinstance(item.get("max_vocab_size"), int)
-                else None,
-                selected_pieces=(
-                    Path(item["selected_pieces"])
-                    if isinstance(item.get("selected_pieces"), str)
-                    else None
-                ),
-                boundary_lambda=float(item.get("boundary_lambda", 0.0)),
-                sp_passthrough_routes=sp_passthrough_routes,
-                isolate_sp_passthrough_routes=bool(
-                    item.get("isolate_sp_passthrough_routes", False)
-                ),
-                byte_fallback_crossing_pieces=bool(
-                    item.get("byte_fallback_crossing_pieces", False)
-                ),
-                pre_split_sp_passthrough_routes=bool(
-                    item.get("pre_split_sp_passthrough_routes", False)
-                ),
-            )
-        )
-
-    return ProbeConfig(
-        path=config_path,
-        split_dir=Path(_string_field(settings, "split_dir", context="settings")),
-        output_dir=Path(settings.get("output_dir", "artifacts/private/v1_8_tiny_lm_bpb_probe")),
-        report_out=Path(settings.get("report_out", "artifacts/v1_8_tiny_lm_bpb_probe.md")),
-        seed=_int_field(settings, "seed", context="settings"),
-        encode_progress=int(settings.get("encode_progress", 0)),
-        model=ModelConfig(
-            seq_len=_int_field(model_raw, "seq_len", context="model"),
-            batch_size=_int_field(model_raw, "batch_size", context="model"),
-            max_steps=_int_field(model_raw, "max_steps", context="model"),
-            eval_interval=_int_field(model_raw, "eval_interval", context="model"),
-            learning_rate=_float_field(model_raw, "learning_rate", context="model"),
-            d_model=_int_field(model_raw, "d_model", context="model"),
-            n_layers=_int_field(model_raw, "n_layers", context="model"),
-            n_heads=_int_field(model_raw, "n_heads", context="model"),
-            ff_mult=_int_field(model_raw, "ff_mult", context="model"),
-            dropout=_float_field(model_raw, "dropout", context="model"),
-            device=_string_field(model_raw, "device", context="model"),
-        ),
-        tokenizers=tokenizers,
-    )
 
 
 def load_split_texts(split_dir: str | Path) -> dict[str, SplitText]:
@@ -358,14 +212,12 @@ def encode_sentencepiece_split(
     return EncodedSplit(split, ids, byte_count, len(lines))
 
 
-def _processor_piece_size(processor) -> int:
-    if hasattr(processor, "GetPieceSize"):
-        return int(processor.GetPieceSize())
-    return int(processor.PieceSize())
-
-
-def _processor_eos_id(processor) -> int:
-    return int(processor.eos_id()) if hasattr(processor, "eos_id") else -1
+# Moved to the production package (Faz 2); re-exported for compatibility.
+from tr_tokenizer.production.sp import (  # noqa: E402,F401
+    _processor_decode_ids,
+    _processor_eos_id,
+    _processor_piece_size,
+)
 
 
 def _processor_encode_ids(processor, surface: str) -> list[int]:
@@ -374,16 +226,6 @@ def _processor_encode_ids(processor, surface: str) -> list[int]:
     if hasattr(processor, "EncodeAsIds"):
         return [int(item) for item in processor.EncodeAsIds(surface)]
     return [int(item) for item in processor.encode(surface, out_type=int)]
-
-
-def _processor_decode_ids(processor, ids: list[int]) -> str | None:
-    if not ids:
-        return ""
-    if hasattr(processor, "DecodeIds"):
-        return str(processor.DecodeIds(ids))
-    if hasattr(processor, "decode"):
-        return str(processor.decode(ids))
-    return None
 
 
 def _processor_encode_ids_lossless_or_byte_fallback(

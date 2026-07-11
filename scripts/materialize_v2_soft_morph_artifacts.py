@@ -29,28 +29,16 @@ from tr_tokenizer.pretok import (  # noqa: E402
 from tr_tokenizer.tokenizer import WORD_START  # noqa: E402
 
 
-PROTECTED_KIND_CHECKS = (
-    ("url", is_url_like_token),
-    ("uzbek_apostrophe_word", is_uzbek_apostrophe_word),
-    ("azerbaijani_word", is_azerbaijani_specific_word),
-    ("cyrillic_word", is_cyrillic_word),
-    ("arabic_word", is_arabic_word),
-    ("greek_word", is_greek_word),
-    ("non_turkish_latin_word", is_non_turkish_latin_word),
-    ("apostrophe_surface", is_apostrophe_surface_token),
-    ("file_like", is_file_like_token),
-    ("numeric_like", is_numeric_like_token),
-    ("percent_encoded", is_percent_encoded_token),
-    ("technical_comparator", is_technical_comparator_token),
+# Moved to the production package (Faz 2); re-exported here so the archived
+# research tooling and historical commands keep working unchanged.
+from tr_tokenizer.production.detector import (  # noqa: E402,F401
+    PROTECTED_KIND_CHECKS,
+    Piece,
+    analyze_line,
+    classify_token,
+    protected_kind,
+    source_surface,
 )
-
-
-@dataclass(frozen=True)
-class Piece:
-    token: str
-    surface: str
-    kind: str
-    boundary_before: str
 
 
 @dataclass(frozen=True)
@@ -74,59 +62,6 @@ class SoftMorphStats:
     @property
     def avg_pieces_line(self) -> float:
         return self.pieces / self.lines if self.lines else 0.0
-
-
-def source_surface(token: str) -> str:
-    if token.startswith(WORD_START) and len(token) > len(WORD_START):
-        return token[len(WORD_START) :]
-    if token.startswith("+") and len(token) > 1:
-        return token[1:]
-    return token
-
-
-def protected_kind(surface: str) -> str | None:
-    for kind, check in PROTECTED_KIND_CHECKS:
-        if check(surface):
-            return kind
-    return None
-
-
-def classify_token(token: str, previous_token: str | None) -> Piece:
-    surface = source_surface(token)
-
-    if token.isspace():
-        return Piece(token=token, surface=surface, kind="whitespace", boundary_before="hard")
-
-    if token == "'":
-        return Piece(token=token, surface=surface, kind="apostrophe", boundary_before="hard")
-
-    if token.startswith("+") and len(token) > 1:
-        boundary = "hard" if previous_token == "'" else "soft"
-        return Piece(token=token, surface=surface, kind="suffix", boundary_before=boundary)
-
-    kind = protected_kind(surface)
-    if kind is not None:
-        return Piece(
-            token=token,
-            surface=surface,
-            kind=f"protected:{kind}",
-            boundary_before="hard",
-        )
-
-    if token.startswith(WORD_START) and len(token) > len(WORD_START):
-        return Piece(token=token, surface=surface, kind="word_start", boundary_before="hard")
-
-    return Piece(token=token, surface=surface, kind="punct_or_symbol", boundary_before="hard")
-
-
-def analyze_line(text: str, tokenizer: TurkishTokenizer) -> list[Piece]:
-    pieces: list[Piece] = []
-    previous: str | None = None
-    for token in tokenizer.encode(text):
-        piece = classify_token(token, previous)
-        pieces.append(piece)
-        previous = token
-    return pieces
 
 
 def materialize_soft_morph_artifacts(

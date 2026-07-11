@@ -97,11 +97,8 @@ def strip_sp_word_start(token: str) -> str:
     return token
 
 
-def load_sp_processor(model_path: Path):
-    spm = ensure_sentencepiece()
-    processor = spm.SentencePieceProcessor()
-    processor.Load(str(model_path))
-    return processor
+# Moved to the production package (Faz 2); re-exported for compatibility.
+from tr_tokenizer.production.sp import load_sp_processor  # noqa: E402,F401
 
 
 def processor_piece_size(processor) -> int:
@@ -167,9 +164,8 @@ def processor_encode_ids_lossless_or_byte_fallback(
     return output, byte_fallback_tokens
 
 
-def selected_piece_strings(selected_path: Path) -> list[str]:
-    pieces = [piece.piece for piece in load_selected_pieces(selected_path)]
-    return sorted((piece for piece in pieces if piece), key=lambda item: (-len(item), item))
+# Moved to the production package (Faz 2); re-exported for compatibility.
+from tr_tokenizer.production.config import selected_piece_strings  # noqa: E402,F401
 
 
 def append_word_surface(tokens: list[str], surface: str, *, word_start: bool) -> None:

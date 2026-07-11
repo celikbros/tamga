@@ -67,7 +67,10 @@ Plan hazır: `docs/v3_8_pii_clean_retokenize_readiness.md`.
   224 satırlık farkın manifest açıklaması).
 - İş Gardash ortamında koşulur; bu repo zinciri/validator'ları sağlar ve
   aggregate gate kanıtını inceler.
-- KURAL: Faz 2'ye bu iş bitmeden BAŞLANMAZ (işin ortasında zemin kaydırılmaz).
+- KURAL (2026-07-11 revizyonu): Derlem tetiği belirsiz süre uzakta olduğu için
+  Faz 2, geri-uyumlu shim'ler + bit-aynılık kapısıyla ERKEN başlatıldı (karar
+  notu Faz 2'de). PII işi geldiğinde HEAD yeşilse oradan, değilse Faz 2 öncesi
+  son tag'den koşulur; eski script giriş noktaları birebir çalışmaya devam eder.
 KAPI: SP alignment mismatch 0 · smoke roundtrip %100 · max id < 64.384 ·
   tokens/raw byte ~0.1843 bandında.
 ```
@@ -84,6 +87,33 @@ KAPI (taviz yok): mevcut test paketi yeşil + tokenize çıktısı repo içi smo
      fixture'larında BİT-AYNI + Gardash'tan istenecek 10k örneklem
      re-tokenize'ında checksums.json ile BİT-AYNI. Bit-aynılık kanıtlanamayan
      taşıma revert edilir.
+```
+
+Başlatma kararı ve repo-içi kapı sonucu (2026-07-11):
+
+```text
+Karar: Derlem tetiği belirsiz olduğundan Faz 2 erken başlatıldı; risk,
+  (a) eski script konumlarının production paketinden re-export eden shim'lere
+  dönüştürülmesi (tarihsel komutlar/importlar birebir çalışır) ve
+  (b) taşıma-öncesi baseline'a karşı bit-aynılık kapısıyla sıfırlandı.
+Taşınanlar:
+  production/detector.py  <- materialize_v2_soft_morph_artifacts (analyze_line ailesi)
+  production/spans.py     <- audit_v2_1 (Span/protected_spans) + tokenize_v3_1
+                             (EncodedTokenSpan/span_to_json/token_mask_for_line)
+  production/sp.py        <- evaluate_v2_finite (load_sp_processor) + run_tiny
+                             (_processor_* yardımcıları)
+  production/config.py    <- run_tiny (TokenizerConfig/ProbeConfig/load_probe_config)
+                             + tokenize_v3_1 (find_tokenizer) + evaluate_v2_protected_encoder
+                             (ProtectedPiece/load_selected_pieces)
+  tokenize_corpus.py artık yalnızca tr_tokenizer.production + stdlib import eder.
+Kapı kanıtı (demo SP1k model, 2 girdi: 15 satırlık zorlu set [U+2581 literal
+  dahil] + demo corpus; workers=1 ve workers=2):
+  tokens.bin / loss_mask.bin / index.jsonl / sidecar.jsonl: 3 kıyasta da BİT-AYNI
+  manifest.json farkı: yalnızca gömülü çıktı dizin yolları (beklenen)
+  test paketi: 319/319 yeşil
+Kalan: Gardash'tan 10k örneklem bit-aynılık teyidi (Faz 1 PII işiyle birlikte
+  doğal olarak gelir); 2.3 için boundary_weighted_bpe.py içindeki bağımsız
+  U+2581 kopyası Faz 3 karantinasında ele alınacak.
 ```
 
 ## Faz 3 — Karantina ve paket temizliği (B6/B7)
@@ -124,7 +154,7 @@ v3.8'e DOKUNULMAZ; yeni hat yeni sürümdür.
 |---|---|---|
 | 0 | ✅ tamamlandı (2026-07-11) | 0.1-0.5 uygulandı; kapı: 319/319 test + lossless smoke 6/6 |
 | 1 | ⏳ Derlem release bekliyor | readiness hazır |
-| 2 | ⏸ Faz 1 sonrası | bit-aynılık kapısıyla |
+| 2 | 🔄 repo-içi kapılar GEÇTİ (2026-07-11) | çıkarma + shim'ler tamam; dışsal 10k teyidi Faz 1 ile gelir |
 | 3 | ⏸ Faz 2 sonrası | sıra bağımlılığı kesin |
 | 4 | ⏸ dışsal tetik | yeni corpus kapsamı |
 

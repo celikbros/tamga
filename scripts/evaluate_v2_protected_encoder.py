@@ -16,14 +16,11 @@ from scripts.analyze_v2_protected_route_inventory import (  # noqa: E402
 )
 
 
-@dataclass(frozen=True)
-class ProtectedPiece:
-    piece: str
-    count: int
-    category: str
-    reason: str
-    bytes: int
-    routes: tuple[str, ...]
+# Moved to the production package (Faz 2); re-exported for compatibility.
+from tr_tokenizer.production.config import (  # noqa: E402,F401
+    ProtectedPiece,
+    load_selected_pieces,
+)
 
 
 @dataclass(frozen=True)
@@ -63,31 +60,6 @@ class EncoderStats:
     @property
     def byte_token_rate(self) -> float:
         return self.byte_tokens / self.total_tokens if self.total_tokens else 0.0
-
-
-def load_selected_pieces(path: str | Path) -> list[ProtectedPiece]:
-    pieces: list[ProtectedPiece] = []
-    with Path(path).open("r", encoding="utf-8") as handle:
-        header = handle.readline().rstrip("\n")
-        expected = "piece\tcount\tcategory\treason\tbytes\troutes"
-        if header != expected:
-            raise ValueError(f"unexpected selected-piece header: {header!r}")
-        for raw_line in handle:
-            line = raw_line.rstrip("\n")
-            if not line:
-                continue
-            piece, count_raw, category, reason, bytes_raw, routes_raw = line.split("\t")
-            pieces.append(
-                ProtectedPiece(
-                    piece=piece,
-                    count=int(count_raw),
-                    category=category,
-                    reason=reason,
-                    bytes=int(bytes_raw),
-                    routes=tuple(route for route in routes_raw.split(",") if route),
-                )
-            )
-    return pieces
 
 
 def protected_entries(entries: list[RouteEntry]) -> list[RouteEntry]:

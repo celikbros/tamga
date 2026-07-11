@@ -10,9 +10,14 @@ maintainers:
 ```text
 docs/handover_otopsi_raporu.md            (findings B1-B8, file/line refs)
 docs/handover_iyilestirme_yol_haritasi.md (Faz 0-4, acceptance gates)
-Faz 0 (tooling repair + honesty fixes) started 2026-07-11.
-Faz 2/3 (production extraction + quarantine) must wait for the PII
-re-tokenize job (Faz 1) to complete first.
+Faz 0 (tooling repair + honesty fixes): DONE 2026-07-11.
+Faz 2 (production extraction): repo-side gates PASSED 2026-07-11 —
+  the v3.8 chain now lives in src/tr_tokenizer/production/ (detector,
+  spans, sp, config); the old scripts/* homes re-export as shims;
+  tokens/loss_mask/index/sidecar outputs verified BIT-IDENTICAL to the
+  pre-move chain (2 inputs x workers 1 and 2); tests 319/319.
+  External 10k-sample confirmation arrives naturally with the Faz 1 job.
+Faz 3 (quarantine of archived research scripts) waits for Faz 2 closeout.
 ```
 
 ## Latest Actual State: Tamga v3.8 Production-Final

@@ -17,18 +17,13 @@ from scripts.run_tiny_lm_bpb_probe import load_sp_processor  # noqa: E402
 from tr_tokenizer import TurkishTokenizer  # noqa: E402
 
 
-@dataclass(frozen=True)
-class Span:
-    route: str
-    surface: str
-    char_start: int
-    char_end: int
-    byte_start: int
-    byte_end: int
-
-    @property
-    def byte_len(self) -> int:
-        return self.byte_end - self.byte_start
+# Moved to the production package (Faz 2); re-exported here so the archived
+# research tooling and historical commands keep working unchanged.
+from tr_tokenizer.production.spans import (  # noqa: E402,F401
+    Span,
+    char_to_byte_offsets,
+    protected_spans,
+)
 
 
 @dataclass(frozen=True)
@@ -149,15 +144,6 @@ class OperationStats:
         return self.token_count_sum / self.protected_spans if self.protected_spans else 0.0
 
 
-def char_to_byte_offsets(text: str) -> list[int]:
-    offsets = [0]
-    total = 0
-    for char in text:
-        total += len(char.encode("utf-8"))
-        offsets.append(total)
-    return offsets
-
-
 def merge_intervals(intervals: list[tuple[int, int]]) -> list[tuple[int, int]]:
     if not intervals:
         return []
@@ -174,30 +160,6 @@ def merge_intervals(intervals: list[tuple[int, int]]) -> list[tuple[int, int]]:
 
 def interval_bytes(intervals: list[tuple[int, int]]) -> int:
     return sum(max(0, end - start) for start, end in intervals)
-
-
-def protected_spans(text: str, tokenizer: TurkishTokenizer) -> list[Span]:
-    byte_offsets = char_to_byte_offsets(text)
-    spans: list[Span] = []
-    char_offset = 0
-    for piece in analyze_line(text, tokenizer):
-        start = char_offset
-        end = start + len(piece.surface)
-        if piece.kind.startswith("protected:"):
-            spans.append(
-                Span(
-                    route=piece.kind.removeprefix("protected:"),
-                    surface=piece.surface,
-                    char_start=start,
-                    char_end=end,
-                    byte_start=byte_offsets[start],
-                    byte_end=byte_offsets[end],
-                )
-            )
-        char_offset = end
-    if char_offset != len(text):
-        raise ValueError("analyze_line surfaces did not reconstruct input")
-    return spans
 
 
 def sp_token_pieces(processor: Any, text: str) -> list[TokenPiece]:

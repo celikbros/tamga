@@ -67,26 +67,17 @@ class TokenizeStats:
         return self.masked_tokens / self.tokens if self.tokens else 0.0
 
 
-@dataclass(frozen=True)
-class EncodedTokenSpan:
-    token_id: int
-    byte_start: int
-    byte_end: int
-
-
-def find_tokenizer(config_path: Path, name: str) -> TokenizerConfig:
-    config = load_probe_config(config_path)
-    for tokenizer in config.tokenizers:
-        if tokenizer.name == name:
-            return tokenizer
-    available = ", ".join(tokenizer.name for tokenizer in config.tokenizers)
-    raise ValueError(f"tokenizer {name!r} not found. Available: {available}")
-
-
-def normalize_max_lines(value: int | None) -> int | None:
-    if value is not None and value <= 0:
-        return None
-    return value
+# Moved to the production package (Faz 2); re-exported here so the archived
+# research tooling and historical commands keep working unchanged.
+from tr_tokenizer.production.config import (  # noqa: E402,F401
+    find_tokenizer,
+    normalize_max_lines,
+)
+from tr_tokenizer.production.spans import (  # noqa: E402,F401
+    EncodedTokenSpan,
+    span_to_json,
+    token_mask_for_line,
+)
 
 
 def write_uint32(handle: Any, values: list[int]) -> None:
@@ -96,26 +87,6 @@ def write_uint32(handle: Any, values: list[int]) -> None:
     if sys.byteorder != "little":
         data.byteswap()
     data.tofile(handle)
-
-
-def span_to_json(span: Span) -> dict[str, object]:
-    return {
-        "route": span.route,
-        "byte_start": span.byte_start,
-        "byte_end": span.byte_end,
-        "char_start": span.char_start,
-        "char_end": span.char_end,
-        "surface": span.surface,
-    }
-
-
-def token_mask_for_line(*, token_spans: list[EncodedTokenSpan], spans: list[Span]) -> bytearray:
-    mask = bytearray([1] * len(token_spans))
-    for span in spans:
-        for index, token in enumerate(token_spans):
-            if token.byte_start < span.byte_end and span.byte_start < token.byte_end:
-                mask[index] = 0
-    return mask
 
 
 def encode_sp_segment_with_offsets(

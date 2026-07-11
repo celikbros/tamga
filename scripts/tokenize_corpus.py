@@ -16,26 +16,30 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 
-from scripts.audit_v2_1_sidecar_operation_simulation import protected_spans  # noqa: E402
-from scripts.evaluate_v2_finite_protected_sp64_intrinsic import (  # noqa: E402
-    load_sp_processor,
+# Production chain imports come from the tr_tokenizer.production package
+# (single source of truth since Faz 2); the former scripts/* homes re-export
+# the same objects for the archived research tooling.
+from tr_tokenizer import TurkishTokenizer  # noqa: E402
+from tr_tokenizer.production.config import (  # noqa: E402
+    TokenizerConfig,
+    find_tokenizer,
+    normalize_max_lines,
     selected_piece_strings,
 )
-from scripts.materialize_v2_soft_morph_artifacts import analyze_line  # noqa: E402
-from scripts.run_tiny_lm_bpb_probe import (  # noqa: E402
-    TokenizerConfig,
+from tr_tokenizer.production.detector import analyze_line  # noqa: E402
+from tr_tokenizer.production.sp import (  # noqa: E402
     _processor_decode_ids,
     _processor_eos_id,
     _processor_piece_size,
+    load_sp_processor,
 )
-from scripts.tokenize_v3_1_corpus_smoke import (  # noqa: E402
+from tr_tokenizer.production.spans import (  # noqa: E402
     EncodedTokenSpan,
-    find_tokenizer,
-    normalize_max_lines,
+    char_to_byte_offsets,
+    protected_spans,
     span_to_json,
     token_mask_for_line,
 )
-from tr_tokenizer import TurkishTokenizer  # noqa: E402
 
 
 @dataclass
@@ -107,15 +111,6 @@ def write_uint32(handle: Any, values: list[int]) -> None:
     if sys.byteorder != "little":
         data.byteswap()
     data.tofile(handle)
-
-
-def char_to_byte_offsets(text: str) -> list[int]:
-    offsets = [0]
-    total = 0
-    for char in text:
-        total += len(char.encode("utf-8"))
-        offsets.append(total)
-    return offsets
 
 
 def encode_sp_segment_with_offsets(
