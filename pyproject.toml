@@ -30,11 +30,15 @@ dev = [
 ]
 # Required by the v3.8 production tokenization chain (scripts/tokenize_corpus.py
 # and the finite-protected SP encoder path).
+# Upper bound <0.2.2: the chain calls EncodeAsImmutableProto, whose piece
+# begin/end are CHARACTER offsets. 0.2.2 removed that API; its replacement
+# Encode(return_type="proto") returns UTF-8 BYTE offsets, which the chain
+# would mis-slice. See docs/current_resume_point.md (2026-09-19).
 production = [
-  "sentencepiece>=0.2"
+  "sentencepiece>=0.2,<0.2.2"
 ]
 baselines = [
-  "sentencepiece>=0.2",
+  "sentencepiece>=0.2,<0.2.2",
   "transformers>=4.40",
   "tokenizers>=0.19"
 ]

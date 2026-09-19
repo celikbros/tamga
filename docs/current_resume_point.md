@@ -2,6 +2,23 @@
 
 Date: 2026-07-11
 
+## Maintenance: sentencepiece Upper Bound (2026-09-19)
+
+gardas-modeller reported (2026-09-18) that the reference wrapper's unk
+byte-fallback slices the wrong bytes on a few documents. Root cause is a
+sentencepiece version split, verified on the real v3.8 model:
+
+```text
+<=0.2.1  EncodeAsImmutableProto            begin/end = character offsets
+>=0.2.2  Encode(return_type="proto")        begin/end = UTF-8 byte offsets
+```
+
+The v3.8 chain assumes character offsets and is correct on <=0.2.1, where
+the frozen corpus was produced. On 0.2.2 tokenize_corpus crashes. The
+`production` and `baselines` extras are now pinned to
+`sentencepiece>=0.2,<0.2.2`. No algorithm or v3.8 output changes. The
+existing tests use a fake processor and do not exercise this path.
+
 ## Handover / Remediation Track (2026-07-11)
 
 A forensic audit and a phased remediation roadmap were added for future
